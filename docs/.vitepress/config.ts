@@ -5,30 +5,38 @@ export default withMermaid(
   defineConfig({
     title: "Saymo",
     description:
-      "Документация Saymo: видео или текст в готовый ролик для соцсетей",
-    lang: "ru-RU",
+      "Saymo documentation: from a recording or text to a ready-to-post social video",
+    lang: "en-US",
     appearance: "dark",
     srcExclude: ["design/screens/html/**"],
+    // HTML labels render clipped inside the default theme, SVG labels do not
+    mermaid: { htmlLabels: false },
+    vite: {
+      optimizeDeps: {
+        // under pnpm mermaid CommonJS dependencies stay unbundled, which blanks docs:dev
+        include: ["mermaid"],
+      },
+    },
     themeConfig: {
       sidebar: [
-        { text: "Обзор", link: "/overview" },
-        { text: "Путь пользователя", link: "/user-flow" },
-        { text: "Архитектура", link: "/architecture" },
-        { text: "Конвейер", link: "/pipeline" },
-        { text: "Схема ролика", link: "/video-schema" },
-        { text: "Словарь", link: "/vocabulary" },
-        { text: "Решения", link: "/product/decisions" },
-        { text: "Уроки", link: "/learnings" },
+        { text: "Overview", link: "/overview" },
+        { text: "User flow", link: "/user-flow" },
+        { text: "Architecture", link: "/architecture" },
+        { text: "Pipeline", link: "/pipeline" },
+        { text: "Video schema", link: "/video-schema" },
+        { text: "Vocabulary", link: "/vocabulary" },
+        { text: "Decisions", link: "/product/decisions" },
+        { text: "Learnings", link: "/learnings" },
         {
-          text: "Инструкции",
+          text: "Runbooks",
           items: [
-            { text: "Окружение", link: "/runbooks/setup" },
+            { text: "Setup", link: "/runbooks/setup" },
             { text: "Remotion Lambda", link: "/runbooks/lambda" },
           ],
         },
-        { text: "Спайк", link: "/spike-results" },
+        { text: "Spike results", link: "/spike-results" },
         {
-          text: "Спека",
+          text: "Design spec",
           link: "/superpowers/specs/2026-10-28-saymo-v1-design",
         },
       ],

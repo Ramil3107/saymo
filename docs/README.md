@@ -7,3 +7,4 @@
 | `product/01-product.md` … `06-next-steps.md` | Продуктовый хендофф от 21 октября | Детали верны, главный сценарий и скоуп см. в спеке, раздел 2 |
 | `product/00-handoff-readme.md` | Как работать с проектом, словарь терминов | Правила переедут в `CLAUDE.md` при развёртывании каркаса |
 | `design/` | Дизайн-система, 20 экранов, токены, HTML и PNG макетов | Основа интерфейса. Что перерисовать, см. в спеке, раздел 12 |
+| `.vitepress/` | Documentation site | `pnpm docs:dev` to browse, `pnpm docs:build` to check links |
