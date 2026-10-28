@@ -711,3 +711,28 @@ git add -A && git commit -m "docs: spike results and decisions on providers and 
 - Раздел 13 (этап 0, «готово, когда»): сайт документации и схема пути в задаче 3, три футажа и два текста в задаче 16, таблица и решения там же.
 - Раздел 16 (скиллы, документация): задачи 2, 3.
 - Review Focus: пункт 1 в задачах 8 и 9, пункт 2 в задаче 9, пункт 3 в задачах 9 и 10, пункт 4 в задаче 7, пункт 5 в задаче 11, пункт 6 в задаче 5.
+
+---
+
+### Task 17: Translate every project file to English
+
+Decision of 2026-10-28: all project files are written in English (docs, CLAUDE.md, skills, comments, commit messages); only the chat with the owner is in Russian. This task translates what was written in Russian before the decision. It runs right after Task 3, before Task 4, so that later tasks produce English docs from the start.
+
+**Files:**
+- Modify (translate in place): `CLAUDE.md`, `.claude/skills/*/SKILL.md`, `docs/README.md`, `docs/user-flow.md`, `docs/learnings.md`, `docs/product/*.md` (including `decisions.md`), `docs/design/README.md`, `docs/design/foundations.md`, `docs/design/components.md`, `docs/design/screens.md`, `docs/superpowers/specs/2026-10-28-saymo-v1-design.md`, this plan.
+- Not touched: `docs/design/tokens.css`, `tokens.json`, `screens/html/**`, `screens/png/**` (already English or binary).
+
+**Rules for the translation:**
+- Translate meaning faithfully; do not summarize, shorten or "improve". Keep every heading level, list, table row and column; keep the document order.
+- Code blocks, inline code, identifiers, commands, file paths, numbers, dates, hex values, URLs and UI strings in English stay byte-identical. Russian text inside code blocks (for example test names or prompt wording such as `"no speech"`) stays as it is.
+- Mermaid labels are translated; node ids are not.
+- The glossary in `CLAUDE.md` and in `docs/product/00-handoff-readme.md` becomes three columns: Term, Meaning, In the UI; the term column is English (video, edit, element, scene, beat, brand, example, editor, format, destination, register, limit, review link).
+- House style: no em dashes in prose, sentence case headings, short sentences.
+- `CLAUDE.md` gets one more rule under "How to work with me": "Everything in this repository is in English: docs, comments, commit messages, skills. Talk to the owner in Russian."
+
+**Verification:**
+- A script run by the implementer compares all fenced code blocks and inline code spans of each file before and after; any difference is a defect. Paste the script's output (per file: N blocks, N spans, 0 differences) into the report.
+- `pnpm docs:build` passes.
+- `grep -rlP '[А-Яа-яЁё]' CLAUDE.md .claude docs --include=*.md` lists nothing except Russian strings inside code blocks the rule above allows; list each remaining hit with its reason in the report.
+
+**Batches:** (a) `CLAUDE.md`, skills, `docs/README.md`, `docs/user-flow.md`, `docs/learnings.md`, `docs/product/*.md`; (b) `docs/design/*.md`; (c) the spec; (d) this plan. One implementer per batch, sequentially; each batch is one commit `docs: translate <batch> to English`.

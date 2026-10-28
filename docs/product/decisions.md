@@ -4,6 +4,12 @@
 
 ---
 
+### 2026-10-28 · Project language is English
+
+- **Decided:** every file in the repository is written in English: documentation, CLAUDE.md, skills, code comments, commit messages. Conversation with the owner stays in Russian. Files written in Russian before this decision are translated in place (plan Task 17).
+- **Why:** the project should be readable by anyone who joins or reviews it.
+- **Rejected:** Russian docs with English code only.
+
 ### 2026-10-28 · Документация и инструменты Claude в репозитории
 
 - **Решили:** документация как небольшие страницы по темам в `docs/`, собранные в сайт VitePress с Mermaid; схема пути пользователя как Mermaid, обновляется в том же коммите, что и поток; скиллы Claude в `.claude/skills/`: learn, decision, docs, review, vocab, spike. Всё ставится на этапе 0.
