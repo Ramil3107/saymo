@@ -1,376 +1,376 @@
-# Saymo. Дизайн первой версии
+# Saymo. Design of the first version
 
-Дата: 2026-10-28. Статус: согласован в чате, проверен ревьюером, ждёт утверждение владельца.
+Date: 2026-10-28. Status: agreed in chat, checked by a reviewer, awaiting the owner's approval.
 
-Этот документ главный. Хендофф в `docs/product/` и `docs/design/` остаётся источником деталей (экраны, компоненты, токены, экономика), но там, где он расходится с этим документом, верен этот документ. Список расхождений в разделе 2.
+This is the main document. The handoff in `docs/product/` and `docs/design/` remains the source of details (screens, components, tokens, economics), but where it disagrees with this document, this document is correct. The list of discrepancies is in section 2.
 
-## 1. Что строим и зачем
+## 1. What we build and why
 
-**Saymo** это сервис, который превращает видео пользователя или его текст в готовый ролик для соцсетей: монтаж, зумы, субтитры, моушн-графика в стиле бренда. Человек загружает запись или пишет, что нужно, нажимает одну кнопку, через минуту видит план, через несколько минут готовый ролик, и правит его словами и кликом по кадру.
+**Saymo** is a service that turns a user's video or text into a finished video for social media: editing, zooms, captions, motion graphics in the brand's style. The person uploads a recording or writes what they need and presses one button. A minute later they see a plan, a few minutes later a finished video, and they edit it with words and by clicking the frame.
 
-Позиционирование: «Claude Code, только для роликов». Говоришь, что нужно, и правишь словами, а не ползунками.
+Positioning: "Claude Code, but for videos". You say what you need and edit with words, not sliders.
 
-**Прообраз:** ролики, которые автор собирал вручную для клиентов в проекте `video-editing` (synevo, batorshina, ame и другие): футаж говорящего человека, нарезка, зумы, чипы и плашки вокруг человека, крупные цифры, субтитры с подсветкой слова, музыка с приглушением под голос. Saymo делает то же самое без автора в цикле.
+**Modeled on:** videos the author built by hand for clients in the `video-editing` project (synevo, batorshina, ame and others): footage of a person talking, cuts, zooms, chips and plates around the person, big numbers, captions with word highlighting, music ducked under the voice. Saymo does the same without the author in the loop.
 
-**Для кого:** маркетологи и SMM в небольших компаниях, фрилансеры, небольшие агентства. 5–20 роликов в месяц, After Effects не знают, моушн-дизайнер дорого.
+**Who it is for:** marketers and social media managers in small companies, freelancers, small agencies. They need 5–20 videos a month. They do not know After Effects, and a motion designer is expensive.
 
-**Главный жест,** который должен запоминаться: ткнул в любой элемент кадра, сказал, что поменять, увидел результат сразу.
+**The main gesture,** which has to be memorable: click any element of the frame, say what to change, see the result right away.
 
-**Три режима входа,** один конвейер:
+**Three entry modes,** one pipeline:
 
-1. Своё видео плюс графика. Главный режим.
-2. Только текст, ролик целиком из графики.
-3. Минимум графики: субтитры, нарезка, зумы.
+1. Own video plus graphics. The main mode.
+2. Text only, a video made entirely of graphics.
+3. Minimal graphics: captions, cuts, zooms.
 
-Режим не выбирается явно: режиссёр понимает его по тому, что дал пользователь и куда ролик пойдёт.
+The mode is not chosen explicitly: the director infers it from what the user provided and where the video is going.
 
-## 2. Что изменилось относительно хендоффа от 21 октября
+## 2. What changed compared with the handoff of October 21
 
-| Было в хендоффе | Стало | Почему |
+| In the handoff | Now | Why |
 | --- | --- | --- |
-| Главный сценарий: текст → моушн-ролик. Своё видео после запуска | Главный сценарий: своё видео плюс графика. Текстовый режим второй | Владелец изначально хотел аналог своей ручной работы с футажом |
-| Три варианта на одну генерацию | Один вариант | Три варианта втрое дороже и дольше, выбор глазами заменяют правки |
-| Формат и длина выбираются вручную (9:16, 15 с) | Выбирается «куда» (Reels, Stories и т. д.), длину предлагает режиссёр | Одна настройка вместо трёх, результат релевантнее |
-| Генерация без вопросов | План-карточка через 30–90 с, в ней до трёх вопросов с дефолтами | Непонятные места уточняются, но не мешают |
-| Озвучка, музыка, субтитры «следом» | Музыка из библиотеки, голос ElevenLabs, субтитры в первой версии | Голос и субтитры меняют конвейер, закладывать потом дороже |
-| Экран 3.1 Add graphics второстепенный | Add graphics становится центральным паттерном: сервис предлагает, человек принимает | Следует из главного сценария |
-| Экран 3.2 Podcast clips в первой версии или после | После запуска, как режим «длинное аудио» | Исходники до 10 минут, подкасты в это не влезают |
-| Кнопка «Three more versions» | Убрана | Вариант один |
-| Длина ролика 10, 15, 30 с | Результат до длины исходника, не больше 10 минут; текстовый режим до 3 минут | Рилсы автора шли за минуту, 30 с мало |
-| Технологии не выбраны | Выбраны, раздел 7 | Этот документ |
+| Main scenario: text → motion video. Own video after launch | Main scenario: own video plus graphics. Text mode is second | The owner originally wanted an equivalent of their own manual work with footage |
+| Three variants per generation | One variant | Three variants are three times more expensive and take longer; edits replace choosing by eye |
+| Format and length are chosen by hand (9:16, 15 s) | "Where to" is chosen (Reels, Stories, etc.), the director proposes the length | One setting instead of three; the result is more relevant |
+| Generation without questions | A plan card after 30–90 s, with up to three questions that have defaults | Unclear points get clarified without getting in the way |
+| Voiceover, music, captions "next" | Music from a library, ElevenLabs voice, captions in the first version | Voice and captions change the pipeline, adding them later costs more |
+| Screen 3.1 Add graphics is secondary | Add graphics becomes the central pattern: the service proposes, the person agrees | Follows from the main scenario |
+| Screen 3.2 Podcast clips in the first version or later | After launch, as a "long audio" mode | Sources are up to 10 minutes, podcasts do not fit |
+| The "Three more versions" button | Removed | There is one variant |
+| Video length 10, 15, 30 s | The result is up to the length of the source, no more than 10 minutes; text mode up to 3 minutes | The author's reels ran over a minute, 30 s is too short |
+| Technologies are not chosen | Chosen, section 7 | This document |
 
-Экраны хендоффа остаются основой интерфейса. Что нужно перерисовать, перечислено в разделе 12.
+The handoff screens remain the basis of the interface. What needs to be redrawn is listed in section 12.
 
-## 3. Цели, не-цели, анти-цели
+## 3. Goals, non-goals, anti-goals
 
-**Цели первой версии:**
+**Goals of the first version:**
 
-- Загрузил видео или написал текст, через несколько минут получил ролик, который не стыдно опубликовать.
-- Любая правка словами или кликом применяется за секунды и ничего не ломает рядом.
-- Процесс не зависит от вкладки браузера: ушёл, вернулся, продолжил с того же места.
-- Себестоимость ролика с правками известна и укладывается в тариф.
-- Код и структура такие, что через полгода их не нужно переписывать.
+- A person uploads a video or writes a text and a few minutes later gets a video that is not embarrassing to publish.
+- Any edit in words or by a click applies within seconds and breaks nothing nearby.
+- The process does not depend on the browser tab: the person leaves, comes back and continues from the same place.
+- The cost of a video, edits included, is known and fits within the plan.
+- The code and the structure are such that they do not need to be rewritten in six months.
 
-**Не входит в первую версию:** генерация музыки и свой аудиофайл (сразу после запуска, это два источника для готового слота), подкасты на 40 минут, критик-модель, редактор на телефоне, команды и роли, несколько брендов, свои шрифты, комментарии по ссылке, автопостинг, мобильное приложение, API, другие языки интерфейса, генерация съёмки нейросетями.
+**Not in the first version:** music generation and a custom audio file (right after launch, these are two sources for a ready-made slot), 40-minute podcasts, a critic model, an editor on the phone, teams and roles, several brands, custom fonts, comments on the link, auto-posting, a mobile app, an API, other interface languages, generation of footage with neural networks.
 
-**Анти-цели,** то, что сделает продукт провалом даже если всё работает:
+**Anti-goals,** what would make the product a failure even if everything works:
 
-- Интерфейс превратился в редактор с панелями и настройками.
-- Правка ждёт модель полминуты и стоит десятки центов.
-- Ролики узнаваемо одинаковые, «из шаблона».
-- Упал интернет, и генерация пропала.
-- Клиент открыл ссылку на согласование с телефона, и она не работает.
-- Код с длинными комментариями от ИИ, абстракциями ради абстракций и дублированием.
+- The interface has turned into an editor with panels and settings.
+- An edit waits half a minute for the model and costs tens of cents.
+- Videos are recognizably alike, "from a template".
+- The internet went down and the generation was lost.
+- A client opened the review link on a phone and it does not work.
+- Code with long comments from the AI, abstractions for the sake of abstractions, and duplication.
 
-## 4. Пользовательский путь
+## 4. User flow
 
-Номера экранов по `docs/design/screens.md`.
+Screen numbers follow `docs/design/screens.md`.
 
-### 4.1 Вход
+### 4.1 Sign-in
 
-Landing (1.1) → Sign in (1.2): Google или ссылка на почту → Check your email (1.3) → Home (2.1). Вход перед Home, как на макетах. Первый вход создаёт аккаунт. Бренд (1.4) не обязателен, предлагается после первого ролика.
+Landing (1.1) → Sign in (1.2): Google or a link by email → Check your email (1.3) → Home (2.1). Sign-in comes before Home, as in the mockups. The first sign-in creates an account. Brand (1.4) is not required and is offered after the first video.
 
 ### 4.2 Home
 
-Главное поле принимает три вещи: перетащить или выбрать видео, написать текст, вставить ссылку. Загрузка видео это основной путь и должна быть такой же заметной, как текстовое поле. Рядом чип «куда»:
+The main field accepts three things: drag or choose a video, write text, paste a link. Uploading a video is the main path and has to be as noticeable as the text field. Next to it is a "where to" chip:
 
-| Куда | Формат | Потолок длины | Что ещё задаёт |
+| Where to | Format | Length ceiling | What else it sets |
 | --- | --- | --- | --- |
-| Reels / TikTok | 9:16 | 3 мин | Безопасные зоны под интерфейс, субтитры включены |
-| Stories | 9:16 | 60 с | То же |
-| Shorts | 9:16 | 3 мин | То же |
-| LinkedIn / X | 16:9 или 1:1 | 10 мин | Субтитры включены, зоны свободнее |
-| YouTube | 16:9 | 10 мин | Субтитры по решению режиссёра |
-| Just a file | любой | 10 мин | Без ограничений платформы |
+| Reels / TikTok | 9:16 | 3 min | Safe zones for the interface, captions on |
+| Stories | 9:16 | 60 s | Same |
+| Shorts | 9:16 | 3 min | Same |
+| LinkedIn / X | 16:9 or 1:1 | 10 min | Captions on, zones less strict |
+| YouTube | 16:9 | 10 min | Captions as decided by the director |
+| Just a file | any | 10 min | No platform restrictions |
 
-По умолчанию Reels / TikTok, последний выбор запоминается. Потолок это ориентир для режиссёра, жёсткий предел задаёт тариф (раздел 4.8).
+The default is Reels / TikTok, and the last choice is remembered. The ceiling is a guideline for the director, and the hard limit is set by the plan (section 4.8).
 
-Примеры для старта остаются, но меняются под новый сценарий: интервью → рилс, экранная запись → how it works, отзыв клиента → customer story, лонч из текста, распродажа из текста, цифры квартала из текста. Пример подставляет текст-заготовку или показывает, какое видео загрузить.
+The examples to start from stay, but they change for the new scenario: interview → reel, screen recording → how it works, customer testimonial → customer story, launch from text, sale from text, the quarter's numbers from text. An example fills in a starter text or shows which video to upload.
 
-Под кнопкой строка: «Usually a minute or two. If anything's unclear, we'll ask you here.» В текстовом режиме «About a minute».
+Under the button there is a line: "Usually a minute or two. If anything's unclear, we'll ask you here." In text mode: "About a minute".
 
-Один ролик делается из одного исходника. Ссылка в поле это веб-страница, с которой берутся текст и картинки, а не видео для скачивания.
+One video is made from one source. A link in the field is a web page from which text and images are taken, not a video to download.
 
 ### 4.3 Generating
 
-Экран 2.2, переделанный под один вариант. Шаги: Watching the video → Writing the plan → Building → Ready. Для текстового режима первый шаг пропускается.
+Screen 2.2, reworked for a single variant. Steps: Watching the video → Writing the plan → Building → Ready. In text mode the first step is skipped.
 
-**План-карточка** появляется всегда и всегда раньше сборки: через одну-две минуты после кнопки в видео-режиме, через 30–60 секунд в текстовом. Точка одна и та же, к ней привыкают. В карточке:
+**The plan card** always appears, and always before the build: one to two minutes after the button in video mode, 30–60 seconds in text mode. It is always the same point in the flow, and people get used to it. The card holds:
 
-- название ролика и одна строка о чём он;
-- кто в кадре (имена из расшифровки, иначе заглушки);
-- куда и какой длины, например «Reels · 0:45 из 5:12»;
-- биты списком, одна строка на бит с таймкодом;
-- характер и музыка: регистр словами, настроение трека;
-- допущения режиссёра, если есть;
-- вопросы, не больше трёх.
+- the title of the video and one line on what it is about;
+- who is in the frame (names from the transcript, otherwise placeholders);
+- where to and how long, for example "Reels · 0:45 of 5:12";
+- beats as a list, one line per beat with a timecode;
+- character and music: the register in words, the mood of the track;
+- the director's assumptions, if any;
+- questions, no more than three.
 
-**Вопрос** это только то, что меняет результат и что режиссёр не может угадать: чьё имя показывать, какой продукт главный, какой из нескольких сильных кусков резать, есть ли бренд. У каждого вопроса два-четыре чипа с ответами, дефолт уже выбран, есть «Skip». Одна кнопка Continue принимает дефолты. Таймеров и автопродолжения нет.
+**A question** is only something that changes the result and that the director cannot guess: whose name to show, which product is the main one, which of several strong clips to cut, whether there is a brand. Each question has two to four answer chips, the default is already selected, and there is "Skip". One Continue button accepts the defaults. There are no timers and no auto-continue.
 
-**Вопросов нет:** карточка подписана «Building now», сборка уже идёт.
+**No questions:** the card is labeled "Building now" and the build is already running.
 
-Экран 3.1 Add graphics отдельно не строится: его роль «сервис предлагает, человек принимает» играют биты плана и подсказки What next.
+Screen 3.1 Add graphics is not built separately: its role, "the service proposes, the person agrees", is played by the plan's beats and the What next suggestions.
 
-**Правка плана:** строки битов редактируются на месте, плюс поле «Change something» со свободным текстом. Любое изменение плана отправляет его режиссёру на пересмотр и перезапускает сборку. До первой готовой сборки это бесплатно и не считается правкой.
+**Plan edit:** beat lines are edited in place, plus a "Change something" field with free text. Any change to the plan sends it back to the director for revision and restarts the build. Before the first finished build this is free and does not count as an edit.
 
-**Если человек ушёл:** задача живёт на сервере. В My videos карточка ролика показывает текущий шаг или «Needs 2 answers». Письмо, если ролик ждёт ответов дольше 10 минут, и письмо «ролик готов», если человек ушёл до готовности.
+**If the person left:** the job lives on the server. In My videos the video card shows the current step or "Needs 2 answers". An email if the video waits for answers longer than 10 minutes, and a "video is ready" email if the person left before it was ready.
 
-**Если не получилось:** экран 2.3, попытка не списывается, можно повторить или изменить описание.
+**If it did not work out:** screen 2.3, the attempt is not charged, the person can retry or change the description.
 
 ### 4.4 Video and edits
 
-Экран 2.4. Один ролик вместо колонки Versions, место колонки занимает ничего или список сцен (решает строитель, ориентируясь на макет без Versions).
+Screen 2.4. One video instead of the Versions column. The column's place is taken by nothing or by a list of scenes (the builder decides, going by the mockup without Versions).
 
-- Клик по элементу в кадре выделяет его, панель правки показывает имя элемента и быстрые правки, подходящие этому типу: для текста Bigger, Rewrite, Change font, Remove; для футажа Zoom in, Trim, Replace; для субтитров Style, Position. Replace для куска футажа это другой кусок того же исходника.
-- Без выделения поле правит весь ролик: «быстрее», «серьёзнее», «убери музыку».
-- Undo есть всегда, на каждую правку.
-- Переключатель формата перекладывает кадр, это бесплатно и локально.
-- What next подбирается по ролику: Shorter (0:30), Longer (1:30), Make a 16:9 for LinkedIn, Add captions (если выключены), Change music.
-- Ссылка Editor ведёт в ручной монтаж (2.5): порядок, длина и текст сцен, обрезка кусков футажа, выбор куска для зума. Слоёв и ключевых кадров нет.
+- A click on an element in the frame selects it, and the edit panel shows the element's name and the quick edits that fit its type: for text Bigger, Rewrite, Change font, Remove; for footage Zoom in, Trim, Replace; for captions Style, Position. Replace for a footage clip means another clip from the same source.
+- With nothing selected, the field edits the whole video: "faster", "more serious", "remove the music".
+- Undo is always there, for every edit.
+- The format switch re-lays out the frame. This is free and local.
+- What next is picked to fit the video: Shorter (0:30), Longer (1:30), Make a 16:9 for LinkedIn, Add captions (if they are off), Change music.
+- The Editor link leads to the manual editor (2.5): the order, length and text of scenes, trimming of footage clips, choosing the clip for a zoom. There are no layers or keyframes.
 
-Что считается правкой для лимита: обращение к модели. Быстрые правки, формат, Undo и редактор не считаются. Предел 30 правок на ролик, смена длины считается одной правкой.
+What counts as an edit for the limit: a call to the model. Quick edits, format, Undo and the editor do not count. The cap is 30 edits per video, and a length change counts as one edit.
 
-### 4.5 Download и Send for review
+### 4.5 Download and Send for review
 
-Download (4.1): форматы 9:16, 1:1, 16:9 чипами, качество 1080p на Pro и 720p на Free, водяной знак на Free. Каждый формат это своя раскладка и свой рендер на Lambda, обычно 5–20 секунд. Строки файлов с прогрессом, Save скачивает MP4. Письмо «файл готов» только если рендер идёт дольше двух минут и человек ушёл.
+Download (4.1): formats 9:16, 1:1, 16:9 as chips, quality 1080p on Pro and 720p on Free, a watermark on Free. Each format is its own layout and its own render on Lambda, usually 5–20 seconds. File rows with progress, Save downloads the MP4. A "file is ready" email only if the render takes longer than two minutes and the person left.
 
-Send for review (4.2) и Review link (4.3): публичная страница по неугадываемой ссылке, без входа, играет MP4, «Made with Saymo» и кнопка Make your own. Ссылку можно выключить. Если готового рендера нет, включение ссылки запускает его.
+Send for review (4.2) and Review link (4.3): a public page at an unguessable link, no sign-in, plays the MP4, "Made with Saymo" and a Make your own button. The link can be turned off. If there is no finished render, turning the link on starts it.
 
-### 4.6 Библиотека и аккаунт
+### 4.6 Library and account
 
-My videos (5.1, 5.2): карточки роликов с постером, названием, форматом, длиной, датой и состоянием (готов, собирается, ждёт ответов, ошибка). Фильтр по формату. Переименовать, дублировать, удалить с подтверждением. Account (5.3): профиль, тариф и счётчик, бренд, удаление аккаунта с подтверждением.
+My videos (5.1, 5.2): video cards with a poster, title, format, length, date and state (ready, building, waiting for answers, error). A filter by format. Rename, duplicate, delete with confirmation. Account (5.3): profile, plan and counter, brand, account deletion with confirmation.
 
-### 4.7 Бренд
+### 4.7 Brand
 
-Экран 1.4 без изменений: адрес сайта и Fetch brand (логотип, цвета, шрифт на проверку, ничего не сохраняется без подтверждения), либо вручную. Один бренд на аккаунт. Без бренда ролик в нейтральном стиле, после первого ролика предложение настроить.
+Screen 1.4 is unchanged: a website address and Fetch brand (logo, colors and font are shown to be checked, nothing is saved without confirmation), or manual entry. One brand per account. Without a brand the video is made in a neutral style, and after the first video the service offers to set one up.
 
-### 4.8 Тарифы и лимиты
+### 4.8 Plans and limits
 
 | | Free | Pro |
 | --- | --- | --- |
-| Цена | $0 | $29 в месяц, заглушка до замера себестоимости |
-| Роликов в месяц | 2 | 20 |
-| Исходник | до 5 минут и 1 ГБ | до 10 минут и 2 ГБ |
-| Результат | до длины исходника; текстовый режим до 3 минут | то же |
-| Правок на ролик | 30 | 30 |
-| Водяной знак | есть | нет |
-| Качество | 720p | 1080p |
-| Хранение | 30 дней, исходники тоже | пока есть подписка |
+| Price | $0 | $29 a month, a placeholder until the cost is measured |
+| Videos per month | 2 | 20 |
+| Source | up to 5 minutes and 1 GB | up to 10 minutes and 2 GB |
+| Result | up to the length of the source; text mode up to 3 minutes | same |
+| Edits per video | 30 | 30 |
+| Watermark | yes | no |
+| Quality | 720p | 1080p |
+| Storage | 30 days, sources too | as long as there is a subscription |
 
-Ролик это одно нажатие кнопки: списывается сразу при нажатии и возвращается, если генерация упала. Free обновляется первого числа, Pro в день продления. Лимит кончился: окно 6.1, текст не теряется. Plans (6.2), оплата у мерчанта оф рекорд, Welcome to Pro (6.3). Отмена в один клик, доступ до конца оплаченного месяца. Неудачный платёж: письмо, три дня, потом Free.
+A video is one press of the button: it is charged immediately on the press and refunded if generation fails. Free refreshes on the first of the month, Pro on the renewal day. Limit reached: window 6.1, the text is not lost. Plans (6.2), payment with the merchant of record, Welcome to Pro (6.3). Cancellation in one click, access until the end of the paid month. Failed payment: an email, three days, then Free.
 
-### 4.9 Телефон
+### 4.9 Phone
 
-Десктоп для работы, телефон для просмотра. На телефоне обязаны работать: Landing, Sign in, Review link, My videos, Account, Plans. Home работает (загрузка с телефона это реальный сценарий). Video and edits на телефоне показывает кадр и поле правки столбиком, без редактора. Editor только на десктопе. Раскладки резиновые с первого дня, никаких допущений «только десктоп» в дизайн-системе.
+Desktop for work, phone for viewing. These must work on a phone: Landing, Sign in, Review link, My videos, Account, Plans. Home works too (uploading from a phone is a real scenario). Video and edits on a phone shows the frame and the edit field stacked in a column, without the editor. Editor is desktop only. Layouts are fluid from day one, with no "desktop only" assumptions in the design system.
 
-## 5. Ролик как данные
+## 5. The video as data
 
-Ролик это JSON-документ по нашей схеме. Это главное архитектурное решение: модель не пишет код, модель выдаёт данные, движок их исполняет.
+A video is a JSON document following our schema. This is the main architectural decision: the model does not write code, it returns data, and the engine executes it.
 
-**Что в документе:** назначение и формат, частота кадров и длительность, бренд, список ассетов (исходное видео, прокси, аудио, картинки, лого), дорожки: футаж (куски с обрезкой), сцены с элементами, камера, субтитры, музыка, голос. У каждого элемента стабильный id, тип из словаря, параметры и тайминг.
+**What is in the document:** destination and format, frame rate and duration, brand, a list of assets (source video, proxy, audio, images, logo), tracks: footage (clips with trims), scenes with elements, camera, captions, music, voice. Every element has a stable id, a type from the vocabulary, parameters and timing.
 
-**Правила схемы:**
+**Schema rules:**
 
-- Zod-схема единственный источник правды, из неё типы TypeScript и JSON-схема для модели.
-- Любой вывод модели проходит валидацию, невалидное не применяется.
-- Единственный способ изменить документ это список операций: set, remove, insert, move, trim, retime, restyle. Операции применяются чисто, без побочных эффектов.
-- Каждая правка это новая версия документа: снимок целиком плюс список операций, который его породил. Undo это переход к предыдущей версии.
-- Id битов и элементов стабильны между пересборками: их выдаёт план, а не сборка. Режиссёр, пересматривая план, сохраняет id битов, которые оставляет.
-- Стилевые решения (музыка, стиль субтитров, регистр, шрифты, цвета) лежат в отдельной секции документа и переживают любую пересборку.
-- Любой элемент можно выделить кликом: движок проставляет id элемента в DOM.
-- Раскладка под 9:16, 1:1, 16:9 считается из документа детерминированно, формат не хранит три копии.
+- The Zod schema is the single source of truth: the TypeScript types and the JSON schema for the model are derived from it.
+- Any model output is validated, and invalid output is not applied.
+- The only way to change the document is a list of operations: set, remove, insert, move, trim, retime, restyle. Operations are applied purely, with no side effects.
+- Every edit is a new version of the document: a full snapshot plus the list of operations that produced it. Undo is a move to the previous version.
+- Beat and element ids are stable across rebuilds: the plan issues them, not the build. When the director revises the plan, it preserves the ids of the beats it keeps.
+- Style decisions (music, caption style, register, fonts, colors) sit in a separate section of the document and survive any rebuild.
+- Any element can be selected with a click: the engine puts the element id into the DOM.
+- The layout for 9:16, 1:1 and 16:9 is computed from the document deterministically. The format does not store three copies.
 
-**Регистр** (из спеки motion от 7 октября): три оси, энергия, тон, плотность, и пресеты driving-launch, serious-clinical, rich-premium, playful-sale. Регистр задаёт тайминги, кривые, стаггеры, веса шрифтов, число элементов в сцене. Словарь читает регистр, QA его проверяет.
+**Register** (from the motion spec of October 7): three axes (energy, tone, density) and the presets driving-launch, serious-clinical, rich-premium, playful-sale. The register sets timings, curves, staggers, font weights and the number of elements in a scene. The vocabulary reads the register and QA checks it.
 
-Точный состав полей оставлен строителю; ограничения выше обязательны.
+The exact set of fields is left to the builder; the constraints above are mandatory.
 
-## 6. Словарь примитивов
+## 6. Vocabulary of primitives
 
-Словарь это React-компоненты на Remotion с параметрами из документа. Сцена это композиция примитивов, а не макет с полями. Модель выбирает слова из словаря, движок собирает.
+The vocabulary consists of React components on Remotion with parameters from the document. A scene is a composition of primitives, not a template with fields. The model picks words from the vocabulary, and the engine assembles them.
 
-**Минимум первой версии:**
+**Minimum for the first version:**
 
-- Футаж: кусок видео с обрезкой, фоновый футаж, картинка, лого, фигура, Lottie.
-- Камера: push, punch-in, pan, парallax по картинке или скриншоту.
-- Текст: заголовок, подзаголовок, крупная цифра со счётчиком, цитата, плашка имени (lower third), чип, список шагов, стикер.
-- Субтитры: стили karaoke, box, pop; позиция; подсветка текущего слова.
-- Появления и уходы: fade, slide, mask, по словам, по буквам, typewriter.
-- Акценты: marker, underline, ring, pulse, shake, flash.
-- Переходы: cut, fade, slide, wipe, push.
-- Фоны: цвет, градиент, бренд, размытый футаж.
-- Звук: музыка с приглушением под голос, голос, нормализация громкости.
-- Раскладка: слоты вокруг человека с запретными зонами, сетки, безопасные зоны по назначению.
+- Footage: a trimmed video clip, background footage, an image, a logo, a shape, Lottie.
+- Camera: push, punch-in, pan, parallax over an image or a screenshot.
+- Text: headline, subheading, a big number with a counter, quote, name plate (lower third), chip, step list, sticker.
+- Captions: karaoke, box and pop styles; position; highlighting of the current word.
+- Entrances and exits: fade, slide, mask, by word, by letter, typewriter.
+- Accents: marker, underline, ring, pulse, shake, flash.
+- Transitions: cut, fade, slide, wipe, push.
+- Backgrounds: color, gradient, brand, blurred footage.
+- Audio: music ducked under the voice, voice, loudness normalization.
+- Layout: slots around the person with keep-out zones, grids, safe zones per destination.
 
-**Откуда брать:** GSAP со всеми плагинами (бесплатны с 2025, таймлайн перематывается на кадр внутри Remotion), пакеты Remotion (transitions, captions, shapes, paths, lottie, layout-utils, google-fonts), Remocn (MIT), приёмы из `video-editing` автора. Чужой код переносится в словарь под нашу схему, а не подключается как есть.
+**Where to get them:** GSAP with all plugins (free since 2025, its timeline can be seeked to a frame inside Remotion), Remotion packages (transitions, captions, shapes, paths, lottie, layout-utils, google-fonts), Remocn (MIT), techniques from the author's `video-editing` project. Third-party code is ported into the vocabulary under our schema, not plugged in as is.
 
-**Внешние ассеты словаря** в первой версии только с разрешительными лицензиями и с манифестом лицензий в репозитории: иконки Lucide, открытые иллюстрации, Lottie под Lottie Simple License. Стоковый футаж для текстового режима в первую версию не входит: фоны строятся из бренда, градиентов, фигур и картинок со ссылки. Если стоковый футаж понадобится, это отдельный лицензированный источник, вопрос владельца.
+**External assets of the vocabulary** come in the first version only with permissive licenses and with a license manifest in the repository: Lucide icons, open illustrations, Lottie under the Lottie Simple License. Stock footage for text mode is not in the first version: backgrounds are built from the brand, gradients, shapes and images from the link. If stock footage is needed, it is a separate licensed source, a question for the owner.
 
-**Каталог:** внутренняя страница, где каждый примитив крутится во всех регистрах и форматах. Это и навигация по словарю, и база для визуальных тестов, и позже публичная витрина. Новый примитив без карточки в каталоге не считается сделанным.
+**Catalog:** an internal page where every primitive plays in every register and format. It is a way to navigate the vocabulary, the base for visual tests and, later, a public showcase. A new primitive without a card in the catalog is not considered done.
 
-**Водяной знак** для Free это тоже примитив, дизайн за владельцем.
+**The watermark** for Free is also a primitive, and its design is up to the owner.
 
-## 7. Конвейер
+## 7. Pipeline
 
-Каждый ролик это задача на сервере с состояниями: queued → ingesting → analyzing (расшифровка и понимание кадра параллельно) → planning → awaiting_answers → building → checking → ready, либо failed на любом шаге. Каждый шаг идемпотентен, пишет артефакты в S3 и базу и перезапускается с места падения. Интерфейс подписан на состояние задачи и показывает текущий шаг; после перезагрузки страницы ничего не теряется.
+Every video is a job on the server with states: queued → ingesting → analyzing (transcription and frame understanding in parallel) → planning → awaiting_answers → building → checking → ready, or failed at any step. Every step is idempotent, writes artifacts to S3 and the database, and restarts from the point of failure. The interface subscribes to the job state and shows the current step. After a page reload nothing is lost.
 
-Шаги для исходника на 5 минут и ориентиры времени:
+Steps for a 5-minute source and timing guidelines:
 
-1. **Загрузка.** Прямо в S3 по частям, с докачкой, лимиты по тарифу проверяются до и после. ffprobe проверяет, что файл это видео и что длина в лимите.
-2. **Ingest.** Сначала быстрое, секунды: аудиодорожка, границы планов, ключевые кадры. Потом в фоне, 1–2 минуты и не на критическом пути плана: нормализованный исходник и прокси 720p для превью в браузере.
-3. **Расшифровка.** Слова с таймкодами, спикеры, язык. 20–60 секунд, параллельно с шагом 4. Провайдер выбирается в спайке: ElevenLabs Scribe (один поставщик с озвучкой) против Deepgram.
-4. **Понимание кадра.** Лица и люди по кадрам с прямоугольниками и таймкодами (ONNX-модель в Node против AWS Rekognition, выбор в спайке). Ключевые кадры планов в Claude: что в кадре, где человек, экран или лицо, текст на экране. 20–40 секунд, параллельно с шагом 3. Результат: карта контента.
-5. **Режиссёр.** Ждёт шаги 3 и 4. Claude со структурированным выводом: расшифровка и карта контента на входе, план на выходе: название, о чём, кто, куда и длина, биты с интервалами футажа, зумами, графикой и стилем субтитров, музыка, регистр, допущения, вопросы с дефолтами. 30–60 секунд. Текстовый режим: вход это текст и содержимое ссылки, режиссёр пишет сценарий и сцены сам.
-6. **Вопросы.** Если план содержит вопросы, задача ждёт в awaiting_answers. Ответы вливаются в план, режиссёр не вызывается заново, если ответы совпали с дефолтами.
-7. **Сборка.** Детерминированно: план → документ ролика. Голос через ElevenLabs, если режиссёр решил, что он нужен (в текстовом режиме по умолчанию только музыка, кроме нарративных жанров); длительности сцен подстраиваются под речь; субтитры из таймингов слов. Секунды плюс время озвучки.
-8. **QA.** Проверки кодом: текст влезает, иначе ужать, перенести, в крайнем случае попросить модель сократить; сумма сцен равна длине и минимальные холды соблюдены; слов на экране не больше лимита регистра и скорость чтения в норме; контраст текста на реальном фоне; безопасные зоны по назначению; элементы не пересекают запретные зоны лиц; голос не длиннее сцены; схема валидна, ассеты и шрифты на месте. Миллисекунды.
-9. **Готово.** Постер одним кадром на Lambda. Превью в браузере играет документ через Remotion Player поверх прокси, рендер не нужен.
-10. **Рендер по требованию.** Lambda, при скачивании и для ссылки на согласование. Один формат это одна раскладка и один рендер.
+1. **Upload.** Straight to S3 in parts, with resume. The plan's limits are checked before and after. ffprobe checks that the file is a video and that its length is within the limit.
+2. **Ingest.** The fast part first, seconds: audio track, shot boundaries, keyframes. Then in the background, 1–2 minutes and off the critical path of the plan: a normalized source and a 720p proxy for the preview in the browser.
+3. **Transcription.** Words with timecodes, speakers, language. 20–60 seconds, in parallel with step 4. The provider is chosen in the spike: ElevenLabs Scribe (the same vendor as the voiceover) versus Deepgram.
+4. **Frame understanding.** Faces and people per frame, with bounding boxes and timecodes (an ONNX model in Node versus AWS Rekognition, chosen in the spike). Shot keyframes through Claude: what is in the frame, where the person is, a screen or a face, text on the screen. 20–40 seconds, in parallel with step 3. Result: the content map.
+5. **Director.** Waits for steps 3 and 4. Claude with structured output: the transcript and the content map go in, the plan comes out: title, what it is about, who, where to and the length, beats with footage intervals, zooms, graphics and caption style, music, register, assumptions, questions with defaults. 30–60 seconds. Text mode: the input is the text and the content of the link, and the director writes the script and the scenes itself.
+6. **Questions.** If the plan contains questions, the job waits in awaiting_answers. Answers are merged into the plan, and the director is not called again if the answers match the defaults.
+7. **Build.** Deterministic: plan → video document. Voice through ElevenLabs if the director decided it is needed (in text mode the default is music only, except for narrative genres). Scene durations adjust to the speech, captions come from word timings. Seconds plus voiceover time.
+8. **QA.** Code checks. The text fits, otherwise shrink it, wrap it, and as a last resort ask the model to shorten it. The scenes add up to the length and the minimum holds are respected. There are no more words on the screen than the register's limit, and the reading speed is within the norm. Text contrast on the actual background. Safe zones per destination. Elements do not cross the keep-out zones of faces. The voice is not longer than the scene. The schema is valid, and the assets and fonts are in place. Milliseconds.
+9. **Ready.** A poster as a single frame on Lambda. The browser preview plays the document through Remotion Player over the proxy, no render needed.
+10. **On-demand render.** Lambda, on download and for the review link. One format is one layout and one render.
 
-Итого для 5-минутного исходника: план через одну-две минуты после загрузки, ролик готов через 2–4 минуты. Текстовый режим: план через 30–60 секунд, ролик через одну-две минуты.
+In total for a 5-minute source: the plan comes one to two minutes after the upload, and the video is ready in 2–4 minutes. Text mode: the plan in 30–60 seconds, the video in one to two minutes.
 
-**Критик-модель** (оценка кадров по рубрике) в первой версии не включается. После запуска собираем 30 тестовых запросов и галерею, оцениваем глазами, и включаем критика точечно на повторяющиеся вкусовые проблемы, которые не чинит словарь.
+**The critic model** (scoring frames against a rubric) is not switched on in the first version. After launch we collect 30 test requests and a gallery, evaluate them by eye, and switch the critic on selectively for recurring taste problems that the vocabulary does not fix.
 
-**Учёт себестоимости:** каждый вызов модели, озвучки, расшифровки и каждый рендер пишется как событие с токенами, секундами и ценой, привязанное к ролику. Себестоимость ролика с правками видна в админке с первого дня.
+**Cost tracking:** every call to the model, to the voiceover and to transcription, and every render, is recorded as an event with tokens, seconds and price, attached to the video. The cost of a video with its edits is visible in the admin panel from day one.
 
-## 8. Правки
+## 8. Edits
 
-- Клик по элементу → id → панель правки знает тип и предлагает быстрые правки.
-- Быстрая правка и смена формата: локальные операции, без модели, мгновенно.
-- Правка словами: Claude получает документ, выделенный элемент и просьбу, возвращает список операций. Валидация, применение, новая версия, QA, превью обновляется без рендера. Цель: до 5 секунд, дешёвая модель там, где хватает.
-- Правка всего ролика без выделения: то же, без элемента.
-- Смена длины: режиссёр перерезает план, сборка заново, одна правка по лимиту.
-- Ручной редактор: те же операции, применённые руками.
-- Undo: предыдущая версия.
-- **Правки переживают пересборку.** Когда план меняется (Shorter, Longer, правка плана), сборка идёт заново, после неё повторно применяются операции всех прошлых правок к элементам, чьи id сохранились. Операции без цели отбрасываются, план-карточка сообщает «2 edits didn't survive the re-cut». Стилевые решения переживают пересборку всегда, потому что лежат в документе, а не в операциях.
+- A click on an element → id → the edit panel knows the type and offers quick edits.
+- A quick edit and a format change: local operations, no model, instant.
+- An edit in words: Claude receives the document, the selected element and the request, and returns a list of operations. Validation, application, a new version, QA, and the preview updates without a render. Target: up to 5 seconds, a cheap model wherever it is enough.
+- An edit of the whole video with nothing selected: the same, without an element.
+- A length change: the director re-cuts the plan and the build runs again. It counts as one edit toward the limit.
+- The manual editor: the same operations, applied by hand.
+- Undo: the previous version.
+- **Edits survive a rebuild.** When the plan changes (Shorter, Longer, a plan edit), the build runs again, and after it the operations of all past edits are applied again to the elements whose ids were preserved. Operations without a target are dropped, and the plan card reports "2 edits didn't survive the re-cut". Style decisions always survive a rebuild, because they sit in the document and not in the operations.
 
-## 9. Архитектура приложения
+## 9. Application architecture
 
-**Одно приложение, два входа.** Next.js для интерфейса и API, воркер как второй вход того же кода для конвейера. Общий код ролика (схема, словарь, операции, QA) лежит в одной папке и используется и превью в браузере, и сборкой в воркере, и рендером на Lambda. Монорепозитория нет, пока он не понадобится.
+**One app, two entry points.** Next.js for the interface and the API, and the worker as a second entry point into the same code, for the pipeline. The shared video code (schema, vocabulary, operations, QA) lives in one folder and is used by the browser preview, by the build in the worker and by the render on Lambda. There is no monorepo until one is needed.
 
-**Структура:**
+**Structure:**
 
 ```
 src/
-  app/            маршруты Next.js, тонкие: собирают экраны из срезов
-  features/       вертикальные срезы, у каждого свои компоненты, серверные действия, запросы, тесты
+  app/            Next.js routes, thin: they assemble screens from slices
+  features/       vertical slices, each with its own components, server actions, queries and tests
     auth/  brand/  library/  generation/  editing/  rendering/  review/  billing/  account/  admin/  landing/  emails/
-  video/          схема, операции, словарь, раскладка, QA, регистры, каталог
-  ui/             дизайн-система: токены, примитивы, иконки
-  worker/         вход воркера, шаги конвейера, очередь
-  lib/            тонкая инфраструктура: db, env, storage, ai, jobs, i18n
-messages/         строки интерфейса, пока только en
+  video/          schema, operations, vocabulary, layout, QA, registers, catalog
+  ui/             design system: tokens, primitives, icons
+  worker/         worker entry, pipeline steps, queue
+  lib/            thin infrastructure: db, env, storage, ai, jobs, i18n
+messages/         interface strings, English only for now
 docs/
 ```
 
-Правила: срез не импортирует внутренности другого среза, только его публичный вход. Экран собирается из срезов в `app/`. Всё, что про ролик, живёт в `video/` и не знает про базу и пользователей.
+Rules: a slice does not import the internals of another slice, only its public entry. A screen is assembled from slices in `app/`. Everything about the video lives in `video/` and knows nothing about the database or users.
 
-**Данные.** Postgres, Drizzle. Основные таблицы: users и сессии (Better Auth), brands, videos, video_versions (снимки документа), jobs и job_steps, assets (загрузки, прокси, постеры, рендеры), usage_events, subscriptions, review_links. Миграции в репозитории.
+**Data.** Postgres, Drizzle. Main tables: users and sessions (Better Auth), brands, videos, video_versions (document snapshots), jobs and job_steps, assets (uploads, proxies, posters, renders), usage_events, subscriptions, review_links. Migrations are in the repository.
 
-**Очередь.** pg-boss поверх того же Postgres: нет Redis, нет второй базы. Воркер берёт задачи, шаги пишут прогресс в job_steps. Интерфейс получает состояние задачи через SSE с запасным опросом.
+**Queue.** pg-boss on top of the same Postgres: no Redis, no second database. The worker takes jobs, and the steps write progress to job_steps. The interface gets the job state over SSE with a polling fallback.
 
-**Хранилище.** S3: исходники, производные, рендеры. CloudFront перед ним. Приватное по подписанным ссылкам, страница согласования получает подписанную ссылку с коротким сроком при каждом открытии.
+**Storage.** S3: sources, derived files, renders. CloudFront in front of it. Private, served by signed links, and the review page gets a short-lived signed link each time it is opened.
 
-**Рендер.** Remotion Lambda в нашем AWS: функция и бандл словаря деплоятся из CI при каждом изменении словаря. Локальный рендер тем же кодом для разработки и как запасной путь.
+**Render.** Remotion Lambda in our AWS: the function and the vocabulary bundle are deployed from CI on every change to the vocabulary. Local rendering with the same code, for development and as a fallback.
 
-**Вход.** Better Auth: Google и ссылка на почту, без паролей. Бесплатные ролики привязаны к подтверждённой почте.
+**Sign-in.** Better Auth: Google and an email link, no passwords. Free videos are tied to a verified email.
 
-**Оплата.** Мерчант оф рекорд: Paddle или Lemon Squeezy, выбор по тому, кто примет регистрацию владельца. Подписки и события приходят вебхуками в subscriptions. Лимиты проверяются на сервере при каждом списании.
+**Payment.** Merchant of record: Paddle or Lemon Squeezy, the choice depends on which one accepts the owner's registration. Subscriptions and events arrive by webhooks into subscriptions. Limits are checked on the server on every charge.
 
-**Письма.** Resend и React Email: ссылка для входа, ролик ждёт ответов, ролик готов, файл готов (если долго), добро пожаловать в Pro. Чеки и напоминания о неудачном платеже шлёт мерчант оф рекорд.
+**Emails.** Resend and React Email: the sign-in link, the video waits for answers, the video is ready, the file is ready (if it takes long), welcome to Pro. Receipts and reminders about a failed payment are sent by the merchant of record.
 
-**Аналитика и ошибки.** PostHog: воронка от регистрации до оплаты, второй ролик, правок до скачивания. Sentry в вебе и воркере.
+**Analytics and errors.** PostHog: the funnel from sign-up to payment, the second video, edits before download. Sentry in the web app and the worker.
 
-**Админка.** Маршрут под ролью admin: пользователи, ролики, задачи с шагами и себестоимостью, выдать ролики вручную, заблокировать аккаунт.
+**Admin panel.** A route under the admin role: users, videos, jobs with steps and cost, granting videos manually, blocking an account.
 
-**Локализация.** next-intl с первого дня, все строки интерфейса в `messages/en.json`, в коде только ключи. Второй язык добавляется файлом. Язык ролика отдельная ось: режиссёр пишет на языке запроса, список шрифтов бренда содержит кириллицу.
+**Localization.** next-intl from day one, all interface strings in `messages/en.json`, only keys in the code. A second language is added with a file. The language of the video is a separate axis: the director writes in the language of the request, and the list of brand fonts includes Cyrillic.
 
-**Дизайн-система.** Токены из `docs/design/tokens.css` становятся темой Tailwind v4. Компоненты в `src/ui/` используют только токены. За пределами `src/ui/` нет сырых цветов, размеров и теней. Доступные примитивы (диалоги, селекты, переключатели) на Radix. Смена дизайна это файл темы и папка `ui/`.
+**Design system.** The tokens from `docs/design/tokens.css` become the Tailwind v4 theme. Components in `src/ui/` use only tokens. Outside `src/ui/` there are no raw colors, sizes or shadows. Accessible primitives (dialogs, selects, switches) are on Radix. A design change is a theme file and the `ui/` folder.
 
-**Безопасность.** Загрузки проверяются ffprobe и лимитами до обработки, обрабатываются только в воркере через ffmpeg с таймаутами. SVG логотипов санитизируются. Вывод модели валидируется схемой. Код от модели нигде не исполняется. Ссылки на согласование неугадываемые. Ограничение частоты на генерацию и письма для входа. Правила контента в документах и блокировка в админке. Резервные копии базы ежедневно.
+**Security.** Uploads are checked with ffprobe and limits before processing, and are processed only in the worker, through ffmpeg with timeouts. Logo SVGs are sanitized. Model output is validated against the schema. Code from the model is never executed anywhere. Review links are unguessable. Rate limiting on generation and on sign-in emails. Content rules in the legal documents and blocking in the admin panel. Database backups daily.
 
-**Производительность.** Серверные компоненты по умолчанию, клиентские только там, где интерактив. Remotion Player грузится лениво, превью идёт по прокси 720p. Шрифты самохостятся. Индексы на все запросы по пользователю. Без N+1. Бюджет на размер клиентских бандлов проверяется в CI.
+**Performance.** Server components by default, client components only where there is interactivity. Remotion Player loads lazily, and the preview runs over the 720p proxy. Fonts are self-hosted. Indexes on all queries by user. No N+1. A budget on the size of client bundles is checked in CI.
 
-## 10. Технологии
+## 10. Technologies
 
-TypeScript везде. Node 22, pnpm. Next.js актуальной стабильной версии, React 19, Tailwind v4, Radix. Remotion 4.x (лицензия бесплатна до трёх человек в компании, в 5.0 условия меняются, перепроверить при обновлении). Postgres, Drizzle, pg-boss. S3, CloudFront, Remotion Lambda. Better Auth. Paddle или Lemon Squeezy. Resend, React Email. PostHog, Sentry. next-intl. Anthropic SDK с tool use для структурированного вывода, кэш промптов для системных инструкций со словарём. ElevenLabs для голоса. ffmpeg. Biome для линта и форматирования. Vitest для юнит-тестов, Playwright для главного пути. GitHub и GitHub Actions. Railway для веба, воркера и Postgres, AWS только для Lambda, S3 и CloudFront.
+TypeScript everywhere. Node 22, pnpm. Next.js, the current stable version, React 19, Tailwind v4, Radix. Remotion 4.x (the license is free for companies of up to three people, the terms change in 5.0, recheck on upgrade). Postgres, Drizzle, pg-boss. S3, CloudFront, Remotion Lambda. Better Auth. Paddle or Lemon Squeezy. Resend, React Email. PostHog, Sentry. next-intl. Anthropic SDK with tool use for structured output, prompt caching for the system instructions with the vocabulary. ElevenLabs for voice. ffmpeg. Biome for linting and formatting. Vitest for unit tests, Playwright for the main path. GitHub and GitHub Actions. Railway for web, worker and Postgres, AWS only for Lambda, S3 and CloudFront.
 
-Модели Claude: режиссёр и зрение на модели класса Sonnet, дешёвые правки на классе Haiku. Окончательный выбор по замеру в спайке.
+Claude models: the director and vision on a Sonnet-class model, cheap edits on a Haiku-class one. The final choice follows the measurements in the spike.
 
-## 11. Правила кода
+## 11. Code rules
 
-Полный текст уходит в `CLAUDE.md` репозитория при развёртывании каркаса. Суть:
+The full text goes into the repository's `CLAUDE.md` when the scaffold is set up. The gist:
 
-- Код читается без комментариев: имена говорят, что происходит. Комментарий только там, где «почему» не очевидно, одной строкой.
-- Никаких длинных пояснений от ИИ, заголовков-разделителей, «TODO: подумать» и мёртвого кода.
-- Простая структура: вертикальные срезы, маленькие функции, без слоёв ради слоёв. Абстракция появляется на третьем повторе, не раньше.
-- Zod на каждой границе: ввод пользователя, вывод модели, вебхуки, env.
-- Производительность учитывается при написании, не потом: серверные компоненты, ленивые тяжёлые вещи, индексы, отсутствие лишних запросов.
-- Строгий TypeScript, без any. Biome чистый, тесты зелёные перед каждым коммитом.
-- Тесты там, где есть логика: схема, операции, раскладка, QA, лимиты, вебхуки. Один e2e на главный путь.
-- Строки интерфейса только через ключи локализации. Стили только через токены.
-- Коммиты маленькие и осмысленные. Решения в `docs/product/decisions.md`.
+- Code reads without comments: names say what is going on. A comment only where the "why" is not obvious, in one line.
+- No long AI explanations, divider headings, "TODO: think about it" or dead code.
+- Simple structure: vertical slices, small functions, no layers for the sake of layers. An abstraction appears on the third repetition, not earlier.
+- Zod at every boundary: user input, model output, webhooks, env.
+- Performance is considered while writing, not afterwards: server components, heavy things loaded lazily, indexes, no extra queries.
+- Strict TypeScript, no any. Biome clean, tests green before every commit.
+- Tests where there is logic: schema, operations, layout, QA, limits, webhooks. One e2e test for the main path.
+- Interface strings only through localization keys. Styles only through tokens.
+- Commits are small and meaningful. Decisions go in `docs/product/decisions.md`.
 
-## 12. Что перерисовать
+## 12. What to redraw
 
-За владельцем, на холсте дизайна:
+The owner's task, on the design canvas:
 
-- Home: загрузка видео как главный путь, чип «куда», примеры под новый сценарий.
-- Generating: один вариант, шаги, план-карточка с битами и вопросами, состояние «Building now».
-- Video and edits: без колонки Versions, строка «0:45 · Reels · из 5:12», быстрые правки для футажа и субтитров, Undo, состояние «правка применяется».
-- Editor: дорожка футажа с обрезкой.
-- My videos: состояния карточки (собирается, ждёт ответов, ошибка).
-- Водяной знак, 404 для выключенной ссылки, подтверждения удаления, уведомления «скопировано».
+- Home: video upload as the main path, the "where to" chip, examples for the new scenario.
+- Generating: one variant, steps, a plan card with beats and questions, the "Building now" state.
+- Video and edits: without the Versions column, the line "0:45 · Reels · of 5:12", quick edits for footage and captions, Undo, the "edit is being applied" state.
+- Editor: a footage track with trimming.
+- My videos: card states (building, waiting for answers, error).
+- The watermark, a 404 for a turned-off link, deletion confirmations, "copied" notifications.
 
-До перерисовки строитель верстает по правилам `docs/design/` и описаниям выше.
+Until the redraw, the builder implements the screens following the rules in `docs/design/` and the descriptions above.
 
-## 13. Порядок работ
+## 13. Order of work
 
-| Этап | Что | Готово, когда |
+| Stage | What | Done when |
 | --- | --- | --- |
-| 0. Каркас и спайк | Репозиторий, `CLAUDE.md` с правилами, скиллы из раздела 16, сайт документации, схема пути пользователя. Спайк: команда в терминале: видео или текст → план → документ → MP4 локально, один раз через Lambda. Замер времени и цены по шагам. Выбор провайдеров расшифровки и детекции | Сайт документации открывается, схема пути пользователя на нём. Три разных футажа и два текста дают ролики, которые можно показать человеку. Таблица замеров в документации. Решения в журнале |
-| 1. Движок | Схема, операции, версии, регистры, словарь первой версии, раскладка под три формата, QA, Player с выделением по клику, каталог | Каталог показывает все примитивы во всех регистрах и форматах. Рукописный документ выглядит одинаково в Player и в рендере Lambda |
-| 2. Конвейер | Загрузка, ingest, расшифровка, понимание кадра, режиссёр, вопросы, сборка, задачи и SSE, план-карточка | Загрузка → ready без интерфейсной полировки, переживает перезагрузку страницы, вопросы работают |
-| 3. Главный путь | Home, Generating, Video and edits с правками и Undo, What next, форматы, Editor | Главный путь по макетам от кнопки до готового ролика |
-| 4. Аккаунт | Вход, бренд с Fetch brand, My videos, Account | Новый человек проходит от лендинга до первого ролика без помощи |
-| 5. Выход | Download на Lambda с форматами и водяным знаком, ссылка на согласование | Файл скачивается, ссылка открывается с телефона |
-| 6. Бизнес | Оплата, лимиты, письма, документы, лендинг с настоящими роликами, аналитика, Sentry, админка, ограничения частоты, бэкапы | Чек-лист запуска из `docs/product/02-mvp-scope.md` закрыт |
+| 0. Scaffold and spike | The repository, `CLAUDE.md` with the rules, the skills from section 16, the documentation site, the user flow diagram. Spike: a command in the terminal: video or text → plan → document → MP4 locally, once through Lambda. Measuring time and price per step. Choosing the transcription and detection providers | The documentation site opens, and the user flow diagram is on it. Three different pieces of footage and two texts give videos that can be shown to a person. A table of measurements in the documentation. Decisions in the log |
+| 1. Engine | Schema, operations, versions, registers, the vocabulary of the first version, layout for three formats, QA, Player with selection by click, catalog | The catalog shows all primitives in all registers and formats. A hand-written document looks the same in Player and in the Lambda render |
+| 2. Pipeline | Upload, ingest, transcription, frame understanding, director, questions, build, jobs and SSE, plan card | Upload → ready without interface polish, survives a page reload, questions work |
+| 3. Main path | Home, Generating, Video and edits with edits and Undo, What next, formats, Editor | The main path matches the mockups, from the button to a finished video |
+| 4. Account | Sign-in, brand with Fetch brand, My videos, Account | A new person goes from the landing page to the first video without help |
+| 5. Output | Download on Lambda with formats and the watermark, the review link | The file downloads, the link opens from a phone |
+| 6. Business | Payment, limits, emails, legal documents, a landing page with real videos, analytics, Sentry, the admin panel, rate limiting, backups | The launch checklist from `docs/product/02-mvp-scope.md` is closed |
 
-Ориентир по времени для одного человека с Claude Code: спайк неделя, движок три, конвейер три, главный путь две, аккаунт полторы, выход одна, бизнес две. Около четырнадцати недель, с большой неопределённостью на движке и конвейере.
+A time guide for one person with Claude Code: spike a week, engine three, pipeline three, main path two, account one and a half, output one, business two. About fourteen weeks, with a lot of uncertainty around the engine and the pipeline.
 
-## 14. Что остаётся строителю
+## 14. What is left to the builder
 
-- Точные поля схемы, формат списка операций и правила их повторного применения после пересборки.
-- Выбор провайдеров расшифровки и детекции по результатам спайка.
-- Выбор между Paddle и Lemon Squeezy после проверки регистрации.
-- Пороги QA, список стилей субтитров, набор регистров сверх четырёх.
-- Как именно показывать список сцен на экране ролика вместо колонки Versions.
-- SSE против опроса, если SSE окажется неудобным на Railway.
-- Структура промптов режиссёра и правок, включая перенос правил и anti-slop из спеки motion.
+- The exact schema fields, the format of the operation list and the rules for reapplying operations after a rebuild.
+- The choice of the transcription and detection providers based on the spike results.
+- The choice between Paddle and Lemon Squeezy after the registration is checked.
+- QA thresholds, the list of caption styles, the set of registers beyond the four.
+- How exactly to show the list of scenes on the video screen instead of the Versions column.
+- SSE versus polling, if SSE turns out to be inconvenient on Railway.
+- The structure of the prompts for the director and for edits, including porting the rules and the anti-slop from the motion spec.
 
-## 15. Открытые вопросы владельца
+## 15. Open questions for the owner
 
-| Вопрос | От чего зависит |
+| Question | What it depends on |
 | --- | --- |
-| Источник и лицензия музыкальной библиотеки на старте | Шаг «музыка» в сборке, права |
-| Как выглядит водяной знак | Примитив в словаре |
-| Перерисовка экранов из раздела 12 | Этапы 2–3 |
-| Цена Pro после спайка | Лендинг, Plans |
-| Страна регистрации и выбор мерчанта оф рекорд | Этап 6 |
-| Домен | Письма, ссылки на согласование |
-| Нужен ли стоковый футаж в текстовом режиме и откуда с лицензией | Без него фоны текстового режима из бренда, градиентов, фигур и картинок со ссылки |
+| The source and license of the music library at launch | The "music" step in the build, rights |
+| What the watermark looks like | A primitive in the vocabulary |
+| Redrawing the screens from section 12 | Stages 2–3 |
+| The Pro price after the spike | Landing page, Plans |
+| The country of registration and the choice of merchant of record | Stage 6 |
+| Domain | Emails, review links |
+| Whether stock footage is needed in text mode and where to get it under a license | Without it, the backgrounds in text mode are made from the brand, gradients, shapes and images from the link |
 
-## 16. Инструменты разработки и документация
+## 16. Development tools and documentation
 
-**Скиллы Claude в репозитории** (`.claude/skills/`), ставятся на этапе 0 и растут по ходу:
+**Claude skills in the repository** (`.claude/skills/`), set up in stage 0 and growing along the way:
 
-- `learn`: записать урок после задачи или фидбека владельца в страницу уроков и предложить изменение правила в `CLAUDE.md` или в скилле. Маховик: каждый провал становится правилом, примитивом или проверкой, никогда шаблоном.
-- `decision`: добавить запись в журнал решений по шаблону: дата, что решили, почему, что отвергли.
-- `docs`: обновить страницы документации по затронутой области и схему пути пользователя. Задача не закрыта, пока документация не обновлена.
-- `review`: самопроверка диффа по правилам кода перед коммитом: читаемость, срезы, Zod на границах, производительность, тесты, строки через локализацию, стили через токены.
-- `vocab`: добавить примитив в словарь: компонент, схема параметров, карточка в каталоге, тест на регистры и форматы.
-- `spike`: прогнать спайк на файле или тексте и записать замеры в таблицу.
+- `learn`: record a lesson on the learnings page after a task or the owner's feedback, and propose a change to a rule in `CLAUDE.md` or in a skill. The flywheel: every failure becomes a rule, a primitive or a check, never a template.
+- `decision`: add an entry to the decision log following the template: date, what was decided, why, what was rejected.
+- `docs`: update the documentation pages for the affected area and the user flow diagram. A task is not closed until the documentation is updated.
+- `review`: a self-check of the diff against the code rules before a commit: readability, slices, Zod at the boundaries, performance, tests, strings through localization, styles through tokens.
+- `vocab`: add a primitive to the vocabulary: the component, the parameter schema, a card in the catalog, a test for registers and formats.
+- `spike`: run the spike on a file or text and record the measurements in the table.
 
-**Документация** живёт в `docs/` как небольшие страницы по темам, а не один большой файл, и собирается в сайт VitePress с Mermaid-диаграммами. Разделы: обзор, путь пользователя, архитектура, конвейер, схема ролика, словарь со ссылкой на живой каталог, решения, уроки, инструкции (окружение, деплой, инциденты). После утверждения этот документ разбирается по страницам, а сам остаётся как исторический.
+**Documentation** lives in `docs/` as small pages by topic, not one big file, and is built into a VitePress site with Mermaid diagrams. Sections: overview, user flow, architecture, pipeline, video schema, vocabulary with a link to the live catalog, decisions, learnings, runbooks (environment, deploy, incidents). After approval this document is broken down into pages, and it stays as a historical record.
 
-**Путь пользователя** для всех, не только для технарей: `docs/user-flow.md`, Mermaid-схемы: общая карта и по одной на поток. Узлы это экраны, стрелки это действия, отдельными узлами письма и уведомления с условиями. Любое изменение потока меняет схему в том же коммите. По запросу схема выгружается в FigJam для презентаций.
+**The user flow** for everyone, not only for technical people: `docs/user-flow.md`, Mermaid diagrams: an overall map and one per flow. Nodes are screens, arrows are actions, and emails and notifications are separate nodes with conditions. Any change to a flow changes the diagram in the same commit. On request the diagram is exported to FigJam for presentations.
 

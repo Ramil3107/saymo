@@ -21,7 +21,7 @@ flowchart TD
   M2([Email: the video waits for answers, if the user left for over 10 minutes]) -.-> Q
   B --> R[2.4 Video and edits]
   M3([Email: the video is ready, if the user left]) -.-> R
-  B -.->|error, the video is returned| F[2.3 Generation failed]
+  B -.->|error, the video is refunded| F[2.3 Generation failed]
   F -->|Try again| G
   F -->|Change the description| H
 
