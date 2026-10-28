@@ -1,34 +1,43 @@
+import { z } from "zod";
 import { destinations } from "../destinations";
+import { overlapRatio } from "../layout/keepOut";
 import { fitsInBox } from "../layout/textWidth";
 import { registers } from "../registers";
 import type { Box } from "../schema/content";
 import type { Plan } from "../schema/plan";
 import type { Element, Scene, VideoDoc } from "../schema/video";
 
-export type QaIssue = {
-  code:
-    | "scenes-sum"
-    | "min-hold"
-    | "words-on-screen"
-    | "text-overflow"
-    | "safe-zone"
-    | "avoid-zone"
-    | "voice-overflow"
-    | "plan-over-cap"
-    | "plan-over-source";
-  severity: "error" | "warning";
-  message: string;
-  sceneId?: string;
-  elementId?: string;
-};
+export const QaIssueSchema = z.object({
+  code: z.enum([
+    "scenes-sum",
+    "min-hold",
+    "words-on-screen",
+    "text-overflow",
+    "safe-zone",
+    "avoid-zone",
+    "voice-overflow",
+    "plan-over-cap",
+    "plan-over-source",
+  ]),
+  severity: z.enum(["error", "warning"]),
+  message: z.string(),
+  sceneId: z.string().optional(),
+  elementId: z.string().optional(),
+});
+export type QaIssue = z.infer<typeof QaIssueSchema>;
 
-export type QaReport = { ok: boolean; issues: QaIssue[] };
+export const QaReportSchema = z.object({
+  ok: z.boolean(),
+  issues: z.array(QaIssueSchema),
+});
+export type QaReport = z.infer<typeof QaReportSchema>;
 
 const maxWordsOnScreen = 6;
 const maxWordsInQuote = 12;
 const headlineFontPx = 72;
 const bodyFontPx = 40;
 const maxLines = 2;
+const keepOutErrorShare = 0.5;
 
 export function planWithinLimits(
   plan: Plan,
@@ -66,10 +75,18 @@ function primaryText(element: Element): string {
 
 const wordCount = (text: string) => text.split(/\s+/).filter(Boolean).length;
 
-function intersects(a: Box, b: Box): boolean {
-  return (
-    a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h
-  );
+function maxConcurrentWords(elements: Element[]): number {
+  const counted = elements.filter((e) => e.kind !== "quote");
+  const moments = counted.flatMap((e) => [e.enterMs, e.exitMs]);
+  let max = 0;
+  for (const ms of moments) {
+    const visible = counted.filter((e) => ms >= e.enterMs && ms < e.exitMs);
+    max = Math.max(
+      max,
+      visible.reduce((sum, e) => sum + wordCount(primaryText(e)), 0),
+    );
+  }
+  return max;
 }
 
 function insideSafeZone(
@@ -97,14 +114,12 @@ function sceneIssues(doc: VideoDoc, scene: Scene, avoid: Box[]): QaIssue[] {
       sceneId: scene.id,
     });
   }
-  const wordsOnScreen = scene.elements
-    .filter((e) => e.kind !== "quote")
-    .reduce((sum, e) => sum + wordCount(primaryText(e)), 0);
+  const wordsOnScreen = maxConcurrentWords(scene.elements);
   if (wordsOnScreen > maxWordsOnScreen) {
     issues.push({
       code: "words-on-screen",
       severity: "error",
-      message: `${wordsOnScreen} words on screen, at most ${maxWordsOnScreen}`,
+      message: `${wordsOnScreen} words on screen at once, at most ${maxWordsOnScreen}`,
       sceneId: scene.id,
     });
   }
@@ -145,11 +160,12 @@ function sceneIssues(doc: VideoDoc, scene: Scene, avoid: Box[]): QaIssue[] {
         elementId: element.id,
       });
     }
-    if (avoid.some((zone) => intersects(element.box, zone))) {
+    const covered = overlapRatio(element.box, avoid);
+    if (covered > 0) {
       issues.push({
         code: "avoid-zone",
-        severity: "error",
-        message: "Element covers a keep-out zone",
+        severity: covered > keepOutErrorShare ? "error" : "warning",
+        message: `Element covers a keep-out zone by ${Math.round(covered * 100)}%`,
         sceneId: scene.id,
         elementId: element.id,
       });
@@ -186,6 +202,14 @@ export function runQa(
   sourceDurationMs: number | null,
 ): QaReport {
   const issues: QaIssue[] = [...planWithinLimits(plan, sourceDurationMs)];
+  const cap = destinations[doc.destination].maxLengthMs;
+  if (doc.durationMs > cap && doc.durationMs !== plan.lengthMs) {
+    issues.push({
+      code: "plan-over-cap",
+      severity: "error",
+      message: `Video grew to ${doc.durationMs} ms, the ${doc.destination} cap is ${cap} ms`,
+    });
+  }
   const scenesSum = doc.scenes.reduce((sum, s) => sum + s.durationMs, 0);
   if (scenesSum !== doc.durationMs) {
     issues.push({

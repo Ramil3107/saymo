@@ -16,3 +16,14 @@ test("placeOverlay keeps a headline inside the safe zone", () => {
   expect(box.x + box.w).toBeLessThanOrEqual(1 - zone.right + 1e-9);
   expect(box.h).toBeCloseTo(0.18, 6);
 });
+
+test("placeOverlay takes the least overlapping slot when nothing is free", () => {
+  const everywhere = [{ x: 0, y: 0, w: 1, h: 0.76 }];
+  const box = placeOverlay(
+    "headline",
+    "9:16",
+    destinations.reels.safeZone,
+    everywhere,
+  );
+  expect(box.y).toBeCloseTo(0.6, 6);
+});

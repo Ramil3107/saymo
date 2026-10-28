@@ -44,3 +44,20 @@ test("timed records duration and cost of a step", async () => {
   expect(metrics.byStep().transcribe?.usd).toBe(0.5);
   expect(metrics.toJSON()[0]?.ms).toBeGreaterThanOrEqual(0);
 });
+
+test("Metrics.drop removes the events of one step so a re-run does not double count", () => {
+  const metrics = Metrics.from([
+    { step: "direct", provider: "anthropic", ms: 100, usd: 0.01 },
+    { step: "render", provider: "lambda", ms: 700, usd: 0.1 },
+  ]);
+  metrics.drop("direct");
+  expect(metrics.byStep()).toEqual({ render: { ms: 700, usd: 0.1 } });
+});
+
+test("assertPricedModel rejects an unknown model before any call", async () => {
+  const { assertPricedModel } = await import("./pricing");
+  expect(() => assertPricedModel("claude-3")).toThrow(
+    "No price for model claude-3",
+  );
+  expect(() => assertPricedModel("claude-sonnet-5-5")).not.toThrow();
+});

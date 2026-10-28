@@ -29,6 +29,12 @@ export class Metrics {
     this.events.push(event);
   }
 
+  drop(step: string): void {
+    for (let i = this.events.length - 1; i >= 0; i -= 1) {
+      if (this.events[i]?.step === step) this.events.splice(i, 1);
+    }
+  }
+
   total(): Totals {
     return this.events.reduce(
       (sum, event) => ({

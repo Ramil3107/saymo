@@ -106,3 +106,52 @@ test("buildVideo keeps overlays out of the caption band when captions are enable
     expect(below || above).toBe(true);
   }
 });
+
+test("buildVideo grows the document when every beat is voiced and speech outruns the plan", () => {
+  const voice = [
+    { beatId: "b1", path: "voice/b1.mp3", durationMs: 2000, words: [] },
+    { beatId: "b2", path: "voice/b2.mp3", durationMs: 9000, words: [] },
+    { beatId: "b3", path: "voice/b3.mp3", durationMs: 4000, words: [] },
+  ];
+  const doc = buildVideo(textPlan, null, { voice }, brand);
+  expect(doc.durationMs).toBe(2300 + 9300 + 4300);
+  expect(doc.scenes.map((s) => s.durationMs)).toEqual([2300, 9300, 4300]);
+});
+
+test("buildVideo keeps caption pages inside their scene", () => {
+  const doc = buildVideo(
+    footagePlan,
+    sampleContent,
+    { sourceVideo: { path: "in.mp4", info: sampleContent.source } },
+    brand,
+  );
+  for (const page of doc.captions?.pages ?? []) {
+    const scene = doc.scenes.find(
+      (s) =>
+        page.startMs >= s.startMs && page.startMs < s.startMs + s.durationMs,
+    );
+    expect(scene).toBeDefined();
+    expect(page.startMs + page.durationMs).toBeLessThanOrEqual(
+      (scene?.startMs ?? 0) + (scene?.durationMs ?? 0),
+    );
+  }
+});
+
+test("a talking-head footage document passes QA with the keep-out zones the run computes", async () => {
+  const { runQa } = await import("../../../video/qa/checks");
+  const { keepOutForScenes } = await import("./buildVideo");
+  const doc = buildVideo(
+    footagePlan,
+    sampleContent,
+    { sourceVideo: { path: "in.mp4", info: sampleContent.source } },
+    brand,
+  );
+  const report = runQa(
+    doc,
+    footagePlan,
+    keepOutForScenes(doc, footagePlan, sampleContent),
+    sampleContent.source.durationMs,
+  );
+  expect(report.issues.filter((i) => i.severity === "error")).toEqual([]);
+  expect(report.ok).toBe(true);
+});

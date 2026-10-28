@@ -3,7 +3,7 @@ import { destinations } from "../destinations";
 import { registers } from "../registers";
 import type { Element, Scene, VideoDoc } from "../schema/video";
 import { loadBrandFont } from "./fonts";
-import { msToFrame } from "./frames";
+import { sceneFrames } from "./frames";
 import { Background } from "./primitives/Background";
 import { BigNumber } from "./primitives/BigNumber";
 import { Camera } from "./primitives/Camera";
@@ -99,11 +99,7 @@ export const SaymoVideo = (doc: VideoDoc) => {
   return (
     <AbsoluteFill style={{ backgroundColor: doc.brand.colors[0], fontFamily }}>
       {doc.scenes.map((scene) => (
-        <Sequence
-          key={scene.id}
-          from={msToFrame(scene.startMs)}
-          durationInFrames={msToFrame(scene.durationMs)}
-        >
+        <Sequence key={scene.id} {...sceneFrames(scene)}>
           <SceneView scene={scene} doc={doc} theme={theme} />
         </Sequence>
       ))}

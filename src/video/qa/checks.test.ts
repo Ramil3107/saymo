@@ -10,7 +10,7 @@ import sampleDocJson from "../../../fixtures/video.sample.json" with {
 };
 import { PlanSchema } from "../schema/plan";
 import { type VideoDoc, VideoDocSchema } from "../schema/video";
-import { planWithinLimits, runQa } from "./checks";
+import { planWithinLimits, QaReportSchema, runQa } from "./checks";
 
 const footagePlan = PlanSchema.parse(footagePlanJson);
 const textPlan = PlanSchema.parse(textPlanJson);
@@ -88,4 +88,54 @@ test("runQa flags a scene sum that misses the duration and a voice longer than i
   const codes = runQa(broken, textPlan, {}, null).issues.map((i) => i.code);
   expect(codes).toContain("scenes-sum");
   expect(codes).toContain("voice-overflow");
+});
+
+test("runQa counts only words that are on screen at the same time", () => {
+  const scene = sampleDoc.scenes[0];
+  const element = scene?.elements[0];
+  if (!scene || !element || element.kind !== "headline")
+    throw new Error("fixture mismatch");
+  const later = {
+    ...element,
+    id: "late-chip",
+    kind: "chip" as const,
+    text: "one two three",
+    enterMs: 1500,
+    exitMs: 2000,
+    box: { x: 0.04, y: 0.6, w: 0.3, h: 0.08 },
+  };
+  const doc: VideoDoc = {
+    ...sampleDoc,
+    scenes: [
+      {
+        ...scene,
+        elements: [
+          { ...element, text: "one two three four five", exitMs: 1000 },
+          later,
+        ],
+      },
+      ...sampleDoc.scenes.slice(1),
+    ],
+  };
+  expect(
+    runQa(doc, textPlan, {}, null).issues.map((i) => i.code),
+  ).not.toContain("words-on-screen");
+});
+
+test("runQa grades a keep-out overlap by its share of the element", () => {
+  const scene = sampleDoc.scenes[0];
+  const element = scene?.elements[0];
+  if (!scene || !element) throw new Error("fixture has no elements");
+  const slight = { ...element.box, x: element.box.x + element.box.w * 0.9 };
+  const warning = runQa(sampleDoc, textPlan, { [scene.id]: [slight] }, null);
+  expect(warning.issues.find((i) => i.code === "avoid-zone")?.severity).toBe(
+    "warning",
+  );
+  expect(warning.ok).toBe(true);
+});
+
+test("QaReportSchema parses a report", () => {
+  expect(QaReportSchema.parse(runQa(sampleDoc, textPlan, {}, null)).ok).toBe(
+    true,
+  );
 });

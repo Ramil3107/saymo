@@ -85,20 +85,35 @@ export async function probe(file: string): Promise<MediaInfo> {
   };
 }
 
+export async function probeDuration(file: string): Promise<number> {
+  const { stdout } = await run("ffprobe", [
+    "-v",
+    "error",
+    "-print_format",
+    "json",
+    "-show_format",
+    file,
+  ]);
+  const parsed = z
+    .object({ format: z.object({ duration: z.string() }) })
+    .safeParse(JSON.parse(stdout));
+  if (!parsed.success) throw new IngestError(`No duration in ${file}`);
+  return Math.round(Number(parsed.data.format.duration) * 1000);
+}
+
 export async function makeTestVideo(
   outPath: string,
   seconds: number,
+  options: { audio?: boolean } = {},
 ): Promise<void> {
+  const audio = options.audio ?? true;
   await runFfmpeg([
     "-y",
     "-f",
     "lavfi",
     "-i",
     "testsrc2=size=640x360:rate=30",
-    "-f",
-    "lavfi",
-    "-i",
-    "sine=frequency=440",
+    ...(audio ? ["-f", "lavfi", "-i", "sine=frequency=440"] : []),
     "-t",
     String(seconds),
     "-c:v",
@@ -107,8 +122,7 @@ export async function makeTestVideo(
     "ultrafast",
     "-pix_fmt",
     "yuv420p",
-    "-c:a",
-    "aac",
+    ...(audio ? ["-c:a", "aac"] : ["-an"]),
     outPath,
   ]);
 }

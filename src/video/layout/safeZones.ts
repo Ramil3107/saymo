@@ -1,6 +1,7 @@
 import type { Destination, Format } from "../destinations";
 import type { Box } from "../schema/content";
 import type { OverlayKind } from "../schema/plan";
+import { overlapRatio } from "./keepOut";
 
 type Horizontal = "left" | "center" | "right";
 type Vertical = "top" | "middle" | "bottom";
@@ -59,6 +60,7 @@ const heightShare: Record<OverlayKind, number> = {
 };
 
 const round6 = (value: number) => Math.round(value * 1e6) / 1e6;
+const scanStep = 0.02;
 const captionBottomGap = 0.02;
 const captionBandHeight = 0.1;
 
@@ -101,14 +103,26 @@ export function placeOverlay(
     middle: inner.top + (inner.bottom - inner.top - h) / 2,
     bottom: inner.bottom - h,
   };
-  const candidates = slotsByKind[kind].map(([horizontal, vertical]) => ({
+  const slots = slotsByKind[kind].map(([horizontal, vertical]) => ({
     x: round6(xFor[horizontal]),
     y: round6(yFor[vertical]),
     w,
     h,
   }));
-  return (
-    candidates.find((box) => !avoid.some((zone) => intersects(box, zone))) ??
-    (candidates[0] as Box)
+  const scanned: Box[] = [];
+  const horizontals = [
+    ...new Set(slotsByKind[kind].map(([horizontal]) => horizontal)),
+  ];
+  for (let y = inner.top; y <= inner.bottom - h + 1e-9; y += scanStep) {
+    for (const horizontal of horizontals)
+      scanned.push({ x: round6(xFor[horizontal]), y: round6(y), w, h });
+  }
+  const candidates = [...slots, ...scanned];
+  const free = candidates.find(
+    (box) => !avoid.some((zone) => intersects(box, zone)),
+  );
+  if (free) return free;
+  return candidates.reduce((best, box) =>
+    overlapRatio(box, avoid) < overlapRatio(best, avoid) ? box : best,
   );
 }

@@ -44,7 +44,5 @@ const doc = values.footage
 const suffix = values.footage ? "-footage" : "";
 await renderPoster(doc, join(outDir, `poster${suffix}.jpg`), posterTimeMs(doc));
 console.log(`poster at ${posterTimeMs(doc)} ms`);
-if (!values.footage) {
-  const { ms } = await renderLocal(doc, join(outDir, "out.mp4"));
-  console.log(`rendered in ${ms} ms`);
-}
+const { ms } = await renderLocal(doc, join(outDir, `out${suffix}.mp4`));
+console.log(`rendered in ${ms} ms`);

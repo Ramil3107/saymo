@@ -3,7 +3,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { expect, test } from "vitest";
 import { makeTestVideo } from "../../lib/ffmpeg";
-import { ingest, parseSceneTimestamps, shotsFromCuts } from "./ingest";
+import {
+  IngestResultSchema,
+  ingest,
+  parseSceneTimestamps,
+  shotsFromCuts,
+} from "./ingest";
 
 test("parseSceneTimestamps reads pts_time from showinfo", () => {
   const stderr =
@@ -27,4 +32,18 @@ test("ingest extracts audio, keyframes and shots from a synthetic video", async 
   expect(result.info.durationMs).toBeGreaterThanOrEqual(5900);
   expect(result.keyframes.map((k) => k.tMs)).toEqual([0, 2000, 4000]);
   expect(result.shots.at(-1)?.endMs).toBe(result.info.durationMs);
+}, 60_000);
+
+test("ingest copies the source into the run and skips audio when the source is silent", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "saymo-ingest-"));
+  const src = join(dir, "silent.mp4");
+  await makeTestVideo(src, 3, { audio: false });
+  const runDir = join(dir, "run");
+  const result = await ingest({ source: src, runDir });
+  expect(result.info.hasAudio).toBe(false);
+  expect(result.audioPath).toBeUndefined();
+  expect(result.sourcePath).toBe(join(runDir, "source.mp4"));
+  expect(IngestResultSchema.parse(JSON.parse(JSON.stringify(result)))).toEqual(
+    result,
+  );
 }, 60_000);

@@ -1,13 +1,13 @@
 import { existsSync } from "node:fs";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { join, relative, resolve } from "node:path";
+import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
+import { basename, join, relative, resolve } from "node:path";
 import { z } from "zod";
 import { createClaude } from "../lib/ai/claude";
 import { type Env, requireEnv } from "../lib/env";
 import { fetchPageText } from "../lib/html";
 import { Metrics } from "../lib/metrics";
-import { avoidZones } from "../video/layout/avoidZones";
-import { runQa } from "../video/qa/checks";
+import { assertPricedModel } from "../lib/pricing";
+import { QaReportSchema, runQa } from "../video/qa/checks";
 import { renderOnLambda, uploadRunAssets } from "../video/render/renderLambda";
 import {
   posterTimeMs,
@@ -16,7 +16,7 @@ import {
 } from "../video/render/renderLocal";
 import { type ContentMap, ContentMapSchema } from "../video/schema/content";
 import { type Plan, PlanSchema } from "../video/schema/plan";
-import { TranscriptSchema } from "../video/schema/transcript";
+import { type Transcript, TranscriptSchema } from "../video/schema/transcript";
 import { type VideoDoc, VideoDocSchema } from "../video/schema/video";
 import {
   loadOrCreateManifest,
@@ -29,14 +29,16 @@ import {
 import {
   type BuildAssets,
   buildVideo,
+  keepOutForScenes,
   pickMusic,
 } from "./steps/build/buildVideo";
 import { direct } from "./steps/direct/director";
 import type { DirectorInput } from "./steps/direct/prompts";
-import { type IngestResult, ingest } from "./steps/ingest";
+import { type IngestResult, IngestResultSchema, ingest } from "./steps/ingest";
 import { buildContentMap } from "./steps/see/contentMap";
 import {
   describeKeyframes,
+  estimateVisionUsd,
   selectFramesForDescription,
 } from "./steps/see/describe";
 import { detectFaces, rekognitionDetector } from "./steps/see/faces";
@@ -65,6 +67,24 @@ const MusicManifestSchema = z.object({
   ),
 });
 
+const SeenSchema = z.object({
+  faces: ContentMapSchema.shape.faces,
+  frames: ContentMapSchema.shape.frames,
+});
+const VoiceAssetsSchema = z.array(
+  z.object({
+    beatId: z.string(),
+    path: z.string(),
+    durationMs: z.number(),
+    words: TranscriptSchema.shape.words,
+  }),
+);
+const emptyTranscript: Transcript = {
+  language: "unknown",
+  text: "",
+  words: [],
+};
+
 type RunResult = {
   manifest: Manifest;
   planPath: string;
@@ -74,6 +94,8 @@ type RunResult = {
 
 function requireCredentials(options: RunOptions, env: Env): void {
   if (!process.env.ANTHROPIC_AUTH_TOKEN) requireEnv(env, "ANTHROPIC_API_KEY");
+  assertPricedModel(options.directorModel);
+  assertPricedModel(options.visionModel);
   if (options.source) {
     requireEnv(
       env,
@@ -85,6 +107,10 @@ function requireCredentials(options: RunOptions, env: Env): void {
     requireEnv(env, "AWS_SECRET_ACCESS_KEY");
   }
   if (options.voice) requireEnv(env, "ELEVENLABS_API_KEY");
+  if (options.render === "lambda") {
+    requireEnv(env, "REMOTION_LAMBDA_FUNCTION_NAME");
+    requireEnv(env, "REMOTION_SERVE_URL");
+  }
 }
 
 async function readJson<T>(path: string, schema: z.ZodType<T>): Promise<T> {
@@ -105,6 +131,8 @@ function printQuestions(plan: Plan): void {
     );
   }
 }
+
+const relativeToRepo = (path: string) => relative(process.cwd(), resolve(path));
 
 export async function runPipeline(
   options: RunOptions,
@@ -132,6 +160,7 @@ export async function runPipeline(
       existsSync(artifact(file))
     )
       return load();
+    metrics.drop(name);
     const startedAt = performance.now();
     try {
       const value = await run();
@@ -160,86 +189,103 @@ export async function runPipeline(
   let ingested: IngestResult | undefined;
 
   if (options.source) {
-    const source = relative(process.cwd(), resolve(options.source));
     ingested = await step(
       "ingest",
       "ingest.json",
       async () => {
-        const result = await ingest({ source, runDir: options.runDir });
-        await writeJson(artifact("ingest.json"), result);
+        const result = await ingest({
+          source: resolve(options.source as string),
+          runDir: options.runDir,
+        });
+        const stored = {
+          ...result,
+          sourcePath: relativeToRepo(result.sourcePath),
+        };
+        await writeJson(artifact("ingest.json"), stored);
+        return stored;
+      },
+      () => readJson(artifact("ingest.json"), IngestResultSchema),
+    );
+    const info = ingested.info;
+    const audioPath = ingested.audioPath;
+    const transcribeTask = audioPath
+      ? step(
+          "transcribe",
+          "transcript.json",
+          async () => {
+            const transcriber =
+              options.transcriber === "deepgram"
+                ? deepgramTranscriber(requireEnv(env, "DEEPGRAM_API_KEY"))
+                : elevenLabsTranscriber(requireEnv(env, "ELEVENLABS_API_KEY"));
+            const startedAt = performance.now();
+            const { transcript, usd } = await transcriber.transcribe(
+              audioPath,
+              info.durationMs,
+            );
+            metrics.record({
+              step: "transcribe",
+              provider: transcriber.name,
+              ms: Math.round(performance.now() - startedAt),
+              usd,
+            });
+            await writeJson(artifact("transcript.json"), transcript);
+            return transcript;
+          },
+          () => readJson(artifact("transcript.json"), TranscriptSchema),
+        )
+      : Promise.resolve(emptyTranscript).then((transcript) => {
+          skip("transcribe");
+          return transcript;
+        });
+    const seeTask = step(
+      "see",
+      "see.json",
+      async () => {
+        const keyframes = ingested?.keyframes ?? [];
+        const selected = selectFramesForDescription(
+          keyframes,
+          ingested?.shots ?? [],
+        );
+        const estimate = estimateVisionUsd(
+          selected.length,
+          options.visionModel,
+        );
+        if (estimate > env.SAYMO_VISION_BUDGET_USD) {
+          throw new Error(
+            `Vision budget exceeded: ${estimate.toFixed(3)} > ${env.SAYMO_VISION_BUDGET_USD.toFixed(3)}`,
+          );
+        }
+        const faces = await detectFaces(
+          rekognitionDetector(env.AWS_REGION),
+          keyframes,
+          metrics,
+        );
+        const frames = await describeKeyframes({
+          client,
+          model: options.visionModel,
+          frames: selected,
+          budgetUsd: env.SAYMO_VISION_BUDGET_USD,
+          metrics,
+        });
+        const result = { faces, frames };
+        await writeJson(artifact("see.json"), result);
         return result;
       },
-      () =>
-        readJson(artifact("ingest.json"), z.any() as z.ZodType<IngestResult>),
+      () => readJson(artifact("see.json"), SeenSchema),
     );
-    const audioPath = ingested.audioPath;
-    const info = ingested.info;
-    const [transcript, seen] = await Promise.all([
-      step(
-        "transcribe",
-        "transcript.json",
-        async () => {
-          const transcriber =
-            options.transcriber === "deepgram"
-              ? deepgramTranscriber(requireEnv(env, "DEEPGRAM_API_KEY"))
-              : elevenLabsTranscriber(requireEnv(env, "ELEVENLABS_API_KEY"));
-          const startedAt = performance.now();
-          const { transcript, usd } = await transcriber.transcribe(
-            audioPath,
-            info.durationMs,
-          );
-          metrics.record({
-            step: "transcribe",
-            provider: transcriber.name,
-            ms: Math.round(performance.now() - startedAt),
-            usd,
-          });
-          await writeJson(artifact("transcript.json"), transcript);
-          return transcript;
-        },
-        () => readJson(artifact("transcript.json"), TranscriptSchema),
-      ),
-      step(
-        "see",
-        "see.json",
-        async () => {
-          const keyframes = ingested?.keyframes ?? [];
-          const faces = await detectFaces(
-            rekognitionDetector(env.AWS_REGION),
-            keyframes,
-            metrics,
-          );
-          const frames = await describeKeyframes({
-            client,
-            model: options.visionModel,
-            frames: selectFramesForDescription(
-              keyframes,
-              ingested?.shots ?? [],
-            ),
-            budgetUsd: env.SAYMO_VISION_BUDGET_USD,
-            metrics,
-          });
-          const result = { faces, frames };
-          await writeJson(artifact("see.json"), result);
-          return result;
-        },
-        () =>
-          readJson(
-            artifact("see.json"),
-            z.object({
-              faces: ContentMapSchema.shape.faces,
-              frames: ContentMapSchema.shape.frames,
-            }),
-          ),
-      ),
+    const [transcribed, seen] = await Promise.allSettled([
+      transcribeTask,
+      seeTask,
     ]);
+    if (transcribed.status === "rejected") throw transcribed.reason;
+    if (seen.status === "rejected") throw seen.reason;
     content = buildContentMap({
-      source,
+      source: ingested.sourcePath,
       info,
       shots: ingested.shots,
-      faces: seen.faces,
-      frames: seen.frames,
-      transcript,
+      faces: seen.value.faces,
+      frames: seen.value.frames,
+      transcript: transcribed.value,
     });
     await writeJson(artifact("content.json"), content);
   } else {
@@ -272,14 +318,6 @@ export async function runPipeline(
   );
   printQuestions(plan);
 
-  const VoiceAssetsSchema = z.array(
-    z.object({
-      beatId: z.string(),
-      path: z.string(),
-      durationMs: z.number(),
-      words: TranscriptSchema.shape.words,
-    }),
-  );
   let voice: NonNullable<BuildAssets["voice"]> = [];
   if (mode === "text" && options.voice && plan.voiceover) {
     voice = await step(
@@ -300,7 +338,7 @@ export async function runPipeline(
           });
           spoken.push({
             beatId: beat.id,
-            path: relative(process.cwd(), resolve(outPath)),
+            path: relativeToRepo(outPath),
             durationMs: result.durationMs,
             words: result.words,
           });
@@ -319,16 +357,20 @@ export async function runPipeline(
     "video.json",
     async () => {
       const assets: BuildAssets = {};
-      if (options.source && ingested)
-        assets.sourceVideo = {
-          path: relative(process.cwd(), resolve(options.source)),
-          info: ingested.info,
-        };
+      if (ingested)
+        assets.sourceVideo = { path: ingested.sourcePath, info: ingested.info };
       const musicManifest = MusicManifestSchema.parse(
         JSON.parse(await readFile("assets/music/manifest.json", "utf8")),
       );
-      const music = pickMusic(musicManifest, plan.musicMood);
-      if (music) assets.music = music;
+      const track = pickMusic(musicManifest, plan.musicMood);
+      if (track) {
+        const copied = join(options.runDir, basename(track.path));
+        await copyFile(track.path, copied);
+        assets.music = {
+          path: relativeToRepo(copied),
+          durationMs: track.durationMs,
+        };
+      }
       if (voice.length > 0) assets.voice = voice;
       const built = buildVideo(plan, content, assets, defaultBrand);
       await writeJson(artifact("video.json"), built);
@@ -341,32 +383,24 @@ export async function runPipeline(
     "qa",
     "qa.json",
     async () => {
-      const avoid = Object.fromEntries(
-        plan.beats.map((beat) => [
-          beat.id,
-          beat.footage && content
-            ? avoidZones(content.faces, {
-                startMs: beat.footage.fromMs,
-                endMs: beat.footage.toMs,
-              })
-            : [],
-        ]),
-      );
       const result = runQa(
         doc,
         plan,
-        avoid,
+        keepOutForScenes(doc, plan, content),
         content?.source.durationMs ?? null,
       );
       await writeJson(artifact("qa.json"), result);
       return result;
     },
-    () =>
-      readJson(
-        artifact("qa.json"),
-        z.any() as z.ZodType<ReturnType<typeof runQa>>,
-      ),
+    () => readJson(artifact("qa.json"), QaReportSchema),
   );
+
+  const writeMetrics = () =>
+    writeJson(artifact("metrics.json"), {
+      events: metrics.toJSON(),
+      byStep: metrics.byStep(),
+      total: metrics.total(),
+    });
 
   let outputPath: string | undefined;
   if (!report.ok) {
@@ -375,11 +409,7 @@ export async function runPipeline(
       .map((i) => `${i.code}: ${i.message}`);
     manifest.steps.render = { status: "failed", error: errors.join("; ") };
     save();
-    await writeJson(artifact("metrics.json"), {
-      events: metrics.toJSON(),
-      byStep: metrics.byStep(),
-      total: metrics.total(),
-    });
+    await writeMetrics();
     throw new QaFailedError(`QA failed: ${errors.join("; ")}`);
   }
   if (options.render === "none") {
@@ -424,11 +454,7 @@ export async function runPipeline(
     );
   }
   save();
-  await writeJson(artifact("metrics.json"), {
-    events: metrics.toJSON(),
-    byStep: metrics.byStep(),
-    total: metrics.total(),
-  });
+  await writeMetrics();
   return {
     manifest,
     planPath: artifact("plan.json"),

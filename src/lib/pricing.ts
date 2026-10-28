@@ -28,6 +28,10 @@ const claudePerMillion: Record<string, PerMillion> = {
   },
 };
 
+export function assertPricedModel(model: string): void {
+  if (!claudePerMillion[model]) throw new Error(`No price for model ${model}`);
+}
+
 export function claudeUsd(model: string, usage: ClaudeUsage): number {
   const price = claudePerMillion[model];
   if (!price) throw new Error(`No price for model ${model}`);

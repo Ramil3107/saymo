@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { z } from "zod";
-import { probe } from "../../../lib/ffmpeg";
+import { probeDuration } from "../../../lib/ffmpeg";
 import type { Metrics } from "../../../lib/metrics";
 import { ELEVENLABS_TTS_USD_PER_1K_CHARS } from "../../../lib/pricing";
 import type { TranscriptWord } from "../../../video/schema/transcript";
@@ -68,7 +68,7 @@ export async function synthesizeVoice(input: {
   const body = ElevenLabsTtsResponseSchema.parse(await response.json());
   await mkdir(dirname(input.outPath), { recursive: true });
   await writeFile(input.outPath, Buffer.from(body.audio_base64, "base64"));
-  const { durationMs } = await probe(input.outPath);
+  const durationMs = await probeDuration(input.outPath);
   input.metrics.record({
     step: "voice",
     provider: "elevenlabs",

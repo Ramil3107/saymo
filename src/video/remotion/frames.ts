@@ -7,3 +7,14 @@ export function msToFrame(ms: number, rate = fps): number {
 export function frameToMs(frame: number, rate = fps): number {
   return (frame / rate) * 1000;
 }
+
+export function sceneFrames(
+  scene: { startMs: number; durationMs: number },
+  rate = fps,
+): { from: number; durationInFrames: number } {
+  const from = msToFrame(scene.startMs, rate);
+  return {
+    from,
+    durationInFrames: msToFrame(scene.startMs + scene.durationMs, rate) - from,
+  };
+}

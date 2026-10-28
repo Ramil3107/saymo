@@ -4,6 +4,12 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-10-28 · Keep-out zones and overlay placement on footage
+
+- **Decided:** face keep-out zones are computed per overlay from the faces inside that overlay's own time window, padded by 0.02 and mapped through the scene's crop transform into frame coordinates. Placement takes the first free slot, then scans the safe area vertically, and falls back to the least-overlapping position. QA treats an overlap above 50% of the element as an error and anything smaller as a warning.
+- **Why:** a talking head cropped to 9:16 leaves no slot that is completely free of the face and the caption band; an all-or-nothing rule made every such video fail QA. Taken by Claude on the owner's behalf during the stage 0 final review; the owner can tighten the thresholds.
+- **Rejected:** any overlap is an error (no video with a face would render); ignoring faces entirely.
+
 ### 2026-10-28 · Project language is English
 
 - **Decided:** every file in the repository is written in English: documentation, CLAUDE.md, skills, code comments, commit messages. Conversation with the owner stays in Russian. Files written in Russian before this decision are translated in place (plan Task 17).
