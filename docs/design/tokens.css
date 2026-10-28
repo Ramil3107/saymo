@@ -1,0 +1,122 @@
+/*
+  Design tokens for [name].
+  Source: the Foundations board on the design canvas, October 2026.
+  Every value here is used on the screens. Descriptions: foundations.md.
+*/
+
+:root {
+  color-scheme: dark;
+
+  /* Colour: surfaces, darkest to lightest */
+  --color-ink: #08080B;          /* page background; text on accent and white buttons */
+  --color-stage: #0F0F13;        /* video stage, inputs */
+  --color-surface: #141418;      /* cards, panels, bars, modals */
+  --color-raised: #1D1D22;       /* secondary buttons, chips, list rows, timeline clips; stage border */
+  --color-selected: #26262C;     /* selected timeline clip */
+
+  /* Colour: lines */
+  --color-line: #2C2C33;         /* card, bar and button borders; progress track */
+  --color-line-strong: #3A3A44;  /* outline chips, dashed empty states */
+  --color-line-input: #4A4A55;   /* input and select borders */
+
+  /* Colour: text */
+  --color-text: #FFFFFF;         /* 20.0:1 on ink */
+  --color-text-muted: #A3A3AD;   /* 8.0:1 on ink, 6.7:1 on raised */
+  --color-text-faint: #8A8A94;   /* placeholders and footnotes only; 5.9:1 on ink */
+  --color-on-accent: #08080B;    /* text and icons on accent */
+
+  /* Colour: accent. One loud thing per screen. Pick one value for the product. */
+  --color-accent: #FF4A1C;       /* default; ink on it 6.0:1 */
+  --color-accent-option-violet: #7C5CFF; /* ink on it 4.6:1 */
+  --color-accent-option-blue: #4C7DFF;   /* ink on it 5.4:1 */
+
+  /* Overlay and elevation */
+  --color-scrim: rgba(8, 8, 11, 0.76);
+  --shadow-float: 0 24px 60px rgba(0, 0, 0, 0.6);   /* modals and tilted video frames only */
+
+  /* Type: families */
+  --font-sans: 'Onest', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* Type: sizes */
+  --text-hero: clamp(44px, 7.5vw, 96px);    /* landing hero only */
+  --text-display: clamp(36px, 5.4vw, 68px);
+  --text-title: clamp(32px, 4.4vw, 52px);
+  --text-section: clamp(32px, 4vw, 44px);
+  --text-heading: 26px;
+  --text-card-title: 22px;                  /* 20px in compact cards */
+  --text-bar-title: 18px;
+  --text-lead: 18px;                        /* 17px on narrow pages */
+  --text-body: 16px;                        /* 15px in dense panels and secondary buttons */
+  --text-small: 14px;
+  --text-label: 13px;
+  --text-sticker: 13px;
+  --text-mono: 13px;                        /* 12px for meta lines */
+
+  /* Type: weights */
+  --weight-regular: 400;
+  --weight-medium: 500;   /* labels */
+  --weight-semibold: 600; /* list titles, selected chips */
+  --weight-bold: 700;     /* headings, solid buttons */
+  --weight-black: 800;    /* hero, display, title, section, sticker */
+
+  /* Type: letter spacing */
+  --tracking-hero: -0.04em;
+  --tracking-display: -0.035em;  /* display and title */
+  --tracking-section: -0.03em;
+  --tracking-heading: -0.02em;   /* heading and card title */
+  --tracking-bar: -0.01em;
+  --tracking-sticker: 0.04em;
+
+  /* Type: line height */
+  --leading-hero: 0.98;
+  --leading-display: 1.02;
+  --leading-title: 1.04;
+  --leading-section: 1.05;
+  --leading-heading: 1.2;
+  --leading-body: 1.45;
+
+  /* Spacing */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-14: 14px;   /* gap between cards and tiles in a grid */
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-28: 28px;
+  --space-32: 32px;   /* page side padding on desktop */
+  --space-44: 44px;   /* between page sections */
+  --page-gutter: 32px;
+  --page-gutter-phone: 16px;
+
+  /* Content widths */
+  --width-task: 880px;
+  --width-wide: 1216px;
+  --width-modal: 500px;
+
+  /* Radius */
+  --radius-pill: 999px;
+  --radius-panel: 28px;
+  --radius-frame: 24px;
+  --radius-row: 18px;
+  --radius-input: 16px;
+  --radius-clip: 14px;
+  --radius-small: 12px;
+
+  /* Sizes */
+  --size-touch-min: 44px;
+  --size-button-lg: 52px;
+  --size-button: 44px;
+  --size-input: 52px;
+  --size-input-dense: 48px;
+  --size-icon-button: 44px;     /* 48px for play and send */
+  --size-icon: 18px;            /* 17-18px inside buttons, 22-24px standalone */
+  --icon-stroke: 1.8;
+
+  /* Borders */
+  --border: 1px solid var(--color-line);
+  --border-input: 1px solid var(--color-line-input);
+  --selection-outline: 2px solid var(--color-accent);
+  --selection-offset: 8px;
+}
