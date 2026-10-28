@@ -1,11 +1,11 @@
 ---
 name: learn
-description: Записать урок и предложить правило. Вызывать после задачи или фидбека владельца, когда что-то пошло не так или результат пришлось переделывать.
+description: Record a lesson and propose a rule. Call after a task or feedback from the owner, when something went wrong or the result had to be redone.
 ---
 
-Каждый провал становится правилом, примитивом или проверкой, никогда шаблоном.
+Every failure becomes a rule, a primitive or a check, never a template.
 
-1. Если не сказано, спросить, что произошло.
-2. Добавить в `docs/learnings.md` запись `### <дата> · <заголовок>` (дата в формате YYYY-MM-DD). Новые записи идут сверху, сразу под вводной строкой. Поля пунктами, как в `docs/product/decisions.md`: `- **Что случилось:**`, `- **Урок:**`, `- **Правило:**`. В «Правиле» указать, куда его положить: `CLAUDE.md` или конкретный скилл в `.claude/skills/`.
-3. Показать diff правила. Применить его только после подтверждения владельца.
-4. Закоммитить: `docs: learning <заголовок>`.
+1. If not stated, ask what happened.
+2. In `docs/learnings.md`, add an entry `### <date> · <title>` (date in YYYY-MM-DD format). Write the entry in English. New entries go on top, right below the intro line. The fields are bullets, as in `docs/product/decisions.md`: `- **What happened:**`, `- **Lesson:**`, `- **Rule:**`. In "Rule", say where to put it: `CLAUDE.md` or a specific skill in `.claude/skills/`.
+3. Show the diff of the rule. Apply it only after the owner confirms.
+4. Commit: `docs: learning <title>`.

@@ -1,11 +1,11 @@
 ---
 name: vocab
-description: Добавить примитив в словарь ролика. Вызывать, когда режиссёру нужен новый компонент кадра.
+description: Add a primitive to the video vocabulary. Call when the director needs a new frame component.
 ---
 
-1. Спросить имя примитива и его параметры.
-2. Создать `src/video/remotion/primitives/<Name>.tsx`.
-3. Добавить Zod-схему параметров в `src/video/schema/video.ts`.
-4. Добавить карточку в каталог. Каталога пока нет, он появится на этапе 1, до тех пор шаг пропускать.
-5. Написать тест на регистры и форматы: примитив работает в каждом регистре и в каждом формате (9:16, 1:1, 16:9).
-6. Прогнать рендер одного кадра: `pnpm remotion:still`.
+1. Ask for the primitive's name and its parameters.
+2. Create `src/video/remotion/primitives/<Name>.tsx`.
+3. Add the Zod schema of the parameters to `src/video/schema/video.ts`.
+4. Add a card to the catalog. There is no catalog yet. It arrives in stage 1. Until then, skip this step.
+5. Write a test for registers and formats: the primitive works in every register and in every format (9:16, 1:1, 16:9).
+6. Render a single frame: `pnpm remotion:still`.

@@ -1,57 +1,57 @@
-# Деньги и рост
+# Money and growth
 
-## Модель
+## Model
 
-Подписка с бесплатным тарифом. Тариф считается в роликах в месяц, правки входят: человек не должен бояться нажимать. Цифры тарифов — в `02-mvp-scope.md`.
+A subscription with a free plan. A plan is counted in videos per month, edits included: a person should not be afraid to click. The plan numbers are in `02-mvp-scope.md`.
 
-## Сколько можно заработать
+## How much can be earned
 
-Оценка из обсуждения, а не прогноз:
+An estimate from the discussion, not a forecast:
 
-- 500 платящих при $20–50 в месяц — это **$10–25 тыс. в месяц**.
-- Это небольшой здоровый бизнес. Масштаба Higgsfield здесь не будет.
+- 500 paying users at $20–50 a month is **$10–25 thousand a month**.
+- This is a small healthy business. There will be no Higgsfield scale here.
 
-## Расходы
+## Costs
 
-- Каждый ролик и каждая правка стоят денег на обработку, плюс сборка видеофайла.
-- На старте, пока пользователей мало, это по оценке десятки, максимум сотни долларов в месяц. Главная трата — время автора.
-- Себестоимость ролика с учётом всех правок неизвестна. Это первое, что нужно измерить.
+- Every video and every edit costs money for processing, plus rendering the video file.
+- At the start, while there are few users, this is estimated at tens, at most hundreds of dollars a month. The main expense is the author's time.
+- The cost of a video including all edits is unknown. It is the first thing to measure.
 
-Как не уйти в минус:
-- Бесплатный тариф: 2 ролика с водяным знаком.
-- Предел правок на ролик (предложение — 30).
-- Мелкие правки обрабатывать дешевле, чем первую сборку ролика.
-- Собирать видеофайл только при скачивании, а не после каждой правки.
+How not to go into the red:
+- Free plan: 2 videos with a watermark.
+- Edit cap per video (proposal: 30).
+- Process small edits more cheaply than the first build of a video.
+- Render the video file only on download, not after every edit.
 
-## Первые клиенты
+## First customers
 
-Платную рекламу на старте не брать: она и уводит в минус. Продукт рекламирует себя сам, потому что результат — ролик.
+Skip paid advertising at the start: it is what pushes the budget into the red. The product advertises itself, because the result is a video.
 
-1. **Делать ролики бесплатно и без спроса.** Найти 20–30 маркетологов или основателей, у которых скоро запуск, собрать ролик про их продукт и отправить. Часть ответит, часть купит, все дадут обратную связь.
-2. **Публиковать сами ролики** в X, LinkedIn, Telegram, TikTok с подписью «сделано за две минуты одним сообщением» и показывать процесс.
-3. **Быть там, где аудитория:** чаты SMM-специалистов и маркетологов, дизайнерские сообщества, Reddit, Indie Hackers. Показывать, а не продавать.
-4. **Водяной знак на бесплатном тарифе** и подпись «Made with [name]» на странице согласования: каждый ролик пользователя — реклама.
+1. **Make videos for free and unasked.** Find 20–30 marketers or founders with a launch coming up, make a video about their product and send it. Some will reply, some will buy, all will give feedback.
+2. **Publish the videos themselves** on X, LinkedIn, Telegram, TikTok with the caption "made in two minutes with one message" and show the process.
+3. **Be where the audience is:** chats of social media managers and marketers, design communities, Reddit, Indie Hackers. Show, do not sell.
+4. **A watermark on the free plan** and the "Made with [name]" signature on the review page: every user's video is an ad.
 
-Первые 10 платящих почти всегда приходят вручную, через личные сообщения.
+The first 10 paying customers almost always come manually, through direct messages.
 
-## Инвестиции
+## Investment
 
-Порядок: сначала цифры, потом разговоры. На ранней стадии смотрят на:
-- **рост:** выручка растёт из месяца в месяц;
-- **возвращаемость:** люди делают ролики снова, а не один раз;
-- **основателя:** сам собрал и сам продал.
+The order: numbers first, then conversations. At an early stage investors look at:
+- **growth:** revenue grows from month to month;
+- **retention:** people make videos again, not just once;
+- **the founder:** built it and sold it themselves.
 
-С несколькими тысячами долларов в месяц и ростом можно идти к ангелам из маркетинга и инструментов для авторов, в акселераторы, в небольшие фонды ранней стадии. Без цифр одиночке с продуктом поверх открытых инструментов откажут.
+With a few thousand dollars a month and growth, you can go to angels from marketing and creator tools, to accelerators, to small early-stage funds. Without numbers, a solo founder with a product built on top of open tools will be turned down.
 
-Расходы низкие, поэтому вариант расти на свои деньги, не отдавая долю, тоже рабочий.
+Costs are low, so the option of growing on your own money, without giving up equity, also works.
 
-## Отложенные идеи
+## Postponed ideas
 
-Обсуждались как запасные варианты или следующий шаг. Сейчас не делаем.
+Discussed as fallback options or a next step. Not doing them now.
 
-- **Продавать готовые ролики, а не подписку.** Небольшая команда с AI обслуживает много клиентов и берёт деньги за результат.
-- **Узкий вход — один выход.** Подкаст → шортсы с субтитрами, ссылка → лонч-ролик, таблица → анимированные графики.
-- **Неанглоязычные рынки.** У западных инструментов слабее кириллица, шрифты и местная оплата.
-- **API для бизнеса.** Автоматические ролики для карточек товаров, недвижимости, отчётов.
-- **Командная работа.** Общий бренд и ссылка, по которой руководитель или клиент оставляет комментарии.
-- **Автопостинг** в соцсети, когда люди уже делают ролики регулярно и сами просят.
+- **Sell finished videos instead of a subscription.** A small team with AI serves many clients and charges for the result.
+- **Narrow input, single output.** Podcast → shorts with captions, link → launch video, table → animated charts.
+- **Non-English-speaking markets.** Western tools are weaker on Cyrillic, fonts and local payment.
+- **API for business.** Automatic videos for product cards, real estate, reports.
+- **Teamwork.** A shared brand and a link where a manager or client leaves comments.
+- **Auto-posting** to social networks, when people already make videos regularly and ask for it themselves.

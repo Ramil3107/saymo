@@ -1,16 +1,16 @@
 ---
 name: review
-description: Самопроверка диффа по правилам кода. Вызывать перед каждым коммитом.
+description: Self-check of the diff against the code rules. Call before every commit.
 ---
 
-1. Прогнать `pnpm check && pnpm typecheck && pnpm test`. Красное сразу идёт в замечания.
-2. Пройти по диффу (`git diff HEAD`, новые файлы из `git status --short`) и сверить с чек-листом из «Правил кода» в `CLAUDE.md`:
-   - читаемость: код понятен без комментариев;
-   - срезы не лезут друг в друга;
-   - Zod стоит на границах;
-   - нет лишних запросов и тяжёлых импортов;
-   - на логику есть тесты;
-   - строки интерфейса идут через локализацию;
-   - стили идут через токены;
-   - нет комментариев и пояснений от ИИ.
-3. Вывести список замечаний: файл, строка, что не так. Ничего не исправлять.
+1. Run `pnpm check && pnpm typecheck && pnpm test`. Anything red goes straight into the findings.
+2. Go through the diff (`git diff HEAD`, new files from `git status --short`) and check it against the checklist from "Code rules" in `CLAUDE.md`:
+   - readability: the code is clear without comments;
+   - slices do not reach into each other;
+   - Zod is in place at the boundaries;
+   - no extra queries or heavy imports;
+   - logic has tests;
+   - interface strings go through localization;
+   - styles go through tokens;
+   - no comments or explanations from the AI.
+3. Output the list of findings: file, line, what is wrong. Do not fix anything.

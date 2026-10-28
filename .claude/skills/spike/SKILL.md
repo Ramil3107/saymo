@@ -1,8 +1,8 @@
 ---
 name: spike
-description: Прогнать спайк на видео или тексте и записать замеры в таблицу. Вызывать, когда нужно проверить конвейер или сравнить провайдеров и модели.
+description: Run the spike on a video or text and record the measurements in the table. Call when the pipeline needs checking or providers and models need comparing.
 ---
 
-1. Если не сказано, спросить вход (путь к видео или текст) и назначение.
-2. Запустить `pnpm spike <путь или --text> --to <назначение> [--transcriber elevenlabs|deepgram] [--render local|lambda|none]`.
-3. После прогона дописать строку в таблицу `docs/spike-results.md` из `runs/<id>/metrics.json`. Оценку глазами и заметки спросить у владельца, самому не ставить.
+1. If not stated, ask for the input (a path to a video, or text) and the destination.
+2. Run `pnpm spike <path or --text> --to <destination> [--transcriber elevenlabs|deepgram] [--render local|lambda|none]`.
+3. After the run, append a row to the table in `docs/spike-results.md` from `runs/<id>/metrics.json`. Ask the owner for the eyeball score and the notes, do not fill them in yourself.

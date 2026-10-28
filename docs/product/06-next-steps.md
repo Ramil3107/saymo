@@ -1,38 +1,38 @@
-# Что дальше
+# What comes next
 
-## Этапы
+## Stages
 
-Длительности не оцениваем: они зависят от технических решений.
+We do not estimate durations: they depend on technical decisions.
 
-### 0. Проверить спрос руками
+### 0. Test demand by hand
 
-До разработки продукта.
-- Сделать 10–20 роликов вручную через свой набор инструментов и продать их.
-- Отправить 20–30 бесплатных роликов маркетологам и основателям без спроса.
-- Записать: что просят чаще всего, сколько правок до «нравится», сколько стоит один ролик, за что готовы платить.
+Before developing the product.
+- Make 10–20 videos by hand with your own set of tools and sell them.
+- Send 20–30 free videos to marketers and founders unasked.
+- Record: what they ask for most often, how many edits until "I like it", how much one video costs, what they are ready to pay for.
 
-Результат: понятно, что автоматизировать первым и сколько брать.
+Result: it is clear what to automate first and how much to charge.
 
-### 1. Технические решения
+### 1. Technical decisions
 
-- Вместе с Claude Code пройти вопросы из `05-open-questions.md`, по одному, начиная с первого: как описывать ролик внутри продукта.
-- Сделать короткую проверку: от текста до готового ролика без интерфейса. Измерить время и стоимость одного ролика и одной правки.
-- Записать решения в `decisions.md`.
+- Go through the questions from `05-open-questions.md` together with Claude Code, one by one, starting with the first: how to describe a video inside the product.
+- Do a short test: from text to a finished video without an interface. Measure the time and cost of one video and one edit.
+- Record the decisions in `decisions.md`.
 
-### 2. Первая версия
+### 2. First version
 
-По скоупу из `02-mvp-scope.md` и дизайну из `design/`. Порядок обсудить; естественный путь — сначала главный сценарий (Home → Generating → Video and edits → Download), потом вход, бренд, тарифы, библиотека.
+Following the scope in `02-mvp-scope.md` and the design in `design/`. Discuss the order. The natural path is the main scenario first (Home → Generating → Video and edits → Download), then sign-in, brand, plans, library.
 
-### 3. Запуск
+### 3. Launch
 
-Лендинг с настоящими роликами, документы, письма, аналитика, первые пользователи из этапа 0.
+A landing page with real videos, documents, emails, analytics, the first users from stage 0.
 
-### 4. После запуска
+### 4. After launch
 
-То, что отложили: свой материал (если не вошёл), комментарии по ссылке, команды, несколько брендов, автопостинг. Порядок — по тому, что просят пользователи.
+What was postponed: own material (if it did not make it), comments on the link, teams, several brands, auto-posting. The order follows what users ask for.
 
-## С чего начать разговор с Claude Code
+## How to start the conversation with Claude Code
 
-1. «Прочитай `CLAUDE.md`, `docs/` и `design/README.md`. Перескажи, как ты понял продукт, и задай вопросы по тому, что непонятно или противоречит.»
-2. «Давай разберём технические вопросы из `05-open-questions.md`. Начни с первого: предложи 2–3 варианта, плюсы и минусы, свою рекомендацию.»
-3. «Предложи план короткой проверки: от текста до готового ролика. Что нужно, чтобы измерить время и стоимость.»
+1. "Read `CLAUDE.md`, `docs/` and `design/README.md`. Retell how you understood the product and ask questions about what is unclear or contradictory."
+2. "Let's go through the technical questions from `05-open-questions.md`. Start with the first one: propose 2–3 options, pros and cons, your recommendation."
+3. "Propose a plan for a short test: from text to a finished video. What is needed to measure the time and cost."

@@ -1,108 +1,111 @@
 # Saymo
 
-## Что это
+## What this is
 
-- Saymo превращает видео или текст пользователя в ролик для соцсетей.
-- Режиссёр на модели Claude строит план из битов, план становится документом ролика (данные, не код), Remotion рендерит документ в MP4.
-- Сейчас этап 0: каркас репозитория и спайк `pnpm spike`. Next.js, база и очередь появятся позже.
+- Saymo turns a user's video or text into a social video.
+- A director running on a Claude model builds a plan of beats. The plan becomes the video document (data, not code), and Remotion renders the document to MP4.
+- Currently stage 0: the repository scaffold and the spike, `pnpm spike`. Next.js, the database and the queue come later.
 
-Спека: `docs/superpowers/specs/2026-10-28-saymo-v1-design.md`.
+Spec: `docs/superpowers/specs/2026-10-28-saymo-v1-design.md`.
 
-## Как со мной работать
+## How to work with me
 
-- Пиши по-русски. Интерфейс продукта на английском.
-- Когда нужно решение по технологии, сервису или архитектуре, предложи 2–3 варианта с плюсами и минусами и свою рекомендацию. Решение за владельцем.
-- Технологии и архитектуру не меняй без записи в `docs/product/decisions.md`.
-- Держись скоупа первой версии из спеки. Если что-то просится сверх него, скажи и спроси.
-- Если документы противоречат друг другу или дизайну, не угадывай: покажи расхождение и спроси.
-- Заглушки в квадратных скобках (`[price]`, `[date]`) это нерешённые вопросы, а не данные.
+- Everything in this repository is in English: docs, comments, commit messages, skills. Talk to the owner in Russian.
+- The product interface is in English.
+- When a decision on technology, a service or architecture is needed, propose 2–3 options with pros and cons and your recommendation. The decision is the owner's.
+- Do not change technologies or architecture without an entry in `docs/product/decisions.md`.
+- Stay within the scope of the first version from the spec. If something beyond it comes up, say so and ask.
+- If documents contradict each other or the design, do not guess: show the discrepancy and ask.
+- Placeholders in square brackets (`[price]`, `[date]`) are open questions, not data.
 
-## Правила кода
+## Code rules
 
-- Код читается без комментариев: имена говорят, что происходит. Комментарий только там, где «почему» не очевидно, одной строкой.
-- Никаких длинных пояснений от ИИ, заголовков-разделителей, «TODO: подумать» и мёртвого кода.
-- Простая структура: вертикальные срезы, маленькие функции, без слоёв ради слоёв. Абстракция появляется на третьем повторе, не раньше.
-- Zod на каждой границе: ввод пользователя, вывод модели, вебхуки, env.
-- Производительность учитывается при написании, не потом: серверные компоненты, ленивые тяжёлые вещи, индексы, отсутствие лишних запросов.
-- Строгий TypeScript, без any. Biome чистый, тесты зелёные перед каждым коммитом.
-- Тесты там, где есть логика: схема, операции, раскладка, QA, лимиты, вебхуки. Один e2e на главный путь.
-- Строки интерфейса только через ключи локализации. Стили только через токены.
-- Коммиты маленькие и осмысленные. Решения в `docs/product/decisions.md`.
+- Code reads without comments: names say what is going on. A comment only where the "why" is not obvious, in one line.
+- No long AI explanations, divider headings, "TODO: think about it" or dead code.
+- Simple structure: vertical slices, small functions, no layers for the sake of layers. An abstraction appears on the third repetition, not earlier.
+- Zod at every boundary: user input, model output, webhooks, env.
+- Performance is considered while writing, not afterwards: server components, heavy things loaded lazily, indexes, no extra queries.
+- Strict TypeScript, no any. Biome clean, tests green before every commit.
+- Tests where there is logic: schema, operations, layout, QA, limits, webhooks. One e2e test for the main path.
+- Interface strings only through localization keys. Styles only through tokens.
+- Commits are small and meaningful. Decisions go in `docs/product/decisions.md`.
 
-## Структура
+## Structure
 
-Целевая структура из спеки, раздел 9. На этапе 0 есть `lib/`, `video/`, `worker/` и `cli/` (команда `spike`).
+Target structure from the spec, section 9. Stage 0 has `lib/`, `video/`, `worker/` and `cli/` (the `spike` command).
 
 ```
 src/
-  app/            маршруты Next.js, тонкие: собирают экраны из срезов
-  features/       вертикальные срезы, у каждого свои компоненты, серверные действия, запросы, тесты
+  app/            Next.js routes, thin: they assemble screens from slices
+  features/       vertical slices, each with its own components, server actions, queries and tests
     auth/  brand/  library/  generation/  editing/  rendering/  review/  billing/  account/  admin/  landing/  emails/
-  video/          схема, операции, словарь, раскладка, QA, регистры, каталог
-  ui/             дизайн-система: токены, примитивы, иконки
-  worker/         вход воркера, шаги конвейера, очередь
-  lib/            тонкая инфраструктура: db, env, storage, ai, jobs, i18n
-messages/         строки интерфейса, пока только en
-docs/             страницы документации, собираются в сайт VitePress
+  video/          schema, operations, vocabulary, layout, QA, registers, catalog
+  ui/             design system: tokens, primitives, icons
+  worker/         worker entry, pipeline steps, queue
+  lib/            thin infrastructure: db, env, storage, ai, jobs, i18n
+messages/         interface strings, English only for now
+docs/             documentation pages, built into a VitePress site
 ```
 
-- Срез не импортирует внутренности другого среза, только его публичный вход.
-- Экран собирается из срезов в `app/`.
-- Всё, что про ролик, живёт в `video/` и не знает про базу и пользователей.
+- A slice does not import the internals of another slice, only its public entry.
+- A screen is assembled from slices in `app/`.
+- Everything about the video lives in `video/` and knows nothing about the database or users.
 
-## Команды
+## Commands
 
-- `pnpm check`: Biome, линт и форматирование.
-- `pnpm format`: чинит форматирование после красного `pnpm check`.
-- `pnpm typecheck`: проверка типов, `tsc --noEmit`.
-- `pnpm test`: тесты, Vitest.
-- `pnpm spike`: прогон конвейера на видео или тексте, подробности в скилле `spike`.
-- `pnpm docs:dev`: сайт документации локально.
-- `pnpm remotion:studio`: Remotion Studio, просмотр композиции.
+- `pnpm check`: Biome, lint and formatting.
+- `pnpm format`: fixes formatting after a red `pnpm check`.
+- `pnpm typecheck`: type check, `tsc --noEmit`.
+- `pnpm test`: tests, Vitest.
+- `pnpm spike`: runs the pipeline on a video or text, details in the `spike` skill.
+- `pnpm docs:dev`: the documentation site, locally.
+- `pnpm docs:build`: builds the documentation site and fails on dead links.
+- `pnpm docs:preview`: serves the built site.
+- `pnpm remotion:studio`: Remotion Studio, composition preview.
 
-Окружение:
+Environment:
 
-- Каждую команду начинать с `source ~/.nvm/nvm.sh && nvm use && pnpm …`: вызовы Bash у агента не делят состояние, Node по умолчанию 20, проекту нужен 22.
-- Один тестовый файл: `pnpm test <путь>`, не `pnpm test -- <путь>` (pnpm 12 пробрасывает `--` дальше).
-- Если `pnpm add` пишет про проигнорированные скрипты сборки, выполнить `pnpm approve-builds`.
+- Start every command with `source ~/.nvm/nvm.sh && nvm use && pnpm …`: the agent's Bash calls do not share state, the default Node is 20 and the project needs 22.
+- One test file: `pnpm test <path>`, not `pnpm test -- <path>` (pnpm 12 passes `--` along).
+- If `pnpm add` reports ignored build scripts, run `pnpm approve-builds`.
 
-## Скиллы
+## Skills
 
-Лежат в `.claude/skills/`.
+They live in `.claude/skills/`.
 
-| Скилл | Когда вызывать |
+| Skill | When to call |
 | --- | --- |
-| `learn` | После задачи или фидбека владельца: записать урок и предложить правило |
-| `decision` | Принято решение по технологии, сервису, архитектуре или скоупу: записать в журнал |
-| `docs` | После правок кода, до коммита: обновить страницы и схему пути пользователя, они идут в тот же коммит |
-| `review` | Перед коммитом: самопроверка диффа по правилам кода |
-| `vocab` | Нужен новый примитив в словаре ролика |
-| `spike` | Нужно прогнать спайк на файле или тексте и записать замеры |
+| `learn` | After a task or feedback from the owner: record a lesson and propose a rule |
+| `decision` | A decision on technology, service, architecture or scope was made: record it in the log |
+| `docs` | After code changes, before the commit: update the pages and the user flow diagram; they go in the same commit |
+| `review` | Before the commit: self-check of the diff against the code rules |
+| `vocab` | A new primitive is needed in the video vocabulary |
+| `spike` | A spike needs to be run on a file or text and its measurements recorded |
 
-## Определение готовности
+## Definition of done
 
-Задача готова, когда:
+A task is done when:
 
-- Biome чистый: `pnpm check`.
-- Типы сходятся: `pnpm typecheck`.
-- Тесты зелёные: `pnpm test`.
-- Документация обновлена в том же коммите, что и изменение (скилл `docs`).
-- Решение записано в `docs/product/decisions.md` (скилл `decision`), если оно принималось.
+- Biome is clean: `pnpm check`.
+- Types check out: `pnpm typecheck`.
+- Tests are green: `pnpm test`.
+- Documentation is updated in the same commit as the change (`docs` skill).
+- The decision is recorded in `docs/product/decisions.md` (`decision` skill), if one was made.
 
-## Словарь
+## Glossary
 
-| Термин | Что значит | В интерфейсе |
+| Term | Meaning | In the UI |
 | --- | --- | --- |
-| Ролик | Один моушн-ролик пользователя | video |
-| Правка | Просьба что-то изменить, словами или быстрой кнопкой | edit |
-| Элемент | Часть кадра, которую можно выделить: заголовок, логотип, фон и т. д. | — |
-| Сцена | Кусок ролика с началом и длительностью | scene |
-| Бит | Кусок плана с ролью, временем и содержимым | — |
-| Бренд | Логотип, до трёх цветов и шрифт пользователя | brand |
-| Пример | Готовый сценарий для старта: Product launch, Sale и т. д. | example |
-| Ручной монтаж | Спрятанный редактор порядка, длины и текста сцен | Editor |
-| Формат | Пропорции кадра: 9:16, 1:1, 16:9 | format |
-| Назначение | Куда пойдёт ролик, задаёт формат и потолок длины | — |
-| Регистр | Характер ролика, задаёт тайминги, кривые и плотность | — |
-| Лимит | Сколько роликов можно сделать в месяц по тарифу | — |
-| Ссылка на согласование | Ссылка только для просмотра ролика без входа | review link |
+| video | One motion video of the user | video |
+| edit | A request to change something, in words or with a quick button | edit |
+| element | A part of the frame that can be selected: headline, logo, background, etc. | — |
+| scene | A piece of the video with a start and a duration | scene |
+| beat | A piece of the plan with a role, a time and content | — |
+| brand | The user's logo, up to three colors and a font | brand |
+| example | A ready-made scenario to start from: Product launch, Sale, etc. | example |
+| editor | A hidden manual editor for the order, length and text of scenes | Editor |
+| format | Aspect ratio of the frame: 9:16, 1:1, 16:9 | format |
+| destination | Where the video will go, sets the format and the length ceiling | — |
+| register | The character of the video, sets timings, curves and density | — |
+| limit | How many videos can be made per month on the plan | — |
+| review link | A view-only link to the video, no sign-in needed | review link |

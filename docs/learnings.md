@@ -1,3 +1,3 @@
-# Уроки
+# Learnings
 
-Записи добавляет скилл `learn`, новые сверху.
+Entries are added by the `learn` skill, newest on top.

@@ -1,8 +1,8 @@
 ---
 name: decision
-description: Записать принятое решение в журнал решений. Вызывать, когда выбрана технология, сервис, архитектура или скоуп.
+description: Record a decision that has been made in the decision log. Call when a technology, service, architecture or scope has been chosen.
 ---
 
-1. Собрать из разговора и спросить недостающее: дату, что решили, почему, что отвергли.
-2. Вставить запись сверху `docs/product/decisions.md`, сразу под строкой `---`, по образцу соседних записей: `### <дата> · <заголовок>` (дата в формате YYYY-MM-DD) и пункты `- **Решили:**`, `- **Почему:**`, `- **Отвергли:**`.
-3. Закоммитить: `docs: decision <заголовок>`.
+1. Collect from the conversation and ask for what is missing: the date, what was decided, why, what was rejected.
+2. Insert the entry at the top of `docs/product/decisions.md`, right below the `---` line, following the neighboring entries: `### <date> · <title>` (date in YYYY-MM-DD format) and the bullets `- **Decided:**`, `- **Why:**`, `- **Rejected:**`. Write the entry in English.
+3. Commit: `docs: decision <title>`.

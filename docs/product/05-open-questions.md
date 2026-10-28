@@ -1,39 +1,39 @@
-# Открытые вопросы
+# Open questions
 
-## Продуктовые
+## Product
 
-Решить до начала разработки или по ходу. Когда вопрос решён, перенести его в `decisions.md`.
+Resolve before development starts or along the way. When a question is resolved, move it to `decisions.md`.
 
-| Вопрос | Варианты или что известно | От чего зависит |
+| Question | Options or what is known | What it depends on |
 | --- | --- | --- |
-| Название и домен | Не выбрано, везде `[name]` | Лендинг, письма, ссылки на согласование |
-| Цена Pro | Ориентир $20–50 в месяц | Себестоимость ролика |
-| Роликов в Pro | Сейчас 20 | Себестоимость ролика |
-| Предел правок на ролик | Предложение — 30 | Себестоимость правки |
-| Свой материал (видео, подкаст) в первой версии? | В первой версии или сразу после запуска | Сроки, сложность |
-| Сколько роликов из лимита стоят клипы из подкаста | Один ролик за пачку или по одному за клип | Экономика |
-| Пускать на Home до входа? | На макетах вход раньше. Альтернатива — просить войти при нажатии Make the video | Конверсия лендинга |
-| Ограничения на загрузку | Максимальная длина и размер видео и аудио | Расходы, скорость |
-| Языки роликов | Только английский или сразу и другие (кириллица и т. д.) | Шрифты, рынки |
-| Первый рынок | Англоязычный или неанглоязычный | Продвижение, оплата |
-| Акцентный цвет | Красно-оранжевый по умолчанию, есть фиолетовый и синий | Только дизайн |
-| Откуда музыка и озвучка | Нужна лицензия на коммерческое использование | Расходы, права |
-| Страна регистрации компании | Влияет на выбор платёжного сервиса и налоги | Оплата |
-| Как выглядит водяной знак | Не нарисован | Дизайн |
+| Name and domain | Not chosen, `[name]` everywhere | Landing page, emails, review links |
+| Pro price | Guideline $20–50 a month | Cost of a video |
+| Videos in Pro | Currently 20 | Cost of a video |
+| Edit cap per video | Proposal: 30 | Cost of an edit |
+| Own material (video, podcast) in the first version? | In the first version or right after launch | Timing, complexity |
+| How many videos from the limit podcast clips use up | One video per batch or one per clip | Economics |
+| Let people onto Home before sign-in? | In the mockups sign-in comes first. The alternative: ask to sign in when Make the video is pressed | Landing page conversion |
+| Upload limits | Maximum length and size of video and audio | Costs, speed |
+| Video languages | English only or others right away (Cyrillic, etc.) | Fonts, markets |
+| First market | English-speaking or non-English-speaking | Promotion, payment |
+| Accent color | Red-orange by default, violet and blue are available | Design only |
+| Where music and voiceover come from | A license for commercial use is needed | Costs, rights |
+| Company registration country | Affects the choice of payment service and taxes | Payment |
+| What the watermark looks like | Not drawn | Design |
 
-## Технические — решаем потом
+## Technical, to decide later
 
-Здесь только вопросы. Ничего не выбрано. Claude Code не выбирает сам: предлагает варианты с плюсами и минусами, решение за автором.
+Only questions here. Nothing is chosen. Claude Code does not choose by itself: it proposes options with pros and cons, and the decision is the author's.
 
-1. **Как описывать ролик внутри продукта**, чтобы правки словами были надёжными, быстрыми и дешёвыми.
-2. **Чем собирать видеофайл и где** это делать. Отдельно проверить лицензии движков: у некоторых особые условия для сервисов, которые собирают ролики для клиентов.
-3. **Какие модели и сервисы** нужны для понимания запроса, текста, озвучки, расшифровки речи.
-4. **Как устроить «ткнул в кадр — сказал — поменялось»**: как определить элемент и как быстро показать результат.
-5. **Как делать быстрые правки** (Bigger, Change font) — может быть, без обращения к модели.
-6. **Как сервис перекладывает кадр** под другой формат.
-7. **Как хранить шаблоны и примеры** и как добавлять новые.
-8. **Стек приложения**: интерфейс, сервер, база, хранение файлов.
-9. **Вход, оплата (включая налоги в ЕС), письма, аналитика, отслеживание ошибок.**
-10. **Безопасность загружаемых файлов** и всего, что сервис генерирует.
-11. **Как считать себестоимость ролика** с учётом правок и сборки файла.
-12. **Как проверять качество** ролика до показа: текст влезает, читается, длина правильная.
+1. **How to describe a video inside the product** so that edits in words are reliable, fast and cheap.
+2. **What to render the video file with and where** to do it. Check engine licenses separately: some have special terms for services that render videos for customers.
+3. **Which models and services** are needed to understand the request, for text, voiceover and speech transcription.
+4. **How to build "click the frame, say it, it changes"**: how to identify the element and how to show the result quickly.
+5. **How to do quick edits** (Bigger, Change font), perhaps without calling the model.
+6. **How the service re-lays out the frame** for another format.
+7. **How to store templates and examples** and how to add new ones.
+8. **The application stack**: interface, server, database, file storage.
+9. **Sign-in, payment (including EU taxes), emails, analytics, error tracking.**
+10. **Security of uploaded files** and of everything the service generates.
+11. **How to calculate the cost of a video** including edits and rendering the file.
+12. **How to check the quality** of a video before showing it: the text fits, is readable, the length is right.
