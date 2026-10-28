@@ -1,0 +1,98 @@
+{
+  "metadata": { "request_id": "fixture" },
+  "results": {
+    "channels": [
+      {
+        "detected_language": "en",
+        "alternatives": [
+          {
+            "transcript": "We closed the month in two days. That is a record for the team.",
+            "confidence": 0.98,
+            "words": [
+              {
+                "word": "we",
+                "punctuated_word": "We",
+                "start": 0.1,
+                "end": 0.3,
+                "confidence": 0.99,
+                "speaker": 0
+              },
+              {
+                "word": "closed",
+                "punctuated_word": "closed",
+                "start": 0.3,
+                "end": 0.7,
+                "confidence": 0.99,
+                "speaker": 0
+              },
+              {
+                "word": "the",
+                "punctuated_word": "the",
+                "start": 0.7,
+                "end": 0.8,
+                "confidence": 0.99,
+                "speaker": 0
+              },
+              {
+                "word": "month",
+                "punctuated_word": "month",
+                "start": 0.8,
+                "end": 1.2,
+                "confidence": 0.99,
+                "speaker": 0
+              },
+              {
+                "word": "in",
+                "punctuated_word": "in",
+                "start": 1.2,
+                "end": 1.3,
+                "confidence": 0.99,
+                "speaker": 0
+              },
+              {
+                "word": "two",
+                "punctuated_word": "two",
+                "start": 1.3,
+                "end": 1.5,
+                "confidence": 0.99,
+                "speaker": 0
+              },
+              {
+                "word": "days",
+                "punctuated_word": "days.",
+                "start": 1.5,
+                "end": 1.9,
+                "confidence": 0.99,
+                "speaker": 0
+              },
+              {
+                "word": "that",
+                "punctuated_word": "That",
+                "start": 2.4,
+                "end": 2.6,
+                "confidence": 0.99,
+                "speaker": 1
+              },
+              {
+                "word": "is",
+                "punctuated_word": "is",
+                "start": 2.6,
+                "end": 2.7,
+                "confidence": 0.99,
+                "speaker": 1
+              },
+              {
+                "word": "record",
+                "punctuated_word": "record.",
+                "start": 2.9,
+                "end": 3.3,
+                "confidence": 0.99,
+                "speaker": 1
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

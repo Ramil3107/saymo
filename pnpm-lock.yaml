@@ -166,6 +166,9 @@ importers:
 
   .:
     dependencies:
+      '@deepgram/sdk':
+        specifier: 5.16.0
+        version: 5.16.0
       zod:
         specifier: 4.6.7
         version: 4.6.7
@@ -382,6 +385,10 @@ packages:
 
   '@chevrotain/utils@13.2.0':
     resolution: {integrity: sha512-SzKYY68rseOrb9KILVzPsl6SjkQtdWw01SRGB5aCVI5kFcHltQsOYV3JB0Ffst72DgkvHCyDQ0NLwxtmCCf97Q==}
+
+  '@deepgram/sdk@5.16.0':
+    resolution: {integrity: sha512-A7NfDvSi5S5hdhsSDvHx8VteivOqiKjPOZ50u2MeUUs8Oy97C8E3R5V9KZnhttTnuUDCVOQQbBnGyTrPAEoRiA==}
+    engines: {node: '>=18.0.0'}
 
   '@docsearch/css@3.8.2':
     resolution: {integrity: sha512-y05ayQFyUmCXze79+56v/4HpycYF3uFqB78pLPrSV5ZKAlDuIAAJNhaRi8tTdRNXh05yxX/TyNnzD6LwSM89vQ==}
@@ -2126,6 +2133,18 @@ packages:
     engines: {node: '>=20.11'}
     hasBin: true
 
+  ws@8.22.0:
+    resolution: {integrity: sha512-Ydggc987+RO0AnWtZ/7Wq9FtNvcrL1b/RO0ud9mWjUPgDrsAAwQSF51sm2hm1XofbU/4jkpGEsLFsZZxU+1DOg==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   zod@4.6.7:
     resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
 
@@ -2326,6 +2345,13 @@ snapshots:
   '@chevrotain/types@13.2.0': {}
 
   '@chevrotain/utils@13.2.0': {}
+
+  '@deepgram/sdk@5.16.0':
+    dependencies:
+      ws: 8.22.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   '@docsearch/css@3.8.2': {}
 
@@ -3890,6 +3916,8 @@ snapshots:
       typescript: 7.0.2
 
   why-is-node-running@3.2.1: {}
+
+  ws@8.22.0: {}
 
   zod@4.6.7: {}
 

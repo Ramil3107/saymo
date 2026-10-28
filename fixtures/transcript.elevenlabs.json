@@ -1,0 +1,90 @@
+{
+  "language_code": "ru",
+  "text": "Привет всем. Сегодня мы закрыли month. Это рекорд для команды.",
+  "words": [
+    {
+      "text": "Привет",
+      "start": 0.12,
+      "end": 0.48,
+      "type": "word",
+      "speaker_id": "speaker_0"
+    },
+    {
+      "text": " ",
+      "start": 0.48,
+      "end": 0.5,
+      "type": "spacing",
+      "speaker_id": "speaker_0"
+    },
+    {
+      "text": "всем.",
+      "start": 0.5,
+      "end": 0.9,
+      "type": "word",
+      "speaker_id": "speaker_0"
+    },
+    {
+      "text": "Сегодня",
+      "start": 1.2,
+      "end": 1.7,
+      "type": "word",
+      "speaker_id": "speaker_0"
+    },
+    {
+      "text": "мы",
+      "start": 1.7,
+      "end": 1.85,
+      "type": "word",
+      "speaker_id": "speaker_0"
+    },
+    {
+      "text": "закрыли",
+      "start": 1.9,
+      "end": 2.4,
+      "type": "word",
+      "speaker_id": "speaker_0"
+    },
+    {
+      "text": "month.",
+      "start": 2.45,
+      "end": 2.9,
+      "type": "word",
+      "speaker_id": "speaker_0"
+    },
+    {
+      "text": "(laughs)",
+      "start": 3.0,
+      "end": 3.4,
+      "type": "audio_event",
+      "speaker_id": "speaker_1"
+    },
+    {
+      "text": "Это",
+      "start": 3.5,
+      "end": 3.7,
+      "type": "word",
+      "speaker_id": "speaker_1"
+    },
+    {
+      "text": "рекорд",
+      "start": 3.75,
+      "end": 4.2,
+      "type": "word",
+      "speaker_id": "speaker_1"
+    },
+    {
+      "text": "для",
+      "start": 4.25,
+      "end": 4.4,
+      "type": "word",
+      "speaker_id": "speaker_1"
+    },
+    {
+      "text": "команды.",
+      "start": 4.45,
+      "end": 5.0,
+      "type": "word",
+      "speaker_id": "speaker_1"
+    }
+  ]
+}
