@@ -1,0 +1,661 @@
+{
+  "source": {
+    "path": "runs/inputs/interview.mp4",
+    "durationMs": 48000,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "hasAudio": true,
+    "sizeBytes": 61234567
+  },
+  "shots": [
+    {
+      "index": 0,
+      "startMs": 0,
+      "endMs": 12400
+    },
+    {
+      "index": 1,
+      "startMs": 12400,
+      "endMs": 27900
+    },
+    {
+      "index": 2,
+      "startMs": 27900,
+      "endMs": 39100
+    },
+    {
+      "index": 3,
+      "startMs": 39100,
+      "endMs": 48000
+    }
+  ],
+  "faces": [
+    {
+      "tMs": 0,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 2000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 4000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 6000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 8000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 10000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 12000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 14000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 16000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 18000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 20000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 22000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 24000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 26000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 28000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 30000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 32000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 34000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 36000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 38000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 40000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 42000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 44000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    },
+    {
+      "tMs": 46000,
+      "x": 0.08,
+      "y": 0.18,
+      "w": 0.22,
+      "h": 0.42
+    }
+  ],
+  "frames": [
+    {
+      "tMs": 0,
+      "description": "A woman in a grey sweater talks to the camera in a bright office, seated on the left.",
+      "kind": "face",
+      "onScreenText": []
+    },
+    {
+      "tMs": 12000,
+      "description": "Same woman, slightly closer, gesturing with one hand.",
+      "kind": "face",
+      "onScreenText": []
+    },
+    {
+      "tMs": 28000,
+      "description": "Laptop screen showing a reports dashboard with an export button.",
+      "kind": "screen",
+      "onScreenText": ["Reports", "Export to PDF"]
+    },
+    {
+      "tMs": 40000,
+      "description": "The woman smiles at the camera, office window behind her.",
+      "kind": "face",
+      "onScreenText": []
+    }
+  ],
+  "transcript": {
+    "language": "en",
+    "text": "We closed the month in two days and that is a record for the team. Last quarter reports took a week to export, people copied numbers by hand into slides. Now reports export to PDF in one click and the sales team sends them straight to clients. Signups grew three times since we launched the feature in March. If you want to try it open the reports page and press export.",
+    "words": [
+      {
+        "text": "We",
+        "startMs": 400,
+        "endMs": 740,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "closed",
+        "startMs": 860,
+        "endMs": 1360,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "the",
+        "startMs": 1480,
+        "endMs": 1860,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "month",
+        "startMs": 1980,
+        "endMs": 2440,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "in",
+        "startMs": 2560,
+        "endMs": 2900,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "two",
+        "startMs": 3020,
+        "endMs": 3400,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "days",
+        "startMs": 3520,
+        "endMs": 3940,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "and",
+        "startMs": 4060,
+        "endMs": 4440,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "that",
+        "startMs": 4560,
+        "endMs": 4980,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "is",
+        "startMs": 5100,
+        "endMs": 5440,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "a",
+        "startMs": 5560,
+        "endMs": 5860,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "record",
+        "startMs": 5980,
+        "endMs": 6480,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "for",
+        "startMs": 6600,
+        "endMs": 6980,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "the",
+        "startMs": 7100,
+        "endMs": 7480,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "team.",
+        "startMs": 7600,
+        "endMs": 8060,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "Last",
+        "startMs": 8760,
+        "endMs": 9180,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "quarter",
+        "startMs": 9300,
+        "endMs": 9840,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "reports",
+        "startMs": 9960,
+        "endMs": 10500,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "took",
+        "startMs": 10620,
+        "endMs": 11040,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "a",
+        "startMs": 11160,
+        "endMs": 11460,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "week",
+        "startMs": 11580,
+        "endMs": 12000,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "to",
+        "startMs": 12120,
+        "endMs": 12460,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "export,",
+        "startMs": 12580,
+        "endMs": 13120,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "people",
+        "startMs": 13240,
+        "endMs": 13740,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "copied",
+        "startMs": 13860,
+        "endMs": 14360,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "numbers",
+        "startMs": 14480,
+        "endMs": 15020,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "by",
+        "startMs": 15140,
+        "endMs": 15480,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "hand",
+        "startMs": 15600,
+        "endMs": 16020,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "into",
+        "startMs": 16140,
+        "endMs": 16560,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "slides.",
+        "startMs": 16680,
+        "endMs": 17220,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "Now",
+        "startMs": 17920,
+        "endMs": 18300,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "reports",
+        "startMs": 18420,
+        "endMs": 18960,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "export",
+        "startMs": 19080,
+        "endMs": 19580,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "to",
+        "startMs": 19700,
+        "endMs": 20040,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "PDF",
+        "startMs": 20160,
+        "endMs": 20540,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "in",
+        "startMs": 20660,
+        "endMs": 21000,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "one",
+        "startMs": 21120,
+        "endMs": 21500,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "click",
+        "startMs": 21620,
+        "endMs": 22080,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "and",
+        "startMs": 22200,
+        "endMs": 22580,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "the",
+        "startMs": 22700,
+        "endMs": 23080,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "sales",
+        "startMs": 23200,
+        "endMs": 23660,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "team",
+        "startMs": 23780,
+        "endMs": 24200,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "sends",
+        "startMs": 24320,
+        "endMs": 24780,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "them",
+        "startMs": 24900,
+        "endMs": 25320,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "straight",
+        "startMs": 25440,
+        "endMs": 26020,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "to",
+        "startMs": 26140,
+        "endMs": 26480,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "clients.",
+        "startMs": 26600,
+        "endMs": 27180,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "Signups",
+        "startMs": 27880,
+        "endMs": 28420,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "grew",
+        "startMs": 28540,
+        "endMs": 28960,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "three",
+        "startMs": 29080,
+        "endMs": 29540,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "times",
+        "startMs": 29660,
+        "endMs": 30120,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "since",
+        "startMs": 30240,
+        "endMs": 30700,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "we",
+        "startMs": 30820,
+        "endMs": 31160,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "launched",
+        "startMs": 31280,
+        "endMs": 31860,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "the",
+        "startMs": 31980,
+        "endMs": 32360,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "feature",
+        "startMs": 32480,
+        "endMs": 33020,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "in",
+        "startMs": 33140,
+        "endMs": 33480,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "March.",
+        "startMs": 33600,
+        "endMs": 34100,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "If",
+        "startMs": 34800,
+        "endMs": 35140,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "you",
+        "startMs": 35260,
+        "endMs": 35640,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "want",
+        "startMs": 35760,
+        "endMs": 36180,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "to",
+        "startMs": 36300,
+        "endMs": 36640,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "try",
+        "startMs": 36760,
+        "endMs": 37140,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "it",
+        "startMs": 37260,
+        "endMs": 37600,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "open",
+        "startMs": 37720,
+        "endMs": 38140,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "the",
+        "startMs": 38260,
+        "endMs": 38640,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "reports",
+        "startMs": 38760,
+        "endMs": 39300,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "page",
+        "startMs": 39420,
+        "endMs": 39840,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "and",
+        "startMs": 39960,
+        "endMs": 40340,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "press",
+        "startMs": 40460,
+        "endMs": 40920,
+        "speaker": "speaker_0"
+      },
+      {
+        "text": "export.",
+        "startMs": 41040,
+        "endMs": 41580,
+        "speaker": "speaker_0"
+      }
+    ]
+  }
+}
