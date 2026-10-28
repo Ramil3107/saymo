@@ -1,280 +1,280 @@
-# Экраны
+# Screens
 
-Двадцать экранов в шести флоу. У каждого: зачем он, что на нём, что делает каждый элемент и что важно знать при вёрстке. Картинки — `screens/png/`, разметка — `screens/html/`, файлы названы по номеру экрана.
+Twenty screens in six flows. For each one: why it exists, what is on it, what each element does and what matters when building it. The pictures are in `screens/png/`, the markup is in `screens/html/`, and the files are named by screen number.
 
-Тексты на экранах — рабочие, их можно править. Всё в квадратных скобках — заглушки.
+The texts on the screens are working texts and can be edited. Anything in square brackets is a placeholder.
 
 ---
 
-## 1. Вход и настройка
+## 1. Sign-in and setup
 
 ### 1.1 Landing
 
-**Зачем.** Первая страница для нового человека: что это, как работает, сколько стоит.
+**Purpose.** The first page for a new person: what this is, how it works, how much it costs.
 
-**Что на экране, сверху вниз:**
-1. Шапка: логотип; ссылки Examples и Pricing (прокрутка к разделам), Sign in; кнопка Start free.
-2. Первый экран: стикер «No timeline. No layers.», заголовок Hero «Say it. Get a motion video.», подзаголовок, кнопки Start free и See examples, строка «2 free videos every month.».
-3. Веер из пяти кадров-примеров (декоративный).
-4. «Three steps, no editing skills.»: три карточки — Describe it, Pick a take, Point and fix.
-5. «Launches, sales, stories, numbers.»: сетка из шести примеров с подписями.
-6. «Start free. Go Pro when it sticks.»: карточки тарифов Free и Pro.
-7. Финальный призыв «What are we making today?» и Start free.
-8. Подвал: «© 2026 [name]», Terms, Privacy, Contact.
+**What is on the screen, top to bottom:**
+1. Header: the logo; the links Examples and Pricing (scroll to the sections), Sign in; the Start free button.
+2. First screen: the sticker "No timeline. No layers.", the Hero heading "Say it. Get a motion video.", a subheading, the buttons Start free and See examples, the line "2 free videos every month."
+3. A fan of five example frames (decorative).
+4. "Three steps, no editing skills." Three cards: Describe it, Pick a take, Point and fix.
+5. "Launches, sales, stories, numbers." A grid of six examples with labels.
+6. "Start free. Go Pro when it sticks." The Free and Pro plan cards.
+7. The final call to action "What are we making today?" and Start free.
+8. Footer: "© 2026 [name]", Terms, Privacy, Contact.
 
-**Действия.** Start free, Sign in, любой пример и кнопки тарифов ведут на 1.2. See examples и Examples прокручивают к примерам, Pricing — к тарифам.
+**Actions.** Start free, Sign in, any example and the plan buttons go to 1.2. See examples and Examples scroll to the examples, and Pricing scrolls to the plans.
 
-**Заметки.** Кадры-примеры нарисованы фигурами. В живом продукте на их месте должны играть настоящие ролики: это главный аргумент страницы.
+**Notes.** The example frames are drawn with shapes. In the live product, real videos should play in their place: this is the main argument of the page.
 
 ### 1.2 Sign in
 
-**Зачем.** Вход и регистрация одним экраном, без пароля.
+**Purpose.** Sign-in and sign-up on one screen, with no password.
 
-**Что на экране.** Слева: стикер «No password needed», заголовок «Sign in and start making.», кнопка Continue with Google, разделитель «or», поле Work email, кнопка Email me a link, строка про Terms и Privacy Policy. Справа: три наклонённых кадра-примера.
+**What is on the screen.** Left: the sticker "No password needed", the heading "Sign in and start making.", the Continue with Google button, the divider "or", the Work email field, the Email me a link button, a line about Terms and Privacy Policy. Right: three tilted example frames.
 
-**Действия.** Continue with Google — вход и переход на 2.1. Email me a link — отправка письма и переход на 1.3.
+**Actions.** Continue with Google signs in and goes to 2.1. Email me a link sends an email and goes to 1.3.
 
-**Заметки.** Отдельной регистрации нет: первый вход создаёт аккаунт. Состояния ошибки (неверная почта, Google отменён) не нарисованы.
+**Notes.** There is no separate sign-up: the first sign-in creates the account. Error states (invalid email, Google canceled) are not drawn.
 
 ### 1.3 Check your email
 
-**Зачем.** Сказать, что письмо отправлено, и что делать дальше.
+**Purpose.** To say that the email has been sent, and what to do next.
 
-**Что на экране.** Макет письма (белая карточка «Your sign-in link» с кнопкой Sign in, наклонена, только картинка), заголовок «Check your inbox.», текст с адресом жирным, кнопка Resend link, ссылка Use a different email, подсказка про спам.
+**What is on the screen.** A mockup of the email (a white card "Your sign-in link" with a Sign in button, tilted, a picture only), the heading "Check your inbox.", text with the address in bold, the Resend link button, the Use a different email link, a hint about spam.
 
-**Действия.** Resend link отправляет письмо ещё раз. Use a different email возвращает на 1.2. Ссылка из письма открывает 2.1.
+**Actions.** Resend link sends the email again. Use a different email goes back to 1.2. The link in the email opens 2.1.
 
-**Заметки.** Не нарисовано: подтверждение, что письмо отправлено повторно, и ограничение на частые повторы.
+**Notes.** Not drawn: the confirmation that the email was sent again, and a restriction on frequent resends.
 
 ### 1.4 Brand setup
 
-**Зачем.** Один раз задать логотип, цвета и шрифт, чтобы все ролики выходили в стиле бренда.
+**Purpose.** To set the logo, colors and font once, so that all videos come out in the style of the brand.
 
-**Что на экране.** Заголовок «Your brand» и «Set it once. Every video comes out in this style.». Слева форма:
-- Start from your website: поле адреса и кнопка Fetch brand, пояснение «Nothing is saved until you confirm».
-- Logo: пустой квадрат и кнопка Upload PNG or SVG.
-- Colours, up to three: три кнопки-цвета с hex.
-- Font: выпадающий список (Onest, Manrope, Unbounded — примеры).
-- Save brand и строка «One brand per account for now.».
+**What is on the screen.** The heading "Your brand" and "Set it once. Every video comes out in this style." On the left, a form:
+- Start from your website: an address field and the Fetch brand button, the note "Nothing is saved until you confirm".
+- Logo: an empty square and the Upload PNG or SVG button.
+- Colours, up to three: three color buttons with hex.
+- Font: a dropdown list (Onest, Manrope, Unbounded as examples).
+- Save brand and the line "One brand per account for now."
 
-Справа Preview: кадр ролика в выбранном стиле и подпись «This is how your videos will look.».
+On the right, Preview: a video frame in the chosen style and the label "This is how your videos will look."
 
-**Действия.** Fetch brand заполняет форму с сайта. Нажатие на цвет открывает выбор цвета (не нарисован). Save brand сохраняет и ведёт на 2.1.
+**Actions.** Fetch brand fills the form from the website. Pressing a color opens a color picker (not drawn). Save brand saves and goes to 2.1.
 
-**Заметки.** Превью обновляется сразу при любом изменении. Не нарисованы: результат Fetch brand с проверкой найденного, ошибка «не удалось прочитать сайт», загрузка логотипа. Бренд не обязателен: без него ролики делаются в нейтральном стиле.
+**Notes.** The preview updates at once on any change. Not drawn: the Fetch brand result with a check of what was found, the error "could not read the website", the logo upload. A brand is not required: without it, videos are made in a neutral style.
 
 ---
 
-## 2. Сделать ролик
+## 2. Make a video
 
 ### 2.1 Home
 
-**Зачем.** Главный экран: сказать, какой ролик нужен, или выбрать пример.
+**Purpose.** The main screen: say what video is needed, or pick an example.
 
-**Что на экране.**
+**What is on the screen.**
 1. App bar.
-2. Стикер «No timeline. No layers.», заголовок Display «What are we making today?», подзаголовок.
-3. Prompt card: подпись «What the video is about», поле на две строки с примером в плейсхолдере, чипы Link, Existing video, Podcast, выбор «9:16, 15 sec», кнопка Make the video.
-4. «Or start from an example» и шесть примеров: Product launch, Sale, Customer story, By the numbers, How it works, Podcast clip.
-5. Счётчик «14 of 20 videos left this month. Edits are included.».
+2. The sticker "No timeline. No layers.", the Display heading "What are we making today?", a subheading.
+3. Prompt card: the label "What the video is about", a two-line field with an example in the placeholder, the chips Link, Existing video, Podcast, the picker "9:16, 15 sec", the Make the video button.
+4. "Or start from an example" and six examples: Product launch, Sale, Customer story, By the numbers, How it works, Podcast clip.
+5. The counter "14 of 20 videos left this month. Edits are included."
 
-**Действия.**
+**Actions.**
 
-| Элемент | Что происходит |
+| Element | What happens |
 | --- | --- |
-| Make the video | Запуск генерации, переход на 2.2. Если роликов не осталось — окно 6.1 |
-| Link | Добавить ссылку на сайт или страницу продукта (как именно — не нарисовано) |
-| Existing video | Загрузить своё видео, переход на 3.1 после загрузки |
-| Podcast | Загрузить запись, переход на 3.2 после анализа |
-| 9:16, 15 sec | Выбор формата (9:16, 1:1, 16:9) и длины (10, 15, 30 с), меню не нарисовано |
-| Пример | Подставляет в поле заготовку под этот сценарий |
+| Make the video | Starts generation and goes to 2.2. If no videos are left: the 6.1 modal |
+| Link | Add a link to a website or a product page (how exactly is not drawn) |
+| Existing video | Upload your own video, goes to 3.1 after the upload |
+| Podcast | Upload a recording, goes to 3.2 after the analysis |
+| 9:16, 15 sec | Choice of format (9:16, 1:1, 16:9) and length (10, 15, 30 s), the menu is not drawn |
+| Example | Puts a template for this scenario into the field |
 
-**Заметки.** Пустое поле с плейсхолдером — нормальное начальное состояние. Кнопка без текста в поле должна либо быть неактивной, либо просить заполнить; не решено.
+**Notes.** An empty field with a placeholder is the normal initial state. With no text in the field, the button must either be disabled or ask the user to fill it in; not decided.
 
 ### 2.2 Generating
 
-**Зачем.** Показать, что ролик собирается, и не держать человека на экране.
+**Purpose.** To show that the video is being put together, and not to keep the person on the screen.
 
-**Что на экране.** Task bar с названием ролика и строкой «Saving to My videos». На сцене три слота вариантов: Version 1 готов (кадр, подпись Ready), Version 2 в работе (скелетон, «Laying out scenes»), Version 3 в очереди (пустая пунктирная рамка, «Up next»). Ниже заголовок «Rolling. Three takes coming up.», прогресс, шаги-чипы (Script written, Scenes laid out — сделано; Checking that text fits — сейчас; Preview — впереди) и строка «You can leave this page. The video will be waiting in My videos.».
+**What is on the screen.** The Task bar with the title of the video and the line "Saving to My videos". On the stage there are three variant slots: Version 1 ready (a frame, the label Ready), Version 2 in progress (a skeleton, "Laying out scenes"), Version 3 queued (an empty dashed frame, "Up next"). Below, the heading "Rolling. Three takes coming up.", progress, step chips (Script written, Scenes laid out: done; Checking that text fits: now; Preview: upcoming) and the line "You can leave this page. The video will be waiting in My videos."
 
-**Действия.** Готовый вариант кликабелен и открывает 2.4, не дожидаясь остальных. Стрелка назад — на 2.1, генерация продолжается.
+**Actions.** A ready variant is clickable and opens 2.4 without waiting for the others. The back arrow goes to 2.1, and generation continues.
 
-**Заметки.** Названия шагов — пример. Если генерация падает, показываем 2.3.
+**Notes.** The step names are an example. If generation fails, we show 2.3.
 
 ### 2.3 Generation failed
 
-**Зачем.** Честно сказать, что не получилось, и дать выход.
+**Purpose.** To say honestly that it did not work, and to offer a way out.
 
-**Что на экране.** Заштрихованный кадр с иконкой предупреждения, заголовок «Cut. Something broke on set.», текст «It doesn't count toward your limit, so trying again is free.», кнопки Try again и Change the description, строка «ref [error id] · still stuck? [support email]».
+**What is on the screen.** A hatched frame with a warning icon, the heading "Cut. Something broke on set.", the text "It doesn't count toward your limit, so trying again is free.", the buttons Try again and Change the description, the line "ref [error id] · still stuck? [support email]".
 
-**Действия.** Try again — повторный запуск, 2.2. Change the description — на 2.1 с сохранённым текстом.
+**Actions.** Try again starts generation again and goes to 2.2. Change the description goes to 2.1 with the text kept.
 
-**Заметки.** Неудачная генерация не списывается из лимита. Это правило продукта, его нужно соблюдать в логике.
+**Notes.** A failed generation does not count toward the limit. This is a product rule, and the logic has to follow it.
 
 ### 2.4 Video and edits
 
-**Зачем.** Главный рабочий экран: выбрать вариант, поправить словами, скачать.
+**Purpose.** The main working screen: pick a variant, adjust it in words, download.
 
-**Что на экране.**
-1. Task bar: назад, название ролика; справа Send for review и Download.
-2. Сцена, слева направо:
-   - Versions: три мини-кадра, выбранный обведён акцентом.
-   - Кадр ролика 9:16. Выделенный элемент (на макете заголовок) обведён акцентом.
-   - Edit panel: название выделенного элемента («Headline») и кнопка снять выделение; поле «What should change?» с кнопкой отправки; быстрые правки Bigger, Rewrite, Change font, Remove; подсказка «Click anything in the video and say what to do with it.».
-3. Player bar: Play, ползунок, время «0:06 / 0:15», форматы 9:16, 1:1, 16:9, ссылка Editor.
+**What is on the screen.**
+1. Task bar: back, the title of the video; on the right Send for review and Download.
+2. The stage, left to right:
+   - Versions: three mini frames, the selected one is outlined in the accent color.
+   - The 9:16 video frame. The selected element (the headline in the mockup) is outlined in the accent color.
+   - Edit panel: the name of the selected element ("Headline") and a button to clear the selection; the field "What should change?" with a send button; the quick edits Bigger, Rewrite, Change font, Remove; the hint "Click anything in the video and say what to do with it."
+3. Player bar: Play, a slider, the time "0:06 / 0:15", the formats 9:16, 1:1, 16:9, the Editor link.
 4. What next: Add captions, Make a square version, Trim to 10 seconds, Three more versions.
 
-**Действия.**
+**Actions.**
 
-| Элемент | Что происходит |
+| Element | What happens |
 | --- | --- |
-| Мини-кадр в Versions | Переключает вариант |
-| Клик по элементу в кадре | Выделяет его, Edit panel показывает этот элемент |
-| Поле правки + отправка | Правка выделенного элемента словами; без выделения — правка всего ролика |
-| Быстрая правка | То же, что написать её словами |
-| Формат 9:16, 1:1, 16:9 | Сервис сам перекладывает кадр под формат |
-| What next | Готовые следующие шаги, работают как правка словами |
-| Editor | Ручной монтаж, 2.5 |
-| Download | Окно 4.1 |
-| Send for review | Окно 4.2 |
+| A mini frame in Versions | Switches the variant |
+| Click on an element in the frame | Selects it, and the Edit panel shows this element |
+| Edit composer + send | Edits the selected element in words; with no selection, edits the whole video |
+| Quick edit | The same as writing it in words |
+| Format 9:16, 1:1, 16:9 | The service reflows the frame to the format by itself |
+| What next | Ready-made next steps. They work like an edit in words |
+| Editor | The manual editor, 2.5 |
+| Download | The 4.1 modal |
+| Send for review | The 4.2 modal |
 
-**Заметки.**
-- Это главный жест продукта: «ткнул в кадр и сказал, что поменять». Он должен работать быстро и предсказуемо.
-- Правки не списываются из лимита роликов, но у ролика есть предел правок (см. проектный хендофф).
-- Не нарисованы: Undo после правки, состояние «правка применяется», состояние без выделения, выделение логотипа, фона, кнопки, музыки.
+**Notes.**
+- This is the main gesture of the product: "point at the frame and say what to change". It has to work fast and predictably.
+- Edits do not count toward the video limit, but a video has an edit cap (see the project handoff).
+- Not drawn: Undo after an edit, the "edit is being applied" state, the state with no selection, selection of the logo, the background, the button, the music.
 
 ### 2.5 Manual editor
 
-**Зачем.** Для тех, кому мало правок словами: переставить, укоротить, переписать сцены руками.
+**Purpose.** For those who find edits in words not enough: to reorder, shorten and rewrite scenes by hand.
 
-**Что на экране.** Task bar с названием «Editor» и кнопкой Done. Слева превью кадра. Справа свойства выбранной сцены «Scene 2. Headline»: Text, Duration seconds, Text entrance (Fade in, Slide up, Letter by letter), Transition to the next scene (Cut, Fade, Slide) и подсказка «Only scene order, length and text live here…». Внизу панель: Play, время, Split, Duplicate, Delete, + Scene, подсказка про перетаскивание; таймлайн со шкалой, дорожками Scenes (Intro 2.0 s, Headline 4.0 s — выбрана, How it works 5.0 s, Call to action 4.0 s), Voice и Music, плейхед.
+**What is on the screen.** The Task bar with the title "Editor" and the Done button. On the left, a preview of the frame. On the right, the properties of the selected scene "Scene 2. Headline": Text, Duration seconds, Text entrance (Fade in, Slide up, Letter by letter), Transition to the next scene (Cut, Fade, Slide) and the hint "Only scene order, length and text live here…". At the bottom, a panel: Play, the time, Split, Duplicate, Delete, + Scene, a hint about dragging; the timeline with a ruler, the tracks Scenes (Intro 2.0 s, Headline 4.0 s: selected, How it works 5.0 s, Call to action 4.0 s), Voice and Music, and the playhead.
 
-**Действия.** Перетащить сцену — поменять порядок. Потянуть за край — изменить длину. Клик по сцене — выбрать, справа её свойства. Done и стрелка назад — на 2.4 с сохранёнными изменениями.
+**Actions.** Drag a scene to change the order. Pull an edge to change the length. Click a scene to select it, and its properties show on the right. Done and the back arrow go to 2.4 with the changes saved.
 
-**Заметки.** Слоёв, ключевых кадров и эффектов здесь нет намеренно. Всё остальное делается словами на 2.4.
+**Notes.** There are no layers, keyframes or effects here, on purpose. Everything else is done in words on 2.4.
 
 ---
 
-## 3. Из своего материала
+## 3. From your own material
 
 ### 3.1 Add graphics to a video
 
-**Зачем.** Человек загрузил готовое видео; сервис сам предлагает, где добавить графику, человек соглашается или нет.
+**Purpose.** The person has uploaded a finished video. The service itself suggests where to add graphics, and the person accepts or not.
 
-**Что на экране.** Task bar: «Add graphics», имя файла «interview.mp4»; справа Skip all и Apply 3 graphics. Слева кадр 16:9 «Your video» с предложенной плашкой имени (`[speaker name]`, `[role, company]`), она выделена. Под ним плеер с точками-метками на ползунке и временем «0:02 / 0:48». Справа список «4 places for graphics» с пояснением и четырьмя строками: Name title (0:02), Big number (0:09), Key phrase (0:17), Captions (All). Внизу Suggest more.
+**What is on the screen.** The Task bar: "Add graphics", the file name "interview.mp4"; on the right Skip all and Apply 3 graphics. On the left, a 16:9 frame "Your video" with a suggested name plate (`[speaker name]`, `[role, company]`), which is selected. Under it, the player with marker dots on the slider and the time "0:02 / 0:48". On the right, the list "4 places for graphics" with a description and four rows: Name title (0:02), Big number (0:09), Key phrase (0:17), Captions (All). At the bottom, Suggest more.
 
-**Действия.** В каждой строке «принять» и «пропустить». Клик по строке выделяет её и перематывает видео к этому месту. Apply N graphics применяет принятые и ведёт на 2.4. Skip all — отказаться от всех. Suggest more — ещё предложения.
+**Actions.** Each row has "accept" and "skip". Clicking a row selects it and moves the video to that place. Apply N graphics applies the accepted ones and goes to 2.4. Skip all declines all of them. Suggest more asks for more suggestions.
 
-**Заметки.** На макете три предложения приняты, субтитры нет, поэтому кнопка «Apply 3 graphics»: число на кнопке равно числу принятых. Загрузка и анализ видео перед этим экраном не нарисованы.
+**Notes.** In the mockup three suggestions are accepted and captions are not, so the button says "Apply 3 graphics": the number on the button equals the number of accepted ones. The upload and the analysis of the video before this screen are not drawn.
 
 ### 3.2 Podcast clips
 
-**Зачем.** Из длинной записи разговора сделать короткие клипы с субтитрами.
+**Purpose.** To make short clips with captions from a long recording of a conversation.
 
-**Что на экране.** Task bar: «Podcast clips», «episode-12.mp3 · 42:18», справа Make 3 clips. Слева: «5 moments worth clipping», волна всей записи с пятью пронумерованными метками, шкала времени; ниже пять карточек клипов (01–05) с мини-превью, цитатой, временем и меткой Keep или Skip. Справа Clip settings: Clip length (15 s, 30 s, 60 s), Format (9:16, 1:1), Captions (переключатель), Speaker names (поле), подсказка «Tap a clip to keep or skip it.».
+**What is on the screen.** The Task bar: "Podcast clips", "episode-12.mp3 · 42:18", on the right Make 3 clips. On the left: "5 moments worth clipping", the waveform of the whole recording with five numbered markers, the time ruler; below, five clip cards (01–05) with a mini preview, a quote, the time and the Keep or Skip tag. On the right, Clip settings: Clip length (15 s, 30 s, 60 s), Format (9:16, 1:1), Captions (a switch), Speaker names (a field), the hint "Tap a clip to keep or skip it."
 
-**Действия.** Нажатие на карточку переключает Keep/Skip, число на главной кнопке меняется. Make N clips запускает генерацию (2.2).
+**Actions.** Pressing a card toggles Keep/Skip, and the number on the main button changes. Make N clips starts generation (2.2).
 
-**Заметки.** Сколько роликов из лимита стоит пачка клипов, не решено. Загрузка и анализ записи не нарисованы.
+**Notes.** How many videos from the limit a batch of clips costs is not decided. The upload and the analysis of the recording are not drawn.
 
 ---
 
-## 4. Скачать и отправить
+## 4. Download and send
 
-### 4.1 Download (окно над 2.4)
+### 4.1 Download (modal over 2.4)
 
-**Зачем.** Выбрать форматы и получить файлы.
+**Purpose.** To choose formats and get the files.
 
-**Что в окне.** Заголовок «Download» и пояснение; Formats — чипы 9:16, 1:1 (выбраны), 16:9; Quality — 1080p или 720p; Files — строки готовых файлов: «9:16 · 1080p · MP4» с кнопкой Save, «1:1 · 1080p · MP4 · rendering» с процентом и прогрессом; строка «Rendering keeps going if you close this. We'll email you when it's done.».
+**What is in the modal.** The heading "Download" and a description; Formats: the chips 9:16, 1:1 (selected), 16:9; Quality: 1080p or 720p; Files: the rows of ready files, "9:16 · 1080p · MP4" with the Save button and "1:1 · 1080p · MP4 · rendering" with a percentage and progress; the line "Rendering keeps going if you close this. We'll email you when it's done."
 
-**Действия.** Выбор формата добавляет строку файла, файл начинает собираться. Save скачивает MP4. Закрыть — вернуться на 2.4, сборка продолжается.
+**Actions.** Choosing a format adds a file row, and the file starts rendering. Save downloads the MP4. Closing returns to 2.4, and rendering continues.
 
-**Заметки.** 1080p только на Pro. Как выглядит выбор 1080p на Free (заблокирован, ведёт на тарифы?) — не нарисовано.
+**Notes.** 1080p is Pro only. How choosing 1080p looks on Free (locked, does it go to the plans?) is not drawn.
 
-### 4.2 Send for review (окно над 2.4)
+### 4.2 Send for review (modal over 2.4)
 
-**Зачем.** Дать коллеге или клиенту посмотреть ролик без входа.
+**Purpose.** To let a colleague or a client watch the video without signing in.
 
-**Что в окне.** Заголовок и «Anyone with the link can watch. Nobody can edit.»; строка «Link is on» с переключателем; поле со ссылкой и кнопка Copy link; Open the review page; строка «Comments come later.».
+**What is in the modal.** The heading and "Anyone with the link can watch. Nobody can edit."; the row "Link is on" with a switch; a field with the link and the Copy link button; Open the review page; the line "Comments come later."
 
-**Действия.** Переключатель включает и выключает ссылку. Copy link копирует (уведомление не нарисовано). Open the review page открывает 4.3.
+**Actions.** The switch turns the link on and off. Copy link copies it (the notification is not drawn). Open the review page opens 4.3.
 
 ### 4.3 Review link
 
-**Зачем.** Публичная страница ролика для того, кто получил ссылку.
+**Purpose.** The public page of the video, for whoever received the link.
 
-**Что на экране.** Логотип и метка «View only»; название ролика, строка «9:16 · 0:15 · shared by [sender name]»; кадр; плеер; «Made with [name]» и кнопка Make your own.
+**What is on the screen.** The logo and the "View only" tag; the title of the video, the line "9:16 · 0:15 · shared by [sender name]"; the frame; the player; "Made with [name]" and the Make your own button.
 
-**Действия.** Make your own ведёт на 1.1. Эту страницу видят люди без аккаунта, поэтому она заодно приводит новых пользователей.
+**Actions.** Make your own goes to 1.1. People without an account see this page, so it also brings in new users.
 
-**Заметки.** Не нарисовано: ссылка выключена или не существует.
+**Notes.** Not drawn: a link that is turned off or does not exist.
 
 ---
 
-## 5. Библиотека и аккаунт
+## 5. Library and account
 
 ### 5.1 My videos
 
-**Зачем.** Все ролики в одном месте.
+**Purpose.** All videos in one place.
 
-**Что на экране.** App bar, заголовок «My videos», фильтры All, 9:16, 1:1, 16:9; сетка: плитка New video и карточки роликов (кадр, название, «формат · длина · дата»); строка «14 of 20 videos left this month. See plans».
+**What is on the screen.** The App bar, the heading "My videos", the filters All, 9:16, 1:1, 16:9; a grid: the New video tile and video cards (a frame, a title, "format · length · date"); the line "14 of 20 videos left this month. See plans".
 
-**Действия.** New video — на 2.1. Карточка ролика — на 2.4. See plans — на 6.2. Фильтры оставляют ролики нужного формата.
+**Actions.** New video goes to 2.1. A video card goes to 2.4. See plans goes to 6.2. The filters leave only the videos of the needed format.
 
-**Заметки.** Не нарисованы: переименовать, дублировать, удалить, скелетоны загрузки, ролик в процессе генерации.
+**Notes.** Not drawn: rename, duplicate, delete, loading skeletons, a video that is being generated.
 
 ### 5.2 My videos, empty
 
-**Зачем.** Первый заход, роликов ещё нет.
+**Purpose.** The first visit, there are no videos yet.
 
-**Что на экране.** Пунктирная рамка, стикер «Nothing here yet», заголовок «Your first video is one sentence away.», кнопка Make a video, «or start from an example» и три примера; строка «2 free videos this month. See plans».
+**What is on the screen.** A dashed frame, the sticker "Nothing here yet", the heading "Your first video is one sentence away.", the Make a video button, "or start from an example" and three examples; the line "2 free videos this month. See plans".
 
-**Действия.** Make a video и примеры — на 2.1. See plans — на 6.2.
+**Actions.** Make a video and the examples go to 2.1. See plans goes to 6.2.
 
 ### 5.3 Account
 
-**Зачем.** Профиль, тариф, бренд, удаление аккаунта.
+**Purpose.** Profile, plan, brand, account deletion.
 
-**Что на экране.** Четыре карточки:
-- Profile: аватар, имя, почта, «Signed in with Google», Sign out.
-- Plan: «Pro», «Renews on [date]», прогресс «6 of 20 videos used this month», Change plan, Billing and receipts.
-- Brand: цвета и шрифт бренда, Edit brand.
-- Delete account: пояснение и кнопка.
+**What is on the screen.** Four cards:
+- Profile: an avatar, a name, an email, "Signed in with Google", Sign out.
+- Plan: "Pro", "Renews on [date]", the progress "6 of 20 videos used this month", Change plan, Billing and receipts.
+- Brand: the colors and the font of the brand, Edit brand.
+- Delete account: a description and a button.
 
-**Действия.** Sign out — на 1.2. Change plan — на 6.2. Billing and receipts — история платежей у платёжного сервиса. Edit brand — на 1.4. Delete account — подтверждение (не нарисовано).
+**Actions.** Sign out goes to 1.2. Change plan goes to 6.2. Billing and receipts shows the payment history at the payment service. Edit brand goes to 1.4. Delete account asks for confirmation (not drawn).
 
 ---
 
-## 6. Тарифы и оплата
+## 6. Plans and payment
 
-### 6.1 Limit reached (окно над 2.1)
+### 6.1 Limit reached (modal over 2.1)
 
-**Зачем.** Человек нажал Make the video, а роликов в этом месяце не осталось.
+**Purpose.** The person pressed Make the video, but no videos are left this month.
 
-**Что в окне.** Стикер «That's a wrap», заголовок «You've used both free videos this month.», текст про Pro и дату обновления, прогресс 2 / 2, кнопки Go Pro и Not now, кнопка закрытия.
+**What is in the modal.** The sticker "That's a wrap", the heading "You've used both free videos this month.", text about Pro and the renewal date, progress 2 / 2, the buttons Go Pro and Not now, a close button.
 
-**Действия.** Go Pro — на 6.2. Not now и закрытие — обратно на 2.1, введённый текст не теряется.
+**Actions.** Go Pro goes to 6.2. Not now and closing go back to 2.1, and the text that was entered is not lost.
 
-**Заметки.** Текст на макете для тарифа Free. Для Pro, у которого кончились 20 роликов, текст нужен другой, не нарисован.
+**Notes.** The text in the mockup is for the Free plan. For Pro, when the 20 videos have run out, a different text is needed, and it is not drawn.
 
 ### 6.2 Plans
 
-**Зачем.** Сравнить тарифы и перейти на Pro.
+**Purpose.** To compare the plans and move to Pro.
 
-**Что на экране.** Метка «2 of 2 free videos used this month», заголовок «Keep the camera rolling.», строка «One video is one press of Make the video. Edits never count.». Две карточки: Free ($0; 2 videos a month; Watermark on export; 720p; Videos kept for 30 days; неактивная кнопка Your current plan) и Pro ($[price] a month; 20 videos a month; No watermark; 1080p; Videos kept while you subscribe; кнопка Go Pro). Строка «Cancel any time in one click. Access stays until the end of the paid month.».
+**What is on the screen.** The tag "2 of 2 free videos used this month", the heading "Keep the camera rolling.", the line "One video is one press of Make the video. Edits never count." Two cards: Free ($0; 2 videos a month; Watermark on export; 720p; Videos kept for 30 days; the disabled button Your current plan) and Pro ($[price] a month; 20 videos a month; No watermark; 1080p; Videos kept while you subscribe; the Go Pro button). The line "Cancel any time in one click. Access stays until the end of the paid month."
 
-**Действия.** Go Pro — оплата у платёжного сервиса (его страница не рисуется), после успешной оплаты — 6.3.
+**Actions.** Go Pro goes to payment at the payment service (its page is not drawn), and after a successful payment to 6.3.
 
 ### 6.3 Welcome to Pro
 
-**Зачем.** Подтвердить оплату и вернуть человека к работе.
+**Purpose.** To confirm the payment and get the person back to work.
 
-**Что на экране.** Большой стикер «PRO», заголовок «You're Pro now.», «Receipt sent to you@company.com. Here's what changed.», три карточки (20 videos a month, No watermark, 1080p), кнопки Make a video и Manage billing.
+**What is on the screen.** A large sticker "PRO", the heading "You're Pro now.", "Receipt sent to you@company.com. Here's what changed.", three cards (20 videos a month, No watermark, 1080p), the buttons Make a video and Manage billing.
 
-**Действия.** Make a video — на 2.1. Manage billing — на 5.3.
+**Actions.** Make a video goes to 2.1. Manage billing goes to 5.3.
 
 ---
 
 ## Foundations
 
-Отдельный борд со всеми значениями дизайна: `foundations.png`, `screens/html/foundations.html`, текстом — `foundations.md`.
+A separate board with all the design values: `foundations.png`, `screens/html/foundations.html`; as text, `foundations.md`.

@@ -1,76 +1,76 @@
-# Дизайн-хендофф: [name], сервис моушн-роликов
+# Design handoff: [name], a motion video service
 
-Обновлено 21 октября 2026. Источник: холст в Claude, «Сервис моушн-роликов для маркетологов» (доступ только у владельца). Если холст и эти файлы разошлись, верен холст: попроси владельца выгрузить свежую версию.
+Updated 21 October 2026. Source: a canvas in Claude, "Motion video service for marketers" (only the owner has access). If the canvas and these files disagree, the canvas is the source of truth: ask the owner to export a fresh version.
 
-Что это за продукт и зачем, описано в `docs/` проектного хендоффа. Здесь только то, как он выглядит и ведёт себя.
+What the product is and why it exists is described in `docs/` of the project handoff. This folder covers only how it looks and behaves.
 
-## Что в папке
+## What is in the folder
 
-| Файл | Что это |
+| File | What it is |
 | --- | --- |
-| `foundations.md` | Цвета, шрифты, отступы, радиусы, размеры, тени, иконки, тон текста |
-| `tokens.css`, `tokens.json` | Те же значения в виде переменных |
-| `components.md` | Компоненты: из чего собраны экраны, размеры, варианты, состояния |
-| `screens.md` | Все 20 экранов: что на экране, что делает каждый элемент, куда ведёт |
-| `foundations.png` | Борд Foundations целиком |
-| `screens/png/` | Скриншоты экранов, 1280 px по ширине |
-| `screens/html/` | Те же экраны и Foundations в HTML. Открываются в браузере, ссылки между экранами работают |
+| `foundations.md` | Colors, fonts, spacing, radii, sizes, shadows, icons, tone of voice |
+| `tokens.css`, `tokens.json` | The same values as variables |
+| `components.md` | Components: what the screens are built from, sizes, variants, states |
+| `screens.md` | All 20 screens: what is on the screen, what each element does, where it goes |
+| `foundations.png` | The whole Foundations board |
+| `screens/png/` | Screenshots of the screens, 1280 px wide |
+| `screens/html/` | The same screens and Foundations in HTML. They open in a browser, and the links between screens work |
 
-## Как читать
+## How to read it
 
-- **PNG** показывает, как выглядит экран. **HTML** даёт точные значения: все стили в нём inline. **screens.md** описывает поведение, которого на картинке не видно.
-- HTML — это макет, а не код продукта. Кнопки ничего не делают, данные выдуманы, стили не организованы. Брать из него размеры и отступы, но не копировать разметку как есть.
-- Если картинка и текст расходятся, верны `foundations.md` и токены. О расхождении стоит сказать владельцу.
-- Все макеты нарисованы под десктоп шириной 1280. Отдельных мобильных макетов нет, см. раздел «Чего нет в макетах».
-- Язык интерфейса английский. Документы на русском.
+- **PNG** shows how a screen looks. **HTML** gives exact values: all styles in it are inline. **screens.md** describes behavior that the picture does not show.
+- The HTML is a mockup, not product code. Buttons do nothing, the data is made up, the styles are not organized. Take sizes and spacing from it, but do not copy the markup as it is.
+- If the picture and the text disagree, `foundations.md` and the tokens are right. Tell the owner about the discrepancy.
+- All mockups are drawn for a desktop screen 1280 wide. There are no separate mobile mockups. See the section "What is missing from the mockups".
+- The interface language is English. These documents are in English too.
 
-## Принципы
+## Principles
 
-1. **Тёмная сцена, один громкий акцент, крупный плотный шрифт.** Главный на экране ролик, интерфейс отступает.
-2. **Один акцент на экран.** Акцентный цвет только у главного действия, выделения, прогресса и плейхеда.
-3. **Цвета бренда пользователя живут только внутри роликов.** Интерфейс их не использует.
-4. **Всё можно попросить словами.** Кнопки нужны только для самых частых действий, остальное через поле правки.
-5. **Выбирать глазами, а не настраивать.** Три готовых варианта вместо панели параметров.
-6. **Без тупиков.** После каждого шага экран предлагает два-три следующих.
-7. **Ручной монтаж спрятан.** Вход в него через неприметную ссылку Editor, внутри только порядок, длина и текст сцен.
-8. **Никаких моделей, режимов и кредитов в интерфейсе.** Пользователь видит только ролики и сколько их осталось.
+1. **A dark stage, one loud accent, a large dense font.** The video is the main thing on the screen, and the interface steps back.
+2. **One accent per screen.** The accent color is used only for the main action, selection, progress and the playhead.
+3. **The user's brand colors live only inside videos.** The interface does not use them.
+4. **Everything can be asked for in words.** Buttons exist only for the most frequent actions, and the rest goes through the edit composer.
+5. **Choose by eye, do not configure.** Three ready variants instead of a panel of settings.
+6. **No dead ends.** After every step the screen offers two or three next ones.
+7. **The manual editor is hidden.** The way in is an unobtrusive Editor link, and inside there are only the order, length and text of scenes.
+8. **No models, modes or credits in the interface.** The user sees only videos and how many are left.
 
-## Карта экранов
+## Screen map
 
-| № | Экран | Файл | Флоу |
+| No. | Screen | File | Flow |
 | --- | --- | --- | --- |
-| 1.1 | Landing | `1-1-landing` | Вход и настройка |
-| 1.2 | Sign in | `1-2-sign-in` | Вход и настройка |
-| 1.3 | Check your email | `1-3-check-email` | Вход и настройка |
-| 1.4 | Brand setup | `1-4-brand-setup` | Вход и настройка |
-| 2.1 | Home | `2-1-home` | Сделать ролик |
-| 2.2 | Generating | `2-2-generating` | Сделать ролик |
-| 2.3 | Generation failed | `2-3-generation-failed` | Сделать ролик |
-| 2.4 | Video and edits | `2-4-video-and-edits` | Сделать ролик |
-| 2.5 | Manual editor | `2-5-manual-editor` | Сделать ролик |
-| 3.1 | Add graphics to a video | `3-1-add-graphics` | Из своего материала |
-| 3.2 | Podcast clips | `3-2-podcast-clips` | Из своего материала |
-| 4.1 | Download (окно) | `4-1-download` | Скачать и отправить |
-| 4.2 | Send for review (окно) | `4-2-send-for-review` | Скачать и отправить |
-| 4.3 | Review link | `4-3-review-link` | Скачать и отправить |
-| 5.1 | My videos | `5-1-my-videos` | Библиотека и аккаунт |
-| 5.2 | My videos, empty | `5-2-my-videos-empty` | Библиотека и аккаунт |
-| 5.3 | Account | `5-3-account` | Библиотека и аккаунт |
-| 6.1 | Limit reached (окно) | `6-1-limit-reached` | Тарифы и оплата |
-| 6.2 | Plans | `6-2-plans` | Тарифы и оплата |
-| 6.3 | Welcome to Pro | `6-3-welcome-to-pro` | Тарифы и оплата |
+| 1.1 | Landing | `1-1-landing` | Sign-in and setup |
+| 1.2 | Sign in | `1-2-sign-in` | Sign-in and setup |
+| 1.3 | Check your email | `1-3-check-email` | Sign-in and setup |
+| 1.4 | Brand setup | `1-4-brand-setup` | Sign-in and setup |
+| 2.1 | Home | `2-1-home` | Make a video |
+| 2.2 | Generating | `2-2-generating` | Make a video |
+| 2.3 | Generation failed | `2-3-generation-failed` | Make a video |
+| 2.4 | Video and edits | `2-4-video-and-edits` | Make a video |
+| 2.5 | Manual editor | `2-5-manual-editor` | Make a video |
+| 3.1 | Add graphics to a video | `3-1-add-graphics` | From your own material |
+| 3.2 | Podcast clips | `3-2-podcast-clips` | From your own material |
+| 4.1 | Download (modal) | `4-1-download` | Download and send |
+| 4.2 | Send for review (modal) | `4-2-send-for-review` | Download and send |
+| 4.3 | Review link | `4-3-review-link` | Download and send |
+| 5.1 | My videos | `5-1-my-videos` | Library and account |
+| 5.2 | My videos, empty | `5-2-my-videos-empty` | Library and account |
+| 5.3 | Account | `5-3-account` | Library and account |
+| 6.1 | Limit reached (modal) | `6-1-limit-reached` | Plans and payment |
+| 6.2 | Plans | `6-2-plans` | Plans and payment |
+| 6.3 | Welcome to Pro | `6-3-welcome-to-pro` | Plans and payment |
 
-## Как экраны связаны
+## How the screens connect
 
 ```mermaid
 flowchart LR
   L[1.1 Landing] --> S[1.2 Sign in]
   S -->|Google| H[2.1 Home]
   S -->|Email me a link| E[1.3 Check your email]
-  E -.->|ссылка из письма| H
+  E -.->|link from the email| H
   H -->|Make the video| G[2.2 Generating]
-  G -->|Version 1 готов| R[2.4 Video and edits]
-  G -.->|ошибка| F[2.3 Generation failed]
+  G -->|Version 1 ready| R[2.4 Video and edits]
+  G -.->|error| F[2.3 Generation failed]
   F -->|Try again| G
   R -->|Editor| ED[2.5 Manual editor]
   ED -->|Done| R
@@ -82,43 +82,43 @@ flowchart LR
   AG -->|Apply| R
   H -->|Podcast| PC[3.2 Podcast clips]
   PC -->|Make clips| G
-  H -.->|лимит исчерпан| LR[6.1 Limit reached]
+  H -.->|limit reached| LR[6.1 Limit reached]
   LR -->|Go Pro| P[6.2 Plans]
-  P -->|Go Pro, после оплаты| W[6.3 Welcome to Pro]
+  P -->|Go Pro, after payment| W[6.3 Welcome to Pro]
   W --> H
 ```
 
-Шапка приложения есть на Home, Brand setup, My videos, Account, Plans и Welcome to Pro: Your brand ведёт на 1.4, My videos на 5.1, иконка профиля на 5.3. Пунктиром отмечены переходы, которые происходят не по кнопке.
+The app bar is on Home, Brand setup, My videos, Account, Plans and Welcome to Pro: Your brand goes to 1.4, My videos to 5.1, the profile icon to 5.3. Dashed arrows mark transitions that do not happen from a button.
 
-## Заглушки
+## Placeholders
 
-На макетах это не настоящие данные, их нужно заменить или решить:
+In the mockups these are not real data. They need to be replaced or decided:
 
-- `[name]` — название продукта, ещё не выбрано.
-- `$[price]` — цена Pro, не выбрана.
-- `[date]` — дата обновления лимита и продления подписки.
-- `[error id]`, `[support email]` — номер ошибки и адрес поддержки.
-- `[your name]`, `[sender name]`, `[customer name, company]`, `[speaker name]`, `[role, company]`, `[host name]`, `[guest name]` — имена людей.
-- `you@company.com`, `[name].app/r/7Kq2xV` — пример почты и ссылки.
-- «Launch: reports in PDF», «interview.mp4», «episode-12.mp3», цифры вроде «14 of 20» и «64%» — примеры содержимого.
-- Синий, жёлтый и прочие цвета внутри роликов — демо-бренд, см. `foundations.md`.
+- `[name]`: the product name, not chosen yet.
+- `$[price]`: the Pro price, not chosen.
+- `[date]`: the date the limit refreshes and the subscription renews.
+- `[error id]`, `[support email]`: the error number and the support address.
+- `[your name]`, `[sender name]`, `[customer name, company]`, `[speaker name]`, `[role, company]`, `[host name]`, `[guest name]`: people's names.
+- `you@company.com`, `[name].app/r/7Kq2xV`: an example email and link.
+- "Launch: reports in PDF", "interview.mp4", "episode-12.mp3", numbers like "14 of 20" and "64%": examples of content.
+- The blue, yellow and other colors inside videos: the demo brand, see `foundations.md`.
 
-## Чего нет в макетах
+## What is missing from the mockups
 
-Это нужно спроектировать или решить при вёрстке. Пункты с пометкой «предложение» — мой вариант, его можно менять.
+These need to be designed or decided during implementation. Items marked "proposal" are my version and can be changed.
 
-- **Телефон.** Экраны резиновые и переносятся по строкам, но отдельных мобильных макетов нет. Правило на телефоне: боковые поля 16 px, колонки встают друг под друга.
-- **Наведение и фокус.** Не нарисованы. Предложение: при наведении фон на шаг светлее по шкале поверхностей; фокус с клавиатуры — обводка 2 px акцентом с отступом 2 px.
-- **Отмена правки (Undo).** Есть в скоупе, на экране 2.4 не нарисована.
-- **Правка всего ролика**, когда ничего не выделено (на 2.4 нарисовано состояние с выделенным заголовком).
-- **Выделение других элементов кадра:** логотип, кнопка, фон, музыка, озвучка.
-- **Результат Fetch brand:** показать найденные логотип, цвета и шрифт и дать их поправить перед сохранением.
-- **Загрузка своего видео и подкаста:** прогресс, ошибки, ограничения по длине и размеру.
-- **Короткие уведомления** («ссылка скопирована», «сохранено») и скелетоны загрузки в My videos.
-- **Действия с роликом в My videos:** переименовать, дублировать, удалить (с подтверждением).
-- **Подтверждение удаления аккаунта.**
-- **Водяной знак** на роликах тарифа Free.
-- **Письма:** ссылка для входа, чек, неудачный платёж, «ролик готов».
-- **Оплата:** страница оплаты платёжного сервиса и неудачный платёж.
-- **Ссылка на согласование выключена** или не существует; страница 404.
-- **Светлая тема** не планируется.
+- **Phone.** The screens are fluid and wrap to new lines, but there are no separate mobile mockups. The rule for phones: 16 px side padding, columns stack one under another.
+- **Hover and focus.** Not drawn. Proposal: on hover, the background goes one step lighter on the surface scale; keyboard focus is a 2 px accent outline with a 2 px offset.
+- **Undoing an edit (Undo).** In scope, but not drawn on screen 2.4.
+- **Editing the whole video** when nothing is selected (on 2.4 the state with the headline selected is drawn).
+- **Selecting other elements of the frame:** logo, button, background, music, voiceover.
+- **The Fetch brand result:** show the logo, colors and font that were found, and let the user correct them before saving.
+- **Uploading your own video and podcast:** progress, errors, restrictions on length and size.
+- **Short notifications** ("link copied", "saved") and loading skeletons in My videos.
+- **Actions on a video in My videos:** rename, duplicate, delete (with confirmation).
+- **Confirming account deletion.**
+- **Watermark** on Free plan videos.
+- **Emails:** sign-in link, receipt, failed payment, "video ready".
+- **Payment:** the payment page of the payment service and a failed payment.
+- **A review link that is turned off** or does not exist; a 404 page.
+- **Light theme** is not planned.

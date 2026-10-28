@@ -1,164 +1,164 @@
 # Foundations
 
-Значения, которые используют экраны. Те же значения лежат в `tokens.css` и `tokens.json`, картинка — `foundations.png`.
+The values that the screens use. The same values are in `tokens.css` and `tokens.json`, and the picture is `foundations.png`.
 
-Коротко: тёмная сцена, один громкий акцент, крупный плотный шрифт. Ролик главный, интерфейс отступает.
+In short: a dark stage, one loud accent, a large dense font. The video comes first, and the interface steps back.
 
-## Цвет
+## Color
 
-Тема одна, тёмная.
+One theme, a dark one.
 
-### Поверхности, от тёмной к светлой
+### Surface scale, from dark to light
 
-| Токен | Hex | Где |
+| Token | Hex | Where used |
 | --- | --- | --- |
-| `ink` | `#08080B` | Фон страницы. Текст на акцентных и белых кнопках |
-| `stage` | `#0F0F13` | Сцена за роликом, поля ввода |
-| `surface` | `#141418` | Карточки, панели, бары, модальные окна |
-| `raised` | `#1D1D22` | Вторичные кнопки, чипы, строки списков, клипы на таймлайне |
-| `selected` | `#26262C` | Выделенный клип на таймлайне |
+| `ink` | `#08080B` | Page background. Text on accent and white buttons |
+| `stage` | `#0F0F13` | The stage behind the video, input fields |
+| `surface` | `#141418` | Cards, panels, bars, modals |
+| `raised` | `#1D1D22` | Secondary buttons, chips, list rows, clips on the timeline |
+| `selected` | `#26262C` | The selected clip on the timeline |
 
-### Линии
+### Lines
 
-| Токен | Hex | Где |
+| Token | Hex | Where used |
 | --- | --- | --- |
-| `line` | `#2C2C33` | Рамки карточек, баров и кнопок, дорожка прогресса |
-| `line-strong` | `#3A3A44` | Контурные чипы, пунктир пустых состояний |
-| `line-input` | `#4A4A55` | Рамки полей ввода и списков |
+| `line` | `#2C2C33` | Borders of cards, bars and buttons, the progress track |
+| `line-strong` | `#3A3A44` | Outline chips, the dashed line of empty states |
+| `line-input` | `#4A4A55` | Borders of input fields and dropdown lists |
 
-Сцена (`stage`) обведена линией `#1D1D22`, то есть цветом `raised`.
+The stage (`stage`) is outlined with `#1D1D22`, which is the `raised` color.
 
-### Текст
+### Text
 
-| Токен | Hex | Где | Контраст |
+| Token | Hex | Where used | Contrast |
 | --- | --- | --- | --- |
-| `text` | `#FFFFFF` | Основной текст, белые кнопки, кнопка Play | 20.0:1 на `ink` |
-| `text-muted` | `#A3A3AD` | Подзаголовки, подписи полей, подсказки, тайм-коды | 8.0:1 на `ink`, 6.7:1 на `raised` |
-| `text-faint` | `#8A8A94` | Только плейсхолдеры и сноски | 5.9:1 на `ink`, 5.4:1 на `surface` |
+| `text` | `#FFFFFF` | Main text, white buttons, the Play button | 20.0:1 on `ink` |
+| `text-muted` | `#A3A3AD` | Subheadings, field labels, hints, time codes | 8.0:1 on `ink`, 6.7:1 on `raised` |
+| `text-faint` | `#8A8A94` | Placeholders and footnotes only | 5.9:1 on `ink`, 5.4:1 on `surface` |
 
-Все сочетания проходят 4.5:1 для обычного текста.
+All combinations pass 4.5:1 for normal text.
 
-### Акцент
+### Accent
 
-| Токен | Hex | Текст на нём |
+| Token | Hex | Text on it |
 | --- | --- | --- |
-| `accent` (по умолчанию) | `#FF4A1C` | `ink`, 6.0:1 |
-| вариант, фиолетовый | `#7C5CFF` | `ink`, 4.6:1 |
-| вариант, синий | `#4C7DFF` | `ink`, 5.4:1 |
+| `accent` (default) | `#FF4A1C` | `ink`, 6.0:1 |
+| variant, purple | `#7C5CFF` | `ink`, 4.6:1 |
+| variant, blue | `#4C7DFF` | `ink`, 5.4:1 |
 
-Правила акцента:
-- Один громкий элемент на экран: главное действие, обводка выделения, прогресс, плейхед, включённый переключатель.
-- Текст на акценте всегда `ink`, никогда не белый.
-- Варианты нужны, чтобы примерить другой характер. Выбрать нужно один, на всех экранах одинаковый.
+Accent rules:
+- One loud element per screen: the main action, the selection outline, progress, the playhead, a switch that is turned on.
+- Text on the accent is always `ink`, never white.
+- The variants let you try on a different character. Choose one, the same on every screen.
 
-### Затемнение и тени
+### Scrim and shadows
 
-- Подложка под модальным окном: `ink` с прозрачностью 76%, `rgba(8, 8, 11, 0.76)`.
-- Тень для того, что парит: `0 24px 60px rgba(0, 0, 0, 0.6)`. Только модальные окна и наклонённые кадры роликов.
-- Всё остальное плоское: рамка 1 px цветом `line` на `surface`.
+- The scrim under a modal: `ink` at 76% opacity, `rgba(8, 8, 11, 0.76)`.
+- The float shadow, for things that float: `0 24px 60px rgba(0, 0, 0, 0.6)`. Only modals and tilted video frames.
+- Everything else is flat: a 1 px border in `line` on `surface`.
 
-### Цвета внутри роликов
+### Colors inside videos
 
-`#2D4BFF`, `#FFD23F`, `#F3F1EC`, `#0E3B2E`, `#B8F35A`, `#5B34D6`, `#FF8A5B` — демо-бренд, которым раскрашены примеры на макетах. В настоящих роликах цвета берутся из настроек бренда пользователя. Интерфейс эти цвета не использует.
+`#2D4BFF`, `#FFD23F`, `#F3F1EC`, `#0E3B2E`, `#B8F35A`, `#5B34D6`, `#FF8A5B`: the demo brand that colors the examples in the mockups. In real videos the colors come from the user's brand settings. The interface does not use these colors.
 
-## Шрифты
+## Fonts
 
-- **Onest** — весь интерфейс и заголовки. Начертания 400, 500, 600, 700, 800.
-- **JetBrains Mono** — время, длительности, форматы, hex, служебные строки. Начертания 400 и 500.
-- Оба есть в Google Fonts.
+- **Onest**: the whole interface and headings. Weights 400, 500, 600, 700, 800.
+- **JetBrains Mono**: time, durations, formats, hex, technical strings. Weights 400 and 500.
+- Both are on Google Fonts.
 
-### Шкала
+### Scale
 
-Формат: размер px / насыщенность / межбуквенный интервал / межстрочный. Где указан диапазон, размер резиновый и зависит от ширины окна.
+Format: size in px / weight / letter spacing / line height. Where a range is given, the size is fluid and depends on the window width.
 
-| Роль | Значения | Пример | Где |
+| Role | Values | Example | Where used |
 | --- | --- | --- | --- |
-| Hero | 44–96 / 800 / −4% / 0.98 | Say it. Get a motion video. | Только первый экран лендинга |
-| Display | 36–68 / 800 / −3.5% / 1.02 | What are we making today? | Home, большие моменты вроде Welcome to Pro |
-| Title | 32–52 / 800 / −3.5% / 1.04 | Your brand | Заголовок страницы, один на страницу |
-| Section | 32–44 / 800 / −3% / 1.05 | Launches, sales, stories, numbers. | Разделы лендинга, крупные статусы |
-| Heading | 26 / 700 / −2% / 1.2 | Or start from an example | Разделы внутри приложения, заголовки окон |
-| Card title | 20–22 / 700 / −2% / 1.2 | Scene 2. Headline | Карточки и боковые панели |
-| Bar title | 18 / 700 / −1% / 1.3 | Launch: reports in PDF | Верхняя панель экрана задачи |
-| Lead | 17–18 / 400 / 0 / 1.45, `text-muted` | Describe it, drop a link… | Строка под заголовком |
-| Body | 15–16 / 400–700 / 0 / 1.45 | Click anything in the video… | Текст, кнопки (700 на залитых), поля |
-| Small | 13–14 / 400 / 0 / 1.45 | Drag a scene to reorder it. | Подсказки, второстепенные строки |
-| Label | 13 / 500 / 0 / 1.4, `text-muted` | What the video is about | Над каждым полем и группой |
-| Sticker | 13 / 800 / +4% / заглавные | NO TIMELINE. NO LAYERS. | Не больше одного на экран |
-| Mono | 12–13 / 400, JetBrains Mono | 0:06 / 0:15 · 9:16 · 1080p | Время, форматы, hex |
+| Hero | 44–96 / 800 / −4% / 0.98 | Say it. Get a motion video. | Only the first screen of the landing page |
+| Display | 36–68 / 800 / −3.5% / 1.02 | What are we making today? | Home, big moments like Welcome to Pro |
+| Title | 32–52 / 800 / −3.5% / 1.04 | Your brand | Page heading, one per page |
+| Section | 32–44 / 800 / −3% / 1.05 | Launches, sales, stories, numbers. | Landing page sections, large statuses |
+| Heading | 26 / 700 / −2% / 1.2 | Or start from an example | Sections inside the app, modal headings |
+| Card title | 20–22 / 700 / −2% / 1.2 | Scene 2. Headline | Cards and side panels |
+| Bar title | 18 / 700 / −1% / 1.3 | Launch: reports in PDF | Top bar of a task screen |
+| Lead | 17–18 / 400 / 0 / 1.45, `text-muted` | Describe it, drop a link… | The line under a heading |
+| Body | 15–16 / 400–700 / 0 / 1.45 | Click anything in the video… | Text, buttons (700 on filled ones), fields |
+| Small | 13–14 / 400 / 0 / 1.45 | Drag a scene to reorder it. | Hints, secondary lines |
+| Label | 13 / 500 / 0 / 1.4, `text-muted` | What the video is about | Above every field and group |
+| Sticker | 13 / 800 / +4% / uppercase | NO TIMELINE. NO LAYERS. | At most one per screen |
+| Mono | 12–13 / 400, JetBrains Mono | 0:06 / 0:15 · 9:16 · 1080p | Time, formats, hex |
 
-Резиновые размеры на макетах заданы так: Hero `clamp(44px, 7.5vw, 96px)`, Display `clamp(36px, 5.4vw, 68px)`, Title `clamp(32px, 4.4vw, 52px)`, Section `clamp(32px, 4vw, 44px)`.
+Fluid sizes in the mockups are set like this: Hero `clamp(44px, 7.5vw, 96px)`, Display `clamp(36px, 5.4vw, 68px)`, Title `clamp(32px, 4.4vw, 52px)`, Section `clamp(32px, 4vw, 44px)`.
 
-Крупные цифры внутри примеров роликов (вроде «30%» и «3×») к шкале интерфейса не относятся: это содержимое ролика.
+The big numbers inside example videos (such as "30%" and "3×") are not part of the interface scale: they are video content.
 
-## Отступы
+## Spacing
 
-Короткая шкала. 14 выбивается намеренно: это зазор между карточками и плитками, чуть плотнее 16, чтобы сетка читалась одним куском.
+A short scale. 14 stands out on purpose: it is the gap between cards and tiles, a bit tighter than 16, so that the grid reads as one piece.
 
-| Значение | Где |
+| Value | Where used |
 | --- | --- |
-| 4 | Внутри сегментированного переключателя; между столбиками волны |
-| 8 | Между кнопками и чипами в ряду; от подписи до поля |
-| 12 | Между полями друг под другом и пунктами списка; от иконки до текста в больших кнопках |
-| 14 | Между карточками, плитками и панелями в сетке |
-| 16 | Между группами внутри карточки; между элементами верхней панели |
-| 20–24 | Внутренние поля карточек и боковых панелей |
-| 28 | Внутренние поля модальных окон и карточек тарифов; отступ под заголовком страницы |
-| 32 | Боковые поля страницы на десктопе. На телефоне 16 |
-| 44 | Между разделами страницы |
+| 4 | Inside a segmented control; between the bars of a waveform |
+| 8 | Between buttons and chips in a row; from a label to its field |
+| 12 | Between fields stacked one under another and between list items; from an icon to the text in large buttons |
+| 14 | Between cards, tiles and panels in a grid |
+| 16 | Between groups inside a card; between elements of a top bar |
+| 20–24 | Padding inside cards and side panels |
+| 28 | Padding inside modals and plan cards; the space under a page heading |
+| 32 | Page side padding on desktop. 16 on a phone |
+| 44 | Between page sections |
 
-### Ширина содержимого
+### Content width
 
-| Ширина | Где |
+| Width | Where used |
 | --- | --- |
-| 880 | Одна задача на странице: поле промпта, тарифы, аккаунт, Welcome to Pro |
-| 1216 | Сетки и раскладки в две колонки: примеры, My videos, бренд, лендинг |
-| 500 | Модальные окна |
+| 880 | One task on a page: the prompt field, plans, account, Welcome to Pro |
+| 1216 | Grids and two-column layouts: examples, My videos, brand, landing page |
+| 500 | Modals |
 
-Страницы резиновые до этих ширин.
+Pages are fluid up to these widths.
 
-### Верхние панели
+### Top bars
 
-- Панель приложения (с логотипом и навигацией): поля 20 px сверху и снизу, 32 px по бокам.
-- Панель экрана задачи (стрелка назад и название): 16 px сверху и снизу, 32 px по бокам.
+- App bar (with the logo and navigation): 20 px padding on top and bottom, 32 px on the sides.
+- Task bar (back arrow and title): 16 px on top and bottom, 32 px on the sides.
 
-## Форма и размер
+## Shape and size
 
-### Радиусы
+### Radii
 
-| Радиус | Где |
+| Radius | Where used |
 | --- | --- |
-| pill (999) | Кнопки, чипы, переключатели, поле правки |
-| 28 | Панели, карточки, модальные окна, бары |
-| 24 | Кадры роликов и плитки примеров |
-| 18 | Строки внутри карточек: файлы, переключатели |
-| 16 | Поля ввода и выпадающие списки |
-| 12–14 | Клипы на таймлайне, мини-превью |
+| pill (999) | Buttons, chips, switches, the edit composer |
+| 28 | Panels, cards, modals, bars |
+| 24 | Video frames and example tiles |
+| 18 | Rows inside cards: files, switches |
+| 16 | Input fields and dropdown lists |
+| 12–14 | Clips on the timeline, mini previews |
 
-### Размеры
+### Sizes
 
-| Размер | Что |
+| Size | What |
 | --- | --- |
-| не меньше 44 | Любая цель для нажатия, включая иконки и чипы |
-| 52 и 44 | Высота большой и обычной кнопки |
-| 52 и 48 | Высота поля ввода; 48 в плотных боковых панелях |
-| 44–48 | Круглые кнопки-иконки: назад, закрыть, play, отправить |
-| 9:16, 1:1, 16:9 | Форматы кадра. По умолчанию 9:16 |
+| at least 44 | Any touch target, including icons and chips |
+| 52 and 44 | Height of a large and a regular button |
+| 52 and 48 | Height of an input field; 48 in dense side panels |
+| 44–48 | Round icon buttons: back, close, play, send |
+| 9:16, 1:1, 16:9 | Frame formats. 9:16 by default |
 
-## Иконки
+## Icons
 
-- Контурные, сетка 24, толщина линии 1.8, скруглённые концы и углы.
-- В кнопках 17–18 px, отдельно 22–24 px.
-- Залита только Play.
-- В макетах использованы: back, arrow, link, video, podcast (микрофон), upload, download, play, check, close, add, editor (ползунки), split (ножницы), copy, delete, account. Нарисованы вручную как inline SVG, конкретный набор иконок не выбран.
+- Outlined, on a 24 grid, with a 1.8 stroke and rounded caps and corners.
+- In buttons 17–18 px, on their own 22–24 px.
+- Only Play is filled.
+- The mockups use: back, arrow, link, video, podcast (microphone), upload, download, play, check, close, add, editor (sliders), split (scissors), copy, delete, account. They are drawn by hand as inline SVG, and no specific icon set has been chosen.
 
-## Тон текста
+## Tone of voice
 
-Короткий простой английский, в крупных строках немного юмора съёмочной площадки.
+Short, plain English, with a little film-set humor in the big lines.
 
-| Правило | Примеры |
+| Rule | Examples |
 | --- | --- |
-| Кнопка называет действие | Make the video · Download · Send for review · Go Pro |
-| Заголовок может подмигнуть | Rolling. Three takes coming up. · Keep the camera rolling. · Cut. Something broke on set. |
-| Подписи полей никогда не шутят | What should change? · Work email · Clip length |
-| Говорим, что произойдёт | Edits never count. · Cancel any time in one click. · It doesn't count toward your limit. |
+| A button names the action | Make the video · Download · Send for review · Go Pro |
+| A heading can wink | Rolling. Three takes coming up. · Keep the camera rolling. · Cut. Something broke on set. |
+| Field labels never joke | What should change? · Work email · Clip length |
+| We say what will happen | Edits never count. · Cancel any time in one click. · It doesn't count toward your limit. |

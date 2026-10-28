@@ -8,6 +8,8 @@ What to install and which keys to get in order to run the project and the spike.
 - pnpm 12: the version is pinned in the `packageManager` field of `package.json`, and `corepack enable` picks it up.
 - ffmpeg and ffprobe on `PATH`: `brew install ffmpeg` on macOS, check with `ffmpeg -version`.
 - Dependencies: `pnpm install`.
+- Run a single test file with `pnpm test <path>` (not `pnpm test -- <path>`: pnpm 12 passes the `--` through).
+- If `pnpm add` reports ignored build scripts, run `pnpm approve-builds`.
 
 ## Environment variables
 

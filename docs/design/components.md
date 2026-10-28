@@ -1,118 +1,118 @@
-# Компоненты
+# Components
 
-Из чего собраны экраны. Размеры в px, цвета — токены из `foundations.md`. Где у компонента есть состояние, которого на макетах нет, это сказано прямо.
+What the screens are built from. Sizes are in px, colors are tokens from `foundations.md`. Where a component has a state that the mockups do not show, this is said directly.
 
-Общие правила:
-- Любая цель для нажатия не меньше 44 × 44.
-- Кнопки-иконки без текста подписаны для скринридера (`aria-label`).
-- Наведение и фокус не нарисованы. Предложение: при наведении фон на шаг светлее по шкале поверхностей, фокус — обводка 2 px акцентом с отступом 2 px.
+General rules:
+- Any touch target is at least 44 × 44.
+- Icon buttons without text are labeled for screen readers (`aria-label`).
+- Hover and focus are not drawn. Proposal: on hover, the background goes one step lighter on the surface scale; focus is a 2 px accent outline with a 2 px offset.
 
-## Верхние панели
+## Top bars
 
-**App bar** — шапка приложения (Home, Brand setup, My videos, Account, Plans, Welcome to Pro).
-- Поля 20 сверху и снизу, 32 по бокам. Слева логотип, справа навигация с зазором 8.
-- Логотип: круг 22 цветом акцента и название 17 / 700, ведёт на Home.
-- Your brand: таблетка 44, рамка `line`, фон `surface`, три кружка цветов бренда по 12 и подпись 15. Ведёт на Brand setup.
-- My videos: текстовая ссылка 15, высота 44. Ведёт на My videos.
-- Профиль: круглая кнопка 44, рамка `line`, фон `surface`, иконка 18. Ведёт на Account.
+**App bar.** The app header (Home, Brand setup, My videos, Account, Plans, Welcome to Pro).
+- Padding 20 on top and bottom, 32 on the sides. The logo on the left, the navigation on the right with a gap of 8.
+- Logo: a 22 circle in the accent color and the name in 17 / 700, goes to Home.
+- Your brand: a 44 pill, `line` border, `surface` background, three 12 dots in the brand colors and a 15 label. Goes to Brand setup.
+- My videos: a text link in 15, 44 high. Goes to My videos.
+- Profile: a 44 round button, `line` border, `surface` background, an 18 icon. Goes to Account.
 
-**Task bar** — панель экрана задачи (Generating, Video and edits, Editor, Add graphics, Podcast clips, Generation failed).
-- Поля 16 сверху и снизу, 32 по бокам.
-- Слева: круглая кнопка «назад» 44 (рамка `line`, фон `surface`), название 18 / 700, иногда вторая строка 15 `text-muted` (имя файла, длительность).
-- Справа: действия экрана, зазор 8.
+**Task bar.** The bar of a task screen (Generating, Video and edits, Editor, Add graphics, Podcast clips, Generation failed).
+- Padding 16 on top and bottom, 32 on the sides.
+- Left: a 44 round "back" button (`line` border, `surface` background), the title in 18 / 700, sometimes a second line in 15 `text-muted` (file name, duration).
+- Right: the actions of the screen, with a gap of 8.
 
-**Public bar** — шапка публичных страниц (Landing, Sign in, Check your email, Review link): только логотип и, где нужно, ссылки или метка View only.
+**Public bar.** The header of public pages (Landing, Sign in, Check your email, Review link): only the logo and, where needed, links or the View only tag.
 
-## Кнопки
+## Buttons
 
-| Вариант | Высота | Поля | Вид | Где |
+| Variant | Height | Padding | Look | Where used |
 | --- | --- | --- | --- | --- |
-| Primary, большая | 52 | 0 26 | Фон `accent`, текст `ink` 16 / 700, иконка 18 справа | Главное действие экрана: Make the video, Start free, Go Pro |
-| Primary | 44 | 0 20 | То же, текст 15 / 700 | Главное действие в панели: Download, Done, Make 3 clips |
-| White | 52 | 0 26 | Фон белый, текст `ink` 16 / 700 | Важное действие, когда главное на экране уже другое: Continue with Google, Fetch brand |
-| Secondary | 44 (иногда 52) | 0 18 | Фон `raised`, рамка `line`, текст 15 / 400, иконка 17 слева | Link, Existing video, Resend link, Manage billing |
-| Outline | 44 | 0 16 | Прозрачный фон, рамка `line-strong`, текст 14 | Быстрые правки: Bigger, Rewrite, Change font, Remove |
-| Suggestion | 44 | 0 16 | Фон `surface`, рамка `line`, текст 14 | Подсказки «What next» |
-| Icon | 44 | — | Круг, рамка `line`, фон `surface` или `raised`, иконка 18 | Назад, закрыть, профиль |
-| Play | 48 (44 в редакторе) | — | Белый круг, залитая иконка `ink` 18 | Плееры |
-| Send | 48 | — | Круг `accent`, стрелка вверх `ink` | Поле правки |
-| Disabled | 52 | 0 22 | Прозрачный фон, рамка `line`, текст `text-muted` 16 / 600 | Your current plan |
+| Primary, large | 52 | 0 26 | `accent` background, `ink` text 16 / 700, an 18 icon on the right | The main action of the screen: Make the video, Start free, Go Pro |
+| Primary | 44 | 0 20 | The same, text 15 / 700 | The main action in a bar: Download, Done, Make 3 clips |
+| White | 52 | 0 26 | White background, `ink` text 16 / 700 | An important action when the screen already has a different main action: Continue with Google, Fetch brand |
+| Secondary | 44 (sometimes 52) | 0 18 | `raised` background, `line` border, text 15 / 400, a 17 icon on the left | Link, Existing video, Resend link, Manage billing |
+| Outline | 44 | 0 16 | Transparent background, `line-strong` border, text 14 | Quick edits: Bigger, Rewrite, Change font, Remove |
+| Suggestion | 44 | 0 16 | `surface` background, `line` border, text 14 | The "What next" suggestions |
+| Icon | 44 | — | A circle, `line` border, `surface` or `raised` background, an 18 icon | Back, close, profile |
+| Play | 48 (44 in the editor) | — | A white circle, a filled `ink` icon 18 | Players |
+| Send | 48 | — | An `accent` circle, an `ink` up arrow | Edit composer |
+| Disabled | 52 | 0 22 | Transparent background, `line` border, `text-muted` text 16 / 600 | Your current plan |
 
-- Все кнопки — таблетки (radius pill).
-- Зазор от иконки до текста 8, в больших кнопках 10.
-- Ссылка, которая выглядит как кнопка, остаётся ссылкой, а не кнопкой внутри ссылки.
+- All buttons are pills (radius pill).
+- The gap from the icon to the text is 8, and 10 in large buttons.
+- A link that looks like a button stays a link, not a button inside a link.
 
-## Поля ввода
+## Input fields
 
-**Input.** Высота 52, поля 0 18, radius 16, рамка `line-input`, фон `stage`, текст 16. В плотных панелях (редактор, настройки клипов) высота 48, поля 0 16, текст 15. Подпись над полем — Label (13 / 500 `text-muted`), зазор 8. Плейсхолдер `text-faint`.
+**Input.** Height 52, padding 0 18, radius 16, `line-input` border, `stage` background, text 16. In dense panels (editor, clip settings) height 48, padding 0 16, text 15. The label above the field is Label (13 / 500 `text-muted`), gap 8. Placeholder `text-faint`.
 
-**Select.** Как Input, поля 0 12–14. Используется для шрифта бренда, появления текста и перехода между сценами.
+**Select.** Like Input, padding 0 12–14. Used for the brand font, the text entrance and the transition between scenes.
 
-**Prompt card** (Home). Карточка `surface`, рамка `line`, radius 28, поля 22. Внутри: подпись, поле без рамки на 2 строки (текст 20), ряд чипов-источников (Link, Existing video, Podcast) и выбор формата «9:16, 15 sec», справа большая Primary-кнопка.
+**Prompt card** (Home). A `surface` card, `line` border, radius 28, padding 22. Inside: a label, a borderless 2-line field (text 20), a row of source chips (Link, Existing video, Podcast) and the format picker "9:16, 15 sec", and on the right a large Primary button.
 
-**Edit composer** (Video and edits). Поле-таблетка высотой 48 (фон `stage`, рамка `line-input`, текст 15) и круглая кнопка Send 48 рядом, зазор 8.
+**Edit composer** (Video and edits). A pill field 48 high (`stage` background, `line-input` border, text 15) and a round Send button 48 next to it, gap 8.
 
-**Read-only link field** (Send for review). Input с моноширинным текстом 14 и кнопкой Copy link рядом.
+**Read-only link field** (Send for review). An Input with monospace text 14 and a Copy link button next to it.
 
-## Выбор
+## Choice
 
-**Toggle chip** — множественный выбор (форматы для скачивания, формат клипов). Высота 44, поля 0 18, таблетка, текст 14. Включён: белый фон, текст `ink` 600, галочка 16 слева. Выключен: прозрачный, рамка `line-strong`.
+**Toggle chip.** Multi-select (download formats, clip format). Height 44, padding 0 18, a pill, text 14. On: white background, `ink` text 600, a 16 check mark on the left. Off: transparent, `line-strong` border.
 
-**Filter chip** — один из нескольких (фильтр в My videos). Как Toggle chip без галочки, у выключенного рамка `line`.
+**Filter chip.** One of several (the filter in My videos). Like Toggle chip without the check mark; when off it has a `line` border.
 
-**Segmented control** — один из 2–4 (формат в плеере, качество, длина клипа). Контейнер-таблетка: фон `ink`, рамка `line`, поля 4, зазор 4. Пункты высотой 36, минимум 54–64 в ширину. Выбранный: белый фон, текст `ink` 14 / 600. Остальные: прозрачные, текст 14 / 500.
+**Segmented control.** One of 2–4 (the format in the player, quality, clip length). A pill container: `ink` background, `line` border, padding 4, gap 4. Items 36 high, at least 54–64 wide. Selected: white background, `ink` text 14 / 600. Others: transparent, text 14 / 500.
 
-**Switch** — вкл/выкл (ссылка на согласование, субтитры). Дорожка 52 × 30, ручка 22. Включён: дорожка `accent`, ручка `ink` справа. Выключен: дорожка `line-strong`, ручка `text-muted` слева. Зона нажатия 60 × 44. Обычно стоит справа в строке-карточке (фон `raised`, radius 18) с названием 15 / 600 и пояснением 13 `text-muted`.
+**Switch.** On/off (the review link, captions). Track 52 × 30, knob 22. On: `accent` track, `ink` knob on the right. Off: `line-strong` track, `text-muted` knob on the left. Touch area 60 × 44. Usually sits on the right in a card row (`raised` background, radius 18) with a name 15 / 600 and a description 13 `text-muted`.
 
-**Brand colour** (Brand setup). Кнопка высотой 52, radius 16, фон `raised`, рамка `line`: кружок 30 цветом и hex моноширинным 14.
+**Brand colour** (Brand setup). A button 52 high, radius 16, `raised` background, `line` border: a 30 dot in the color and the hex in monospace 14.
 
-## Обратная связь
+## Feedback
 
-**Progress bar.** Высота 8, radius 4, дорожка `line`, заполнение `accent`. Подпись рядом или под ней моноширинным 12–13 `text-muted`.
+**Progress bar.** Height 8, radius 4, `line` track, `accent` fill. The label next to it or under it, in monospace 12–13 `text-muted`.
 
-**Step chips** (Generating). Таблетки высотой 40, рамка `line`, фон `surface`, текст 14. Сделано: белая галочка. Сейчас: точка 9 цветом акцента. Впереди: пустой кружок, текст `text-muted`.
+**Step chips** (Generating). Pills 40 high, `line` border, `surface` background, text 14. Done: a white check mark. Now: a 9 dot in the accent color. Upcoming: an empty circle, `text-muted` text.
 
-**Sticker.** Белая таблетка, текст `ink` 13 / 800 заглавными с интервалом +4%, поля 6 14, двойная обводка (3 px `ink` внутри, 3 px белым снаружи), наклон от −3° до −5°. Не больше одного на экран. Крупный вариант на Welcome to Pro: текст 32, обводки по 4.
+**Sticker.** A white pill, `ink` text 13 / 800 in uppercase with +4% letter spacing, padding 6 14, a double outline (3 px `ink` inside, 3 px white outside), tilted from −3° to −5°. At most one per screen. The large variant on Welcome to Pro: text 32, outlines of 4.
 
-**Empty state.** Рамка 1.5 px пунктиром `line-strong`, radius 28, всё по центру: стикер, заголовок, главная кнопка, примеры.
+**Empty state.** A 1.5 px dashed border in `line-strong`, radius 28, everything centered: a sticker, a heading, the main button, examples.
 
-**Error state** (Generation failed). Кадр 9:16 с косой штриховкой из `surface` и `stage`, в центре белый круг 60 с иконкой предупреждения.
+**Error state** (Generation failed). A 9:16 frame with diagonal hatching in `surface` and `stage`, and in the center a white 60 circle with a warning icon.
 
-## Контейнеры
+## Containers
 
-**Card.** Фон `surface`, рамка `line`, radius 28, поля 24 (22–28).
+**Card.** `surface` background, `line` border, radius 28, padding 24 (22–28).
 
-**Stage.** Область, где показан ролик: фон `stage`, рамка `raised`, radius 28.
+**Stage.** The area where the video is shown: `stage` background, `raised` border, radius 28.
 
-**Modal.** Ширина до 500, фон `surface`, рамка `line`, radius 28, поля 28, тень float, зазор между блоками 22. Подложка — `scrim` поверх экрана, из которого окно открыто. Сверху заголовок Heading (26 / 700) с пояснением 15 `text-muted` и кнопка закрытия 44 справа.
+**Modal.** Width up to 500, `surface` background, `line` border, radius 28, padding 28, float shadow, gap between blocks 22. The scrim (`scrim`) goes over the screen the modal is opened from. At the top: a Heading (26 / 700) with a description in 15 `text-muted`, and a 44 close button on the right.
 
-**Plan card.** Free — обычная Card с полями 28. Pro — белая карточка с текстом `ink`, radius 28, поля 28 и чёрным стикером No watermark в углу. Цена 60 / 800, интервал −4.5%. Список с галочками 18, текст 16, зазор 12.
+**Plan card.** Free is a regular Card with padding 28. Pro is a white card with `ink` text, radius 28, padding 28 and a black No watermark sticker in the corner. The price is 60 / 800, letter spacing −4.5%. A list with 18 check marks, text 16, gap 12.
 
-## Ролики
+## Videos
 
-**Example tile.** Кадр 9:16, radius 24, внутри макет ролика. В левом нижнем углу кнопка Play 34 (круг `ink`, белая иконка) с отступом 16. Под кадром название 15 / 600 и описание 13 `text-muted`, зазор 12. Сетка плиток: от 170 в ширину, зазор 14.
+**Example tile.** A 9:16 frame, radius 24, with a video mockup inside. In the bottom left corner, a Play 34 button (an `ink` circle, a white icon) inset 16. Under the frame, a name 15 / 600 and a description 13 `text-muted`, gap 12. The tile grid: tiles from 170 wide, gap 14.
 
-**Video frame.** Кадр ролика на сцене: 9:16, radius 24 (в редакторе и превью меньше, radius 18).
+**Video frame.** The frame of a video on the stage: 9:16, radius 24 (smaller in the editor and the preview, radius 18).
 
-**Versions.** Колонка мини-кадров 58 × 102, radius 13, зазор 12, подпись Versions сверху. Выбранный обведён акцентом 2 px с отступом 3.
+**Versions.** A column of mini frames 58 × 102, radius 13, gap 12, with a Versions label on top. The selected one has a 2 px accent outline with an offset of 3.
 
-**Selection.** Выделенный элемент в кадре обведён акцентом 2 px с отступом 8.
+**Selection.** The selected element in the frame has a 2 px accent outline with an offset of 8.
 
-**Edit panel** (Video and edits). Рядом с кадром: фон `raised`, рамка `line`, radius 24, поля 18, зазор 14. Сверху точка 9 цветом акцента и название элемента 16 / 700, справа кнопка снятия выделения. Дальше Edit composer, ряд Outline-кнопок быстрых правок и подсказка 13 `text-muted`.
+**Edit panel** (Video and edits). Next to the frame: `raised` background, `line` border, radius 24, padding 18, gap 14. At the top, a 9 dot in the accent color and the element name in 16 / 700, and on the right a button that clears the selection. Then the Edit composer, a row of Outline buttons for quick edits and a hint 13 `text-muted`.
 
-**Player bar.** Полоса под сценой: фон `surface`, рамка `line`, radius 28, поля 10 18 10 10. Play 48, ползунок, время моноширинным 13 `text-muted`, Segmented control форматов, ссылка Editor 14 `text-muted` с иконкой ползунков.
+**Player bar.** A strip under the stage: `surface` background, `line` border, radius 28, padding 10 18 10 10. Play 48, a slider, the time in monospace 13 `text-muted`, a Segmented control for formats, an Editor link 14 `text-muted` with the sliders icon.
 
 **Timeline** (Manual editor).
-- Шкала времени: моноширинный 12, засечки 1 px `line-input`.
-- Подписи дорожек слева, ширина 84, 13 / 500 `text-muted`.
-- Сцены: клипы высотой 60, radius 14, фон `raised`, ширина пропорциональна длительности. Название 14 / 600, длительность моноширинным 12. Выбранный клип: рамка 2 px `accent`, фон `selected`, по краям ручки обрезки 4 × 24 цветом акцента.
-- Дорожки Voice и Music: высота 40, radius 12, фон `raised`, у музыки штриховая «волна».
-- Плейхед: линия 2 px и кружок 12 цветом акцента.
+- Time ruler: monospace 12, 1 px `line-input` ticks.
+- Track labels on the left, width 84, 13 / 500 `text-muted`.
+- Scenes: clips 60 high, radius 14, `raised` background, width proportional to the duration. The name 14 / 600, the duration in monospace 12. The selected clip: a 2 px `accent` border, `selected` background, trim handles 4 × 24 in the accent color on the edges.
+- Voice and Music tracks: height 40, radius 12, `raised` background, and the music track has a striped "wave".
+- Playhead: a 2 px line and a 12 dot in the accent color.
 
-**Suggestion row** (Add graphics). Строка: radius 18, фон `raised`, поля 12 12 12 14. Время моноширинным 13, тип 12 / 700 заглавными `text-muted`, текст 15 / 600. Справа две круглые кнопки 44: принять (принято — белый круг с галочкой `ink`, не принято — контур `line-input`) и пропустить. Выделенная строка обведена акцентом 2 px. Места подсказок отмечены точками цвета акцента на ползунке плеера.
+**Suggestion row** (Add graphics). A row: radius 18, `raised` background, padding 12 12 12 14. The time in monospace 13, the type in 12 / 700 uppercase `text-muted`, the text 15 / 600. On the right two 44 round buttons: accept (accepted: a white circle with an `ink` check mark; not accepted: a `line-input` outline) and skip. The selected row has a 2 px accent outline. The places of the suggestions are marked with accent-colored dots on the player slider.
 
-**Clip card** (Podcast clips). Карточка-кнопка: radius 22, фон `surface`, рамка 2 px (оставлен — `accent`, пропущен — `line`), поля 12. Слева мини-превью 72 × 128, radius 12. Справа номер моноширинным, метка Keep (таблетка `accent` высотой 26) или Skip (контур), цитата 15 / 600, время и длительность моноширинным 12. Нажатие переключает Keep/Skip.
+**Clip card** (Podcast clips). A card that is a button: radius 22, `surface` background, 2 px border (kept: `accent`, skipped: `line`), padding 12. On the left a mini preview 72 × 128, radius 12. On the right the number in monospace, the Keep tag (an `accent` pill 26 high) or Skip (an outline), the quote 15 / 600, the time and duration in monospace 12. A press toggles Keep/Skip.
 
-**Waveform** (Podcast clips). Столбики шириной по 1/160 с зазором 2. Найденные моменты подсвечены (оставленные — акцентом, пропущенные — белым), над каждым номер в круге 24.
+**Waveform** (Podcast clips). Bars each 1/160 wide, with a gap of 2. The moments found are highlighted (kept: accent, skipped: white), with a number in a 24 circle above each.
 
-**File row** (Download). Строка radius 18, фон `raised`. Значок пропорции кадра, название 15 / 600, строка формата моноширинным 12. Справа белая кнопка Save или процент рендера; во время рендера под строкой Progress bar.
+**File row** (Download). A row, radius 18, `raised` background. An icon of the frame's aspect ratio, the name 15 / 600, the format line in monospace 12. On the right a white Save button or the render percentage; while rendering, a Progress bar under the row.
