@@ -8,6 +8,7 @@ import { fetchPageText } from "../lib/html";
 import { Metrics } from "../lib/metrics";
 import { avoidZones } from "../video/layout/avoidZones";
 import { runQa } from "../video/qa/checks";
+import { renderOnLambda, uploadRunAssets } from "../video/render/renderLambda";
 import {
   posterTimeMs,
   renderLocal,
@@ -384,7 +385,24 @@ export async function runPipeline(
   if (options.render === "none") {
     skip("render");
   } else if (options.render === "lambda") {
-    throw new Error("Lambda rendering arrives in Task 15");
+    outputPath = await step(
+      "render",
+      "lambda.json",
+      async () => {
+        const uploaded = await uploadRunAssets(doc, manifest.id, env);
+        const result = await renderOnLambda({
+          doc: uploaded,
+          outName: `${manifest.id}.mp4`,
+          env,
+          metrics,
+        });
+        await writeJson(artifact("lambda.json"), result);
+        return result.url;
+      },
+      async () =>
+        (await readJson(artifact("lambda.json"), z.object({ url: z.string() })))
+          .url,
+    );
   } else {
     outputPath = await step(
       "render",
