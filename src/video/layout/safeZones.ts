@@ -59,6 +59,17 @@ const heightShare: Record<OverlayKind, number> = {
 };
 
 const round6 = (value: number) => Math.round(value * 1e6) / 1e6;
+const captionBottomGap = 0.02;
+const captionBandHeight = 0.1;
+
+export function captionBand(safeZone: Destination["safeZone"]): Box {
+  return {
+    x: safeZone.left,
+    y: round6(1 - safeZone.bottom - captionBottomGap - captionBandHeight),
+    w: round6(1 - safeZone.left - safeZone.right),
+    h: captionBandHeight,
+  };
+}
 
 function intersects(a: Box, b: Box): boolean {
   return (

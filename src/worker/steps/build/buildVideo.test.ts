@@ -8,6 +8,8 @@ import footagePlanJson from "../../../../fixtures/plan.footage.json" with {
 import textPlanJson from "../../../../fixtures/plan.text.json" with {
   type: "json",
 };
+import { destinations } from "../../../video/destinations";
+import { captionBand } from "../../../video/layout/safeZones";
 import { ContentMapSchema } from "../../../video/schema/content";
 import { PlanSchema } from "../../../video/schema/plan";
 import { buildVideo, pickMusic } from "./buildVideo";
@@ -88,4 +90,19 @@ test("pickMusic matches a track by mood and returns nothing for an empty manifes
   };
   expect(pickMusic(manifest, "calm")?.path).toContain("calm.mp3");
   expect(pickMusic({ tracks: [] }, "calm")).toBeUndefined();
+});
+
+test("buildVideo keeps overlays out of the caption band when captions are enabled", () => {
+  const doc = buildVideo(
+    footagePlan,
+    sampleContent,
+    { sourceVideo: { path: "in.mp4", info: sampleContent.source } },
+    brand,
+  );
+  const band = captionBand(destinations.reels.safeZone);
+  for (const element of doc.scenes.flatMap((s) => s.elements)) {
+    const below = element.box.y >= band.y + band.h;
+    const above = element.box.y + element.box.h <= band.y;
+    expect(below || above).toBe(true);
+  }
 });

@@ -1,0 +1,173 @@
+{
+  "id": "reels-sample",
+  "format": "9:16",
+  "fps": 30,
+  "durationMs": 15000,
+  "destination": "reels",
+  "register": "driving-launch",
+  "brand": {
+    "colors": ["#2D4BFF", "#FFD23F", "#FFFFFF"],
+    "font": "Onest"
+  },
+  "assets": [],
+  "scenes": [
+    {
+      "id": "b1",
+      "startMs": 0,
+      "durationMs": 2000,
+      "background": {
+        "kind": "brand"
+      },
+      "elements": [
+        {
+          "id": "b1-headline",
+          "kind": "headline",
+          "text": "Reports, now in PDF",
+          "sub": "Export in one click",
+          "enterMs": 0,
+          "exitMs": 2000,
+          "box": {
+            "x": 0.1056,
+            "y": 0.14,
+            "w": 0.6888,
+            "h": 0.18
+          }
+        }
+      ],
+      "transition": "cut"
+    },
+    {
+      "id": "b2",
+      "startMs": 2000,
+      "durationMs": 9000,
+      "background": {
+        "kind": "brand"
+      },
+      "camera": {
+        "kind": "push",
+        "intensity": 0.5
+      },
+      "elements": [
+        {
+          "id": "b2-number",
+          "kind": "big-number",
+          "value": "3×",
+          "label": "more signups",
+          "enterMs": 0,
+          "exitMs": 9000,
+          "box": {
+            "x": 0.204,
+            "y": 0.4,
+            "w": 0.492,
+            "h": 0.12
+          }
+        },
+        {
+          "id": "b2-chip",
+          "kind": "chip",
+          "text": "since March",
+          "enterMs": 1500,
+          "exitMs": 9000,
+          "box": {
+            "x": 0.04,
+            "y": 0.14,
+            "w": 0.2952,
+            "h": 0.08
+          }
+        }
+      ],
+      "transition": "cut"
+    },
+    {
+      "id": "b3",
+      "startMs": 11000,
+      "durationMs": 4000,
+      "background": {
+        "kind": "brand"
+      },
+      "elements": [
+        {
+          "id": "b3-sticker",
+          "kind": "sticker",
+          "text": "Try it free",
+          "enterMs": 0,
+          "exitMs": 4000,
+          "box": {
+            "x": 0.5648,
+            "y": 0.14,
+            "w": 0.2952,
+            "h": 0.08
+          }
+        }
+      ],
+      "transition": "cut"
+    }
+  ],
+  "captions": {
+    "style": "karaoke",
+    "pages": [
+      {
+        "text": "Reports now export",
+        "startMs": 300,
+        "durationMs": 2200,
+        "tokens": [
+          {
+            "text": "Reports",
+            "fromMs": 300,
+            "toMs": 800
+          },
+          {
+            "text": " now",
+            "fromMs": 900,
+            "toMs": 1200
+          },
+          {
+            "text": " export",
+            "fromMs": 1300,
+            "toMs": 1800
+          }
+        ]
+      },
+      {
+        "text": "to PDF.",
+        "startMs": 2500,
+        "durationMs": 7500,
+        "tokens": [
+          {
+            "text": "to",
+            "fromMs": 2500,
+            "toMs": 2700
+          },
+          {
+            "text": " PDF.",
+            "fromMs": 2800,
+            "toMs": 3400
+          }
+        ]
+      },
+      {
+        "text": "One click, every report.",
+        "startMs": 10000,
+        "durationMs": 2600,
+        "tokens": [
+          {
+            "text": "One",
+            "fromMs": 10000,
+            "toMs": 10300
+          },
+          {
+            "text": " click,",
+            "fromMs": 10400,
+            "toMs": 10900
+          },
+          {
+            "text": " every report.",
+            "fromMs": 11200,
+            "toMs": 12600
+          }
+        ]
+      }
+    ]
+  },
+  "voice": []
+}

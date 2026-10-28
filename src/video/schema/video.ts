@@ -88,6 +88,8 @@ export const VideoDocSchema = z
         kind: z.enum(["video", "audio", "image"]),
         src: z.string(),
         durationMs: z.number().optional(),
+        width: z.number().optional(),
+        height: z.number().optional(),
       }),
     ),
     scenes: z.array(SceneSchema),

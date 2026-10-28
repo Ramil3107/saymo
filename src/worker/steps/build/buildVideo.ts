@@ -5,7 +5,7 @@ import { rebaseWords } from "../../../video/captions/timeline";
 import { destinations, formatSize } from "../../../video/destinations";
 import { avoidZones } from "../../../video/layout/avoidZones";
 import { fitCover } from "../../../video/layout/fitCover";
-import { placeOverlay } from "../../../video/layout/safeZones";
+import { captionBand, placeOverlay } from "../../../video/layout/safeZones";
 import type { Box, ContentMap } from "../../../video/schema/content";
 import type { MediaInfo } from "../../../video/schema/media";
 import type { Beat, Overlay, Plan } from "../../../video/schema/plan";
@@ -173,13 +173,16 @@ export function buildVideo(
     const sceneStartMs = startMs;
     startMs += durationMs;
     const footageRange = beat.footage;
-    const avoid =
+    const faceZones =
       footageRange && content
         ? avoidZones(content.faces, {
             startMs: footageRange.fromMs,
             endMs: footageRange.toMs,
           })
         : [];
+    const avoid = plan.captions.enabled
+      ? [...faceZones, captionBand(destination.safeZone)]
+      : faceZones;
     const elements = beat.overlays.map((overlay) =>
       elementFrom(
         beat,
@@ -239,6 +242,8 @@ export function buildVideo(
       kind: "video",
       src: assets.sourceVideo.path,
       durationMs: assets.sourceVideo.info.durationMs,
+      width: assets.sourceVideo.info.width,
+      height: assets.sourceVideo.info.height,
     });
   }
   if (assets.music)
