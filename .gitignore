@@ -10,3 +10,7 @@ dist/
 coverage/
 .turbo/
 .superpowers/
+runs/
+.remotion/
+docs/.vitepress/cache/
+docs/.vitepress/dist/
