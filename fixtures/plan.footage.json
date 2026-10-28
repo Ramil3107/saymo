@@ -1,0 +1,103 @@
+{
+  "title": "Why we rebuilt reporting",
+  "summary": "A founder explains in 45 seconds why reports now export to PDF in one click, and how much faster it is.",
+  "cast": [{ "name": "Maya Chen", "role": "Co-founder" }],
+  "destination": "reels",
+  "lengthMs": 45000,
+  "register": "driving-launch",
+  "musicMood": "driving, confident",
+  "captions": { "enabled": true, "style": "karaoke" },
+  "voiceover": false,
+  "beats": [
+    {
+      "id": "b1",
+      "role": "hook",
+      "startMs": 0,
+      "durationMs": 3000,
+      "footage": { "fromMs": 12000, "toMs": 15000 },
+      "camera": { "kind": "punch-in", "intensity": 0.6 },
+      "overlays": [
+        {
+          "id": "o1",
+          "kind": "headline",
+          "text": "Reports in one click",
+          "atMs": 200,
+          "durationMs": 2600,
+          "emphasis": "marker"
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "role": "setup",
+      "startMs": 3000,
+      "durationMs": 9000,
+      "footage": { "fromMs": 0, "toMs": 9000 },
+      "overlays": []
+    },
+    {
+      "id": "b3",
+      "role": "message",
+      "startMs": 12000,
+      "durationMs": 15000,
+      "footage": { "fromMs": 15000, "toMs": 30000 },
+      "camera": { "kind": "push", "intensity": 0.4 },
+      "overlays": [
+        {
+          "id": "o1",
+          "kind": "chip",
+          "text": "PDF export",
+          "atMs": 1000,
+          "durationMs": 3000
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "role": "proof",
+      "startMs": 27000,
+      "durationMs": 12000,
+      "footage": { "fromMs": 30000, "toMs": 42000 },
+      "overlays": [
+        {
+          "id": "o1",
+          "kind": "big-number",
+          "text": "3×",
+          "sub": "faster reports",
+          "atMs": 500,
+          "durationMs": 4000,
+          "emphasis": "pulse"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "role": "cta",
+      "startMs": 39000,
+      "durationMs": 6000,
+      "footage": { "fromMs": 42000, "toMs": 48000 },
+      "copy": { "headline": "Try it free", "sub": "No card needed" },
+      "overlays": [
+        {
+          "id": "o1",
+          "kind": "sticker",
+          "text": "Free for 14 days",
+          "atMs": 500,
+          "durationMs": 4000
+        }
+      ]
+    }
+  ],
+  "assumptions": [
+    "The source is a single-speaker interview in English",
+    "The call to action is a free trial"
+  ],
+  "questions": [
+    {
+      "id": "q1",
+      "text": "How should the video end?",
+      "options": ["Try it free", "Book a demo", "Read the docs"],
+      "defaultOption": "Try it free"
+    }
+  ]
+}

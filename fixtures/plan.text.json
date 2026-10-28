@@ -1,0 +1,73 @@
+{
+  "title": "Reports, now in PDF",
+  "summary": "A 15-second announcement that reports now export to PDF in one click.",
+  "cast": [],
+  "destination": "reels",
+  "lengthMs": 15000,
+  "register": "driving-launch",
+  "musicMood": "upbeat, modern",
+  "captions": { "enabled": true, "style": "karaoke" },
+  "voiceover": true,
+  "beats": [
+    {
+      "id": "b1",
+      "role": "hook",
+      "startMs": 0,
+      "durationMs": 2000,
+      "overlays": [
+        {
+          "id": "o1",
+          "kind": "headline",
+          "text": "Reports, now in PDF",
+          "atMs": 0,
+          "durationMs": 2000,
+          "emphasis": "marker"
+        }
+      ],
+      "voiceText": "Reports, now in PDF."
+    },
+    {
+      "id": "b2",
+      "role": "message",
+      "startMs": 2000,
+      "durationMs": 9000,
+      "overlays": [
+        {
+          "id": "o1",
+          "kind": "chip",
+          "text": "New",
+          "atMs": 500,
+          "durationMs": 3500
+        },
+        {
+          "id": "o2",
+          "kind": "big-number",
+          "text": "3×",
+          "sub": "faster",
+          "atMs": 3000,
+          "durationMs": 5500,
+          "emphasis": "pulse"
+        }
+      ],
+      "voiceText": "Reports now export to PDF in one click. No more copying tables by hand, and it takes a third of the time."
+    },
+    {
+      "id": "b3",
+      "role": "cta",
+      "startMs": 11000,
+      "durationMs": 4000,
+      "overlays": [
+        {
+          "id": "o1",
+          "kind": "sticker",
+          "text": "Try it free",
+          "atMs": 300,
+          "durationMs": 3400
+        }
+      ],
+      "voiceText": "Try it free today."
+    }
+  ],
+  "assumptions": ["No product name was given, so the video stays generic"],
+  "questions": []
+}
