@@ -18,18 +18,50 @@ import { Sticker } from "./primitives/Sticker";
 import { VoiceTrack } from "./primitives/VoiceTrack";
 import type { Frame, Theme } from "./theme";
 
-const assetUrl = (src: string) =>
-  /^https?:\/\//.test(src) ? src : `/${src.replace(/^\/+/, "")}`;
+export function SaymoVideo(doc: VideoDoc) {
+  const { fontFamily } = loadBrandFont(doc.brand.font);
+  const theme: Theme = { brand: doc.brand, register: registers[doc.register], fontFamily };
+  const safeZone = destinations[doc.destination].safeZone;
+  const musicSrc = doc.music ? assetSrc(doc, doc.music.assetId) : undefined;
 
-function ElementView({
-  element,
-  theme,
-  frame,
-}: {
-  element: Element;
-  theme: Theme;
-  frame: Frame;
-}) {
+  return (
+    <AbsoluteFill style={{ backgroundColor: doc.brand.colors[0], fontFamily }}>
+      {doc.scenes.map((scene) => (
+        <Sequence key={scene.id} {...sceneFrames(scene)}>
+          <SceneView scene={scene} doc={doc} theme={theme} />
+        </Sequence>
+      ))}
+      {doc.captions ? <Captions captions={doc.captions} theme={theme} safeZone={safeZone} /> : null}
+      {doc.music && musicSrc ? <MusicTrack music={doc.music} src={musicSrc} /> : null}
+      {doc.voice.map((voice) => {
+        const src = assetSrc(doc, voice.assetId);
+        return src ? <VoiceTrack key={voice.assetId} voice={voice} src={src} /> : null;
+      })}
+    </AbsoluteFill>
+  );
+}
+
+function SceneView({ scene, doc, theme }: { scene: Scene; doc: VideoDoc; theme: Theme }) {
+  const { width, height } = useVideoConfig();
+  const frame: Frame = { width, height };
+  const footageAsset = scene.footage ? findAsset(doc, scene.footage.assetId) : undefined;
+
+  return (
+    <AbsoluteFill>
+      <Background background={scene.background} theme={theme} />
+      <Camera camera={scene.camera} durationMs={scene.durationMs}>
+        {scene.footage && footageAsset ? (
+          <Footage footage={scene.footage} asset={footageAsset} durationMs={scene.durationMs} />
+        ) : null}
+        {scene.elements.map((element) => (
+          <ElementView key={element.id} element={element} theme={theme} frame={frame} />
+        ))}
+      </Camera>
+    </AbsoluteFill>
+  );
+}
+
+function ElementView({ element, theme, frame }: { element: Element; theme: Theme; frame: Frame }) {
   switch (element.kind) {
     case "headline":
       return <Headline element={element} theme={theme} frame={frame} />;
@@ -46,78 +78,16 @@ function ElementView({
   }
 }
 
-function SceneView({
-  scene,
-  doc,
-  theme,
-}: {
-  scene: Scene;
-  doc: VideoDoc;
-  theme: Theme;
-}) {
-  const { width, height } = useVideoConfig();
-  const frame = { width, height };
-  const asset = scene.footage
-    ? doc.assets.find((a) => a.id === scene.footage?.assetId)
-    : undefined;
-  return (
-    <AbsoluteFill>
-      <Background background={scene.background} theme={theme} />
-      <Camera camera={scene.camera} durationMs={scene.durationMs}>
-        {scene.footage && asset ? (
-          <Footage
-            footage={scene.footage}
-            asset={asset}
-            durationMs={scene.durationMs}
-          />
-        ) : null}
-        {scene.elements.map((element) => (
-          <ElementView
-            key={element.id}
-            element={element}
-            theme={theme}
-            frame={frame}
-          />
-        ))}
-      </Camera>
-    </AbsoluteFill>
-  );
+function findAsset(doc: VideoDoc, id: string) {
+  return doc.assets.find((asset) => asset.id === id);
 }
 
-export const SaymoVideo = (doc: VideoDoc) => {
-  const { fontFamily } = loadBrandFont(doc.brand.font);
-  const theme: Theme = {
-    brand: doc.brand,
-    register: registers[doc.register],
-    fontFamily,
-  };
-  const safeZone = destinations[doc.destination].safeZone;
-  const assetSrc = (id: string) => {
-    const src = doc.assets.find((a) => a.id === id)?.src;
-    return src ? assetUrl(src) : undefined;
-  };
-  return (
-    <AbsoluteFill style={{ backgroundColor: doc.brand.colors[0], fontFamily }}>
-      {doc.scenes.map((scene) => (
-        <Sequence key={scene.id} {...sceneFrames(scene)}>
-          <SceneView scene={scene} doc={doc} theme={theme} />
-        </Sequence>
-      ))}
-      {doc.captions ? (
-        <Captions captions={doc.captions} theme={theme} safeZone={safeZone} />
-      ) : null}
-      {doc.music && assetSrc(doc.music.assetId) ? (
-        <MusicTrack
-          music={doc.music}
-          src={assetSrc(doc.music.assetId) as string}
-        />
-      ) : null}
-      {doc.voice.map((voice) => {
-        const src = assetSrc(voice.assetId);
-        return src ? (
-          <VoiceTrack key={voice.assetId} voice={voice} src={src} />
-        ) : null;
-      })}
-    </AbsoluteFill>
-  );
-};
+function assetSrc(doc: VideoDoc, id: string): string | undefined {
+  const src = findAsset(doc, id)?.src;
+  return src ? assetUrl(src) : undefined;
+}
+
+function assetUrl(src: string): string {
+  if (/^https?:\/\//.test(src)) return src;
+  return `/${src.replace(/^\/+/, "")}`;
+}

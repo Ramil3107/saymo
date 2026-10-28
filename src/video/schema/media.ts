@@ -8,4 +8,5 @@ export const MediaInfoSchema = z.object({
   hasAudio: z.boolean(),
   sizeBytes: z.number(),
 });
+
 export type MediaInfo = z.infer<typeof MediaInfoSchema>;

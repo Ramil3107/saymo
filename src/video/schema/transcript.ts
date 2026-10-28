@@ -6,6 +6,7 @@ export const TranscriptWordSchema = z.object({
   endMs: z.number(),
   speaker: z.string().optional(),
 });
+
 export type TranscriptWord = z.infer<typeof TranscriptWordSchema>;
 
 export const TranscriptSchema = z.object({
@@ -13,4 +14,5 @@ export const TranscriptSchema = z.object({
   text: z.string(),
   words: z.array(TranscriptWordSchema),
 });
+
 export type Transcript = z.infer<typeof TranscriptSchema>;

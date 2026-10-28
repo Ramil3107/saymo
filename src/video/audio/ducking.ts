@@ -2,36 +2,39 @@ import type { TranscriptWord } from "../schema/transcript";
 
 type Interval = { startMs: number; endMs: number };
 
-export function speechIntervals(
-  words: TranscriptWord[],
-  gapMs = 300,
-): Interval[] {
+const defaultGapMs = 300;
+const defaultBase = 0.9;
+const defaultDuckTo = 0.25;
+const defaultRampMs = 200;
+
+export function speechIntervals(words: TranscriptWord[], gapMs = defaultGapMs): Interval[] {
+  const sorted = [...words].sort((a, b) => a.startMs - b.startMs);
   const intervals: Interval[] = [];
-  for (const word of [...words].sort((a, b) => a.startMs - b.startMs)) {
+
+  for (const word of sorted) {
     const last = intervals.at(-1);
-    if (last && word.startMs - last.endMs <= gapMs)
-      last.endMs = Math.max(last.endMs, word.endMs);
+    if (last && word.startMs - last.endMs <= gapMs) last.endMs = Math.max(last.endMs, word.endMs);
     else intervals.push({ startMs: word.startMs, endMs: word.endMs });
   }
+
   return intervals;
 }
 
 export function musicVolumeAt(
   ms: number,
   speech: Interval[],
-  base = 0.9,
-  duckTo = 0.25,
-  rampMs = 200,
+  base = defaultBase,
+  duckTo = defaultDuckTo,
+  rampMs = defaultRampMs,
 ): number {
-  let volume = base;
-  for (const interval of speech) {
-    if (ms >= interval.startMs && ms <= interval.endMs) return duckTo;
-    const before = interval.startMs - ms;
-    const after = ms - interval.endMs;
-    if (before > 0 && before < rampMs)
-      volume = Math.min(volume, duckTo + (base - duckTo) * (before / rampMs));
-    if (after > 0 && after < rampMs)
-      volume = Math.min(volume, duckTo + (base - duckTo) * (after / rampMs));
-  }
-  return volume;
+  const nearestSpeechMs = Math.min(...speech.map((interval) => distanceTo(ms, interval)));
+  if (nearestSpeechMs >= rampMs) return base;
+
+  return duckTo + (base - duckTo) * (nearestSpeechMs / rampMs);
+}
+
+function distanceTo(ms: number, interval: Interval): number {
+  if (ms < interval.startMs) return interval.startMs - ms;
+  if (ms > interval.endMs) return ms - interval.endMs;
+  return 0;
 }

@@ -1,24 +1,20 @@
+import type { CSSProperties } from "react";
 import { AbsoluteFill } from "remotion";
 import type { Scene } from "../../schema/video";
-import type { Theme } from "../theme";
+import { ink, type Theme } from "../theme";
 
-export function Background({
-  background,
-  theme,
-}: {
-  background: Scene["background"];
-  theme: Theme;
-}) {
-  const primary = theme.brand.colors[0] ?? "#08080B";
+type SceneBackground = Scene["background"];
+
+export function Background({ background, theme }: { background: SceneBackground; theme: Theme }) {
+  return <AbsoluteFill style={backgroundStyle(background, theme)} />;
+}
+
+function backgroundStyle(background: SceneBackground, theme: Theme): CSSProperties {
+  const primary = theme.brand.colors[0] ?? ink;
   const secondary = theme.brand.colors[1] ?? primary;
-  const style: React.CSSProperties =
-    background.kind === "gradient"
-      ? { background: `linear-gradient(160deg, ${primary}, ${secondary})` }
-      : {
-          backgroundColor:
-            background.kind === "solid"
-              ? (background.color ?? primary)
-              : primary,
-        };
-  return <AbsoluteFill style={style} />;
+
+  if (background.kind === "gradient")
+    return { background: `linear-gradient(160deg, ${primary}, ${secondary})` };
+  if (background.kind === "solid") return { backgroundColor: background.color ?? primary };
+  return { backgroundColor: primary };
 }

@@ -1,11 +1,14 @@
-import type { Destination, Format } from "../destinations";
+import type { Format, SafeZone } from "../destinations";
 import type { Box } from "../schema/content";
 import type { OverlayKind } from "../schema/plan";
+import { boxesOverlap, round6 } from "./geometry";
 import { overlapRatio } from "./keepOut";
 
 type Horizontal = "left" | "center" | "right";
 type Vertical = "top" | "middle" | "bottom";
 type Slot = [Horizontal, Vertical];
+type Inner = { left: number; right: number; top: number; bottom: number };
+type Size = { w: number; h: number };
 
 const slotsByKind: Record<OverlayKind, Slot[]> = {
   headline: [
@@ -59,12 +62,23 @@ const heightShare: Record<OverlayKind, number> = {
   sticker: 0.08,
 };
 
-const round6 = (value: number) => Math.round(value * 1e6) / 1e6;
 const scanStep = 0.02;
+const scanEpsilon = 1e-9;
 const captionBottomGap = 0.02;
 const captionBandHeight = 0.1;
 
-export function captionBand(safeZone: Destination["safeZone"]): Box {
+export function placeOverlay(kind: OverlayKind, _format: Format, safeZone: SafeZone, avoid: Box[]): Box {
+  const inner = innerArea(safeZone);
+  const size = overlaySize(kind, inner);
+  const candidates = [...preferredSlots(kind, inner, size), ...scannedSlots(kind, inner, size)];
+
+  const free = candidates.find((box) => !avoid.some((zone) => boxesOverlap(box, zone)));
+  if (free) return free;
+
+  return leastCovered(candidates, avoid);
+}
+
+export function captionBand(safeZone: SafeZone): Box {
   return {
     x: safeZone.left,
     y: round6(1 - safeZone.bottom - captionBottomGap - captionBandHeight),
@@ -73,56 +87,49 @@ export function captionBand(safeZone: Destination["safeZone"]): Box {
   };
 }
 
-function intersects(a: Box, b: Box): boolean {
-  return (
-    a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h
+function innerArea(safeZone: SafeZone): Inner {
+  return { left: safeZone.left, right: 1 - safeZone.right, top: safeZone.top, bottom: 1 - safeZone.bottom };
+}
+
+function overlaySize(kind: OverlayKind, inner: Inner): Size {
+  return { w: round6((inner.right - inner.left) * widthShare[kind]), h: heightShare[kind] };
+}
+
+function preferredSlots(kind: OverlayKind, inner: Inner, size: Size): Box[] {
+  return slotsByKind[kind].map(([horizontal, vertical]) =>
+    boxAt(xAt(horizontal, inner, size), yAt(vertical, inner, size), size),
   );
 }
 
-export function placeOverlay(
-  kind: OverlayKind,
-  _format: Format,
-  safeZone: Destination["safeZone"],
-  avoid: Box[],
-): Box {
-  const inner = {
-    left: safeZone.left,
-    right: 1 - safeZone.right,
-    top: safeZone.top,
-    bottom: 1 - safeZone.bottom,
-  };
-  const w = round6((inner.right - inner.left) * widthShare[kind]);
-  const h = heightShare[kind];
-  const xFor: Record<Horizontal, number> = {
-    left: inner.left,
-    center: inner.left + (inner.right - inner.left - w) / 2,
-    right: inner.right - w,
-  };
-  const yFor: Record<Vertical, number> = {
-    top: inner.top,
-    middle: inner.top + (inner.bottom - inner.top - h) / 2,
-    bottom: inner.bottom - h,
-  };
-  const slots = slotsByKind[kind].map(([horizontal, vertical]) => ({
-    x: round6(xFor[horizontal]),
-    y: round6(yFor[vertical]),
-    w,
-    h,
-  }));
-  const scanned: Box[] = [];
-  const horizontals = [
-    ...new Set(slotsByKind[kind].map(([horizontal]) => horizontal)),
-  ];
-  for (let y = inner.top; y <= inner.bottom - h + 1e-9; y += scanStep) {
-    for (const horizontal of horizontals)
-      scanned.push({ x: round6(xFor[horizontal]), y: round6(y), w, h });
+function scannedSlots(kind: OverlayKind, inner: Inner, size: Size): Box[] {
+  const horizontals = [...new Set(slotsByKind[kind].map(([horizontal]) => horizontal))];
+  const boxes: Box[] = [];
+
+  for (let y = inner.top; y <= inner.bottom - size.h + scanEpsilon; y += scanStep) {
+    for (const horizontal of horizontals) boxes.push(boxAt(xAt(horizontal, inner, size), y, size));
   }
-  const candidates = [...slots, ...scanned];
-  const free = candidates.find(
-    (box) => !avoid.some((zone) => intersects(box, zone)),
-  );
-  if (free) return free;
+
+  return boxes;
+}
+
+function leastCovered(candidates: Box[], avoid: Box[]): Box {
   return candidates.reduce((best, box) =>
     overlapRatio(box, avoid) < overlapRatio(best, avoid) ? box : best,
   );
+}
+
+function xAt(horizontal: Horizontal, inner: Inner, size: Size): number {
+  if (horizontal === "left") return inner.left;
+  if (horizontal === "right") return inner.right - size.w;
+  return inner.left + (inner.right - inner.left - size.w) / 2;
+}
+
+function yAt(vertical: Vertical, inner: Inner, size: Size): number {
+  if (vertical === "top") return inner.top;
+  if (vertical === "bottom") return inner.bottom - size.h;
+  return inner.top + (inner.bottom - inner.top - size.h) / 2;
+}
+
+function boxAt(x: number, y: number, size: Size): Box {
+  return { x: round6(x), y: round6(y), w: size.w, h: size.h };
 }

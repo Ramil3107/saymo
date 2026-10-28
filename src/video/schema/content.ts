@@ -10,6 +10,7 @@ export const BoxSchema = z.object({
   w: fraction,
   h: fraction,
 });
+
 export type Box = z.infer<typeof BoxSchema>;
 
 export const ShotSchema = z.object({
@@ -17,9 +18,11 @@ export const ShotSchema = z.object({
   startMs: z.number(),
   endMs: z.number(),
 });
+
 export type Shot = z.infer<typeof ShotSchema>;
 
 export const FaceBoxSchema = BoxSchema.extend({ tMs: z.number() });
+
 export type FaceBox = z.infer<typeof FaceBoxSchema>;
 
 export const FrameNoteSchema = z.object({
@@ -28,6 +31,7 @@ export const FrameNoteSchema = z.object({
   kind: z.enum(["face", "screen", "other"]),
   onScreenText: z.array(z.string()),
 });
+
 export type FrameNote = z.infer<typeof FrameNoteSchema>;
 
 export const ContentMapSchema = z.object({
@@ -37,4 +41,5 @@ export const ContentMapSchema = z.object({
   frames: z.array(FrameNoteSchema),
   transcript: TranscriptSchema.nullable(),
 });
+
 export type ContentMap = z.infer<typeof ContentMapSchema>;

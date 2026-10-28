@@ -8,7 +8,7 @@ Next.js serves the interface and the API. The worker is a second entry point int
 
 ## Folders
 
-This is the target layout. Stage 0 has only `lib/`, `video/`, `worker/` and `cli/` (the `spike` command).
+This is the target layout. Stage 0 has only `lib/`, `video/`, `worker/` and `cli/` (the `spike` command). Tests sit in a `tests/` folder next to the module they cover.
 
 ```
 src/

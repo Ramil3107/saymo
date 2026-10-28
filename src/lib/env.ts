@@ -4,8 +4,7 @@ const emptyAsMissing = <T extends z.ZodType>(schema: T) =>
   z.preprocess((value) => (value === "" ? undefined : value), schema);
 
 const optionalString = emptyAsMissing(z.string().optional());
-const stringWithDefault = (fallback: string) =>
-  emptyAsMissing(z.string().default(fallback));
+const stringWithDefault = (fallback: string) => emptyAsMissing(z.string().default(fallback));
 
 const envSchema = z.object({
   ANTHROPIC_API_KEY: optionalString,
@@ -25,9 +24,7 @@ const envSchema = z.object({
 
 export type Env = z.infer<typeof envSchema>;
 
-export function loadEnv(
-  source: Record<string, string | undefined> = process.env,
-): Env {
+export function loadEnv(source: Record<string, string | undefined> = process.env): Env {
   return envSchema.parse(source);
 }
 

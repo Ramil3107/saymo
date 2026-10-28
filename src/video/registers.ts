@@ -6,13 +6,16 @@ export const RegisterIdSchema = z.enum([
   "rich-premium",
   "playful-sale",
 ]);
+
 export type RegisterId = z.infer<typeof RegisterIdSchema>;
+
+export type Easing = "snap" | "settle" | "drift" | "bounce";
 
 export type RegisterTokens = {
   sceneMs: [number, number];
   minHoldMs: number;
   staggerMs: number;
-  easing: "snap" | "settle" | "drift" | "bounce";
+  easing: Easing;
   overshoot: number;
   fontWeight: [number, number];
   maxElements: number;

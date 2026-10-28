@@ -1,21 +1,23 @@
-import type {
-  ContentMap,
-  FaceBox,
-  FrameNote,
-  Shot,
+import {
+  type ContentMap,
+  ContentMapSchema,
+  type FaceBox,
+  type FrameNote,
+  type Shot,
 } from "../../../video/schema/content";
-import { ContentMapSchema } from "../../../video/schema/content";
 import type { MediaInfo } from "../../../video/schema/media";
 import type { Transcript } from "../../../video/schema/transcript";
 
-export function buildContentMap(input: {
+type ContentInput = {
   source: string;
   info: MediaInfo;
   shots: Shot[];
   faces: FaceBox[];
   frames: FrameNote[];
   transcript: Transcript | null;
-}): ContentMap {
+};
+
+export function buildContentMap(input: ContentInput): ContentMap {
   return ContentMapSchema.parse({
     source: { path: input.source, ...input.info },
     shots: input.shots,

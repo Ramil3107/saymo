@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import { z } from "zod";
-import type { UsageEvent } from "../lib/metrics";
+import { providers } from "../lib/metrics";
 import { DestinationIdSchema } from "../video/destinations";
 
 export const RunOptionsSchema = z.object({
@@ -18,18 +18,11 @@ export const RunOptionsSchema = z.object({
   render: z.enum(["local", "lambda", "none"]),
   resume: z.boolean(),
 });
+
 export type RunOptions = z.infer<typeof RunOptionsSchema>;
 
-export const stepNames = [
-  "ingest",
-  "transcribe",
-  "see",
-  "direct",
-  "voice",
-  "build",
-  "qa",
-  "render",
-] as const;
+export const stepNames = ["ingest", "transcribe", "see", "direct", "voice", "build", "qa", "render"] as const;
+
 export type StepName = (typeof stepNames)[number];
 
 const StepStateSchema = z.object({
@@ -38,16 +31,11 @@ const StepStateSchema = z.object({
   error: z.string().optional(),
 });
 
+export type StepState = z.infer<typeof StepStateSchema>;
+
 const UsageEventSchema = z.object({
   step: z.string(),
-  provider: z.enum([
-    "anthropic",
-    "elevenlabs",
-    "deepgram",
-    "rekognition",
-    "lambda",
-    "ffmpeg",
-  ]),
+  provider: z.enum(providers),
   ms: z.number(),
   usd: z.number(),
   detail: z.record(z.string(), z.union([z.number(), z.string()])).optional(),
@@ -60,34 +48,16 @@ export const ManifestSchema = z.object({
   steps: z.record(z.enum(stepNames), StepStateSchema),
   events: z.array(UsageEventSchema),
 });
-export type Manifest = z.infer<typeof ManifestSchema> & {
-  steps: Record<StepName, z.infer<typeof StepStateSchema>>;
-};
 
-const manifestFile = (runDir: string) => join(runDir, "manifest.json");
+export type Manifest = z.infer<typeof ManifestSchema> & { steps: Record<StepName, StepState> };
 
-export function loadOrCreateManifest(
-  runDir: string,
-  options: RunOptions,
-): Manifest {
+export function loadOrCreateManifest(runDir: string, options: RunOptions): Manifest {
   mkdirSync(runDir, { recursive: true });
-  const file = manifestFile(runDir);
-  if (existsSync(file)) {
-    const existing = ManifestSchema.parse(
-      JSON.parse(readFileSync(file, "utf8")),
-    );
-    return { ...existing, options } as Manifest;
-  }
-  const steps = Object.fromEntries(
-    stepNames.map((name) => [name, { status: "pending" }]),
-  ) as Manifest["steps"];
-  const manifest: Manifest = {
-    id: runDir.split("/").at(-1) ?? runDir,
-    createdAt: new Date().toISOString(),
-    options,
-    steps,
-    events: [] as UsageEvent[],
-  };
+
+  const existing = readManifest(runDir);
+  if (existing) return { ...existing, options };
+
+  const manifest = newManifest(runDir, options);
   saveManifest(runDir, manifest);
   return manifest;
 }
@@ -96,10 +66,42 @@ export function saveManifest(runDir: string, manifest: Manifest): void {
   writeFileSync(manifestFile(runDir), `${JSON.stringify(manifest, null, 2)}\n`);
 }
 
-export function shouldRun(
-  manifest: Manifest,
-  step: StepName,
-  resume: boolean,
-): boolean {
+export function shouldRun(manifest: Manifest, step: StepName, resume: boolean): boolean {
   return !(resume && manifest.steps[step].status === "done");
+}
+
+function readManifest(runDir: string): Manifest | undefined {
+  const file = manifestFile(runDir);
+  if (!existsSync(file)) return undefined;
+
+  return ManifestSchema.parse(JSON.parse(readFileSync(file, "utf8")));
+}
+
+function newManifest(runDir: string, options: RunOptions): Manifest {
+  return {
+    id: basename(runDir),
+    createdAt: new Date().toISOString(),
+    options,
+    steps: pendingSteps(),
+    events: [],
+  };
+}
+
+function pendingSteps(): Manifest["steps"] {
+  const pending = (): StepState => ({ status: "pending" });
+
+  return {
+    ingest: pending(),
+    transcribe: pending(),
+    see: pending(),
+    direct: pending(),
+    voice: pending(),
+    build: pending(),
+    qa: pending(),
+    render: pending(),
+  };
+}
+
+function manifestFile(runDir: string): string {
+  return join(runDir, "manifest.json");
 }

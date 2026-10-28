@@ -1,27 +1,22 @@
 import { fitText } from "@remotion/layout-utils";
-import type { Element } from "../../schema/video";
-import { accentColor, type Frame, ink, type Theme } from "../theme";
+import { accentColor, ink, type PrimitiveProps } from "../theme";
 import { ElementBox } from "./ElementBox";
 
-type ChipElement = Extract<Element, { kind: "chip" }>;
+const fontWeight = 700;
+const paddingShare = 0.35;
+const maxFontShare = 0.5;
 
-export function Chip({
-  element,
-  theme,
-  frame,
-}: {
-  element: ChipElement;
-  theme: Theme;
-  frame: Frame;
-}) {
+export function Chip({ element, theme, frame }: PrimitiveProps<"chip">) {
   const height = element.box.h * frame.height;
-  const padding = height * 0.35;
+  const padding = height * paddingShare;
+
   const { fontSize } = fitText({
     text: element.text,
     withinWidth: element.box.w * frame.width - padding * 2,
     fontFamily: theme.fontFamily,
-    fontWeight: 700,
+    fontWeight,
   });
+
   return (
     <ElementBox element={element} theme={theme} frame={frame}>
       <div
@@ -33,8 +28,8 @@ export function Chip({
           height,
           display: "flex",
           alignItems: "center",
-          fontSize: Math.min(fontSize, height * 0.5),
-          fontWeight: 700,
+          fontSize: Math.min(fontSize, height * maxFontShare),
+          fontWeight,
           whiteSpace: "nowrap",
         }}
       >

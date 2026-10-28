@@ -1,39 +1,35 @@
+import type { CSSProperties } from "react";
 import { Easing, interpolate, useCurrentFrame } from "remotion";
-import type { RegisterTokens } from "../../registers";
+import type { Easing as EasingName, RegisterTokens } from "../../registers";
 import type { Element } from "../../schema/video";
 import { frameToMs } from "../frames";
 
-const easingByRegister: Record<
-  RegisterTokens["easing"],
-  (t: number) => number
-> = {
+type Entrance = { visible: boolean; progress: number };
+
+const easingByName: Record<EasingName, (t: number) => number> = {
   snap: Easing.out(Easing.exp),
   settle: Easing.out(Easing.quad),
   drift: Easing.inOut(Easing.sin),
   bounce: Easing.out(Easing.back(1.4)),
 };
 
-export function useEntrance(
-  element: Element,
-  register: RegisterTokens,
-): { visible: boolean; progress: number } {
+const entranceStaggerSteps = 6;
+const riseFromPx = 40;
+
+export function useEntrance(element: Element, register: RegisterTokens): Entrance {
   const ms = frameToMs(useCurrentFrame());
-  const entranceMs = register.staggerMs * 6;
+  const entranceMs = register.staggerMs * entranceStaggerSteps;
+
   const visible = ms >= element.enterMs && ms < element.exitMs;
-  const progress = interpolate(
-    ms,
-    [element.enterMs, element.enterMs + entranceMs],
-    [0, 1],
-    {
-      extrapolateLeft: "clamp",
-      extrapolateRight: "clamp",
-      easing: easingByRegister[register.easing],
-    },
-  );
+  const progress = interpolate(ms, [element.enterMs, element.enterMs + entranceMs], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: easingByName[register.easing],
+  });
+
   return { visible, progress };
 }
 
-export const revealStyle = (progress: number): React.CSSProperties => ({
-  opacity: progress,
-  transform: `translateY(${(1 - progress) * 40}px)`,
-});
+export function revealStyle(progress: number): CSSProperties {
+  return { opacity: progress, transform: `translateY(${(1 - progress) * riseFromPx}px)` };
+}

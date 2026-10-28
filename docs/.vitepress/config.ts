@@ -4,8 +4,7 @@ import { withMermaid } from "vitepress-plugin-mermaid";
 export default withMermaid(
   defineConfig({
     title: "Saymo",
-    description:
-      "Saymo documentation: from a recording or text to a ready-to-post social video",
+    description: "Saymo documentation: from a recording or text to a ready-to-post social video",
     lang: "en-US",
     appearance: "dark",
     srcExclude: ["design/screens/html/**"],

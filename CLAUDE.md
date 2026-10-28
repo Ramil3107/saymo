@@ -30,6 +30,21 @@ Spec: `docs/superpowers/specs/2026-10-28-saymo-v1-design.md`.
 - Interface strings only through localization keys. Styles only through tokens.
 - Commits are small and meaningful. Decisions go in `docs/product/decisions.md`.
 
+## Style
+
+The code reads top-down like a book. In every file:
+
+- Order: imports, constants and types, exported functions, then private helpers in the order they are first used.
+- Functions are short, up to about 30 lines. A block that would need a comment becomes a named helper instead.
+- Blank lines separate the steps of a function: gather, compute, return. Lines that belong together stay together.
+- Early returns instead of nesting. No nested ternaries. A `switch` over a union has no `default`, so the compiler checks it is complete.
+- Private helpers are function declarations, so the main function can sit above them.
+- Magic numbers are named constants at the top of the file.
+- Long command-line argument lists are assembled from named parts.
+- No `as` casts and no non-null `!`: narrow with a check, a schema or a type guard. Zod schemas end in `Schema`; their types carry the bare name.
+- Tests live in a `tests/` folder next to the module they test, one file per module: `src/video/layout/tests/safeZones.test.ts` tests `src/video/layout/safeZones.ts`.
+- The Biome line width is 110. `pnpm format` settles the rest.
+
 ## Structure
 
 Target structure from the spec, section 9. Stage 0 has `lib/`, `video/`, `worker/` and `cli/` (the `spike` command).
