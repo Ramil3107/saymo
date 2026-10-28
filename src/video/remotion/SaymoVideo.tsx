@@ -18,6 +18,9 @@ import { Sticker } from "./primitives/Sticker";
 import { VoiceTrack } from "./primitives/VoiceTrack";
 import type { Frame, Theme } from "./theme";
 
+const assetUrl = (src: string) =>
+  /^https?:\/\//.test(src) ? src : `/${src.replace(/^\/+/, "")}`;
+
 function ElementView({
   element,
   theme,
@@ -89,7 +92,10 @@ export const SaymoVideo = (doc: VideoDoc) => {
     fontFamily,
   };
   const safeZone = destinations[doc.destination].safeZone;
-  const assetSrc = (id: string) => doc.assets.find((a) => a.id === id)?.src;
+  const assetSrc = (id: string) => {
+    const src = doc.assets.find((a) => a.id === id)?.src;
+    return src ? assetUrl(src) : undefined;
+  };
   return (
     <AbsoluteFill style={{ backgroundColor: doc.brand.colors[0], fontFamily }}>
       {doc.scenes.map((scene) => (
