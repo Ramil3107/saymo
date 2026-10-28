@@ -54,3 +54,22 @@ flowchart TD
   PX -.-> S9
   S9 -.->|on demand| S10["10. Render on Lambda"]
 ```
+
+## Spike run
+
+`pnpm spike <video.mp4> --to reels` or `pnpm spike --text "..." --to reels` runs the pipeline from the terminal and writes everything to `runs/<id>/`:
+
+| File | Written by | What it holds |
+| --- | --- | --- |
+| `manifest.json` | every step | run options, step statuses with timings, usage events |
+| `ingest.json`, `audio.wav`, `frames/` | ingest | probe info, extracted audio, keyframes every 2 s |
+| `transcript.json` | transcribe | words with timestamps and speakers |
+| `see.json`, `content.json` | see | face boxes, frame notes, the assembled content map |
+| `plan.json` | direct | the director's plan; questions are printed and answered with defaults |
+| `voice/*.mp3`, `voice.json` | voice | voiceover per beat with word timings (text mode with `--voice`) |
+| `video.json` | build | the video document |
+| `qa.json` | qa | the QA report; errors stop the run with exit code 2 |
+| `out.mp4`, `poster.jpg` | render | the rendered video and its poster frame |
+| `metrics.json` | end of run | usage events, totals per step, grand total |
+
+`--resume --run <id>` continues a run from its first unfinished step. Local assets are referenced by repository-relative paths; the local renderer serves `runs/` through a symlink inside the Remotion bundle.

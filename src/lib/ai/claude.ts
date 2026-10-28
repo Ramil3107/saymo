@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 
-export function createClaude(apiKey: string): Anthropic {
-  return new Anthropic({ apiKey });
+export function createClaude(apiKey?: string): Anthropic {
+  return new Anthropic(apiKey ? { apiKey } : {});
 }
 
 export const withFallback = {
