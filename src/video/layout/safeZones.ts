@@ -78,11 +78,14 @@ export function placeOverlay(kind: OverlayKind, _format: Format, safeZone: SafeZ
   return leastCovered(candidates, avoid);
 }
 
+// Centered on the frame: the wider side margin is used on both sides.
 export function captionBand(safeZone: SafeZone): Box {
+  const margin = Math.max(safeZone.left, safeZone.right);
+
   return {
-    x: safeZone.left,
+    x: margin,
     y: round6(1 - safeZone.bottom - captionBottomGap - captionBandHeight),
-    w: round6(1 - safeZone.left - safeZone.right),
+    w: round6(1 - 2 * margin),
     h: captionBandHeight,
   };
 }
@@ -121,7 +124,11 @@ function leastCovered(candidates: Box[], avoid: Box[]): Box {
 function xAt(horizontal: Horizontal, inner: Inner, size: Size): number {
   if (horizontal === "left") return inner.left;
   if (horizontal === "right") return inner.right - size.w;
-  return inner.left + (inner.right - inner.left - size.w) / 2;
+  return clamp(0.5 - size.w / 2, inner.left, inner.right - size.w);
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
 }
 
 function yAt(vertical: Vertical, inner: Inner, size: Size): number {

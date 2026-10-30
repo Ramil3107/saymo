@@ -1,5 +1,5 @@
 import { fitTextOnNLines } from "@remotion/layout-utils";
-import { type PrimitiveProps, white } from "../theme";
+import { type PrimitiveProps, textShadow, white } from "../theme";
 import { ElementBox } from "./ElementBox";
 
 const maxLines = 2;
@@ -27,7 +27,16 @@ export function Headline({ element, theme, frame }: PrimitiveProps<"headline">) 
       frame={frame}
       style={{ flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}
     >
-      <div style={{ fontSize, fontWeight, lineHeight: 1.02, letterSpacing: "-0.03em", color: white }}>
+      <div
+        style={{
+          fontSize,
+          fontWeight,
+          lineHeight: 1.02,
+          letterSpacing: "-0.03em",
+          color: white,
+          textShadow: textShadow(fontSize),
+        }}
+      >
         {element.text}
       </div>
       {element.sub ? (
@@ -38,6 +47,7 @@ export function Headline({ element, theme, frame }: PrimitiveProps<"headline">) 
             fontWeight: 500,
             color: white,
             opacity: 0.85,
+            textShadow: textShadow(fontSize),
           }}
         >
           {element.sub}

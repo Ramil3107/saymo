@@ -111,3 +111,18 @@ test("runQa grades a keep-out overlap by its share of the element", () => {
 test("QaReportSchema parses a report", () => {
   expect(QaReportSchema.parse(runQa(sampleDoc, textPlan, {}, null)).ok).toBe(true);
 });
+
+test("runQa flags two elements that overlap in time and space", () => {
+  const scene = sampleDoc.scenes[0];
+  const element = scene?.elements[0];
+  if (!scene || !element) throw new Error("fixture has no elements");
+  const twin = { ...element, id: `${element.id}-twin` };
+  const doc = {
+    ...sampleDoc,
+    scenes: [{ ...scene, elements: [element, twin] }, ...sampleDoc.scenes.slice(1)],
+  };
+
+  const report = runQa(doc, textPlan, {}, null);
+  expect(report.issues.map((i) => i.code)).toContain("elements-overlap");
+  expect(report.ok).toBe(false);
+});

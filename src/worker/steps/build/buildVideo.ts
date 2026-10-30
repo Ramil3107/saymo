@@ -55,6 +55,7 @@ type Point = { x: number; y: number };
 type Transform = { scale: number; x: number; y: number };
 type Interval = { startMs: number; endMs: number };
 type Slot = { beat: Beat; startMs: number; durationMs: number };
+type Timing = { enterMs: number; exitMs: number };
 
 type SceneContext = {
   destination: Destination;
@@ -213,7 +214,7 @@ function stretched(durations: number[], index: number, byMs: number): number[] {
 function buildScene(slot: Slot, context: SceneContext): BuiltScene {
   const { beat, startMs, durationMs } = slot;
   const transform = footageTransform(beat, context);
-  const elements = beat.overlays.map((overlay) => placeElement(overlay, slot, transform, context));
+  const elements = placeElements(slot, transform, context);
   const words = sceneWords(slot, context);
 
   const scene: Scene = {
@@ -253,11 +254,24 @@ function faceFocus(content: ContentMap | null, range: { fromMs: number; toMs: nu
   return { x: average(centers.map((center) => center.x)), y: average(centers.map((center) => center.y)) };
 }
 
+function placeElements(slot: Slot, transform: Transform | undefined, context: SceneContext): Element[] {
+  const placed: Element[] = [];
+
+  for (const overlay of slot.beat.overlays) {
+    const timing = elementTiming(overlay, slot.durationMs);
+    const taken = placed.filter((element) => sharesTime(element, timing)).map((element) => element.box);
+    placed.push(placeElement(overlay, slot, transform, context, taken));
+  }
+
+  return placed;
+}
+
 function placeElement(
   overlay: Overlay,
   slot: Slot,
   transform: Transform | undefined,
   context: SceneContext,
+  taken: Box[],
 ): Element {
   const { beat, durationMs } = slot;
   const { destination } = context;
@@ -270,9 +284,24 @@ function placeElement(
     window: overlayWindow(beat, overlay),
   });
   const band = context.captionsOn ? [captionBand(destination.safeZone)] : [];
-  const box = placeOverlay(overlay.kind, destination.format, destination.safeZone, [...zones, ...band]);
+  const box = placeOverlay(overlay.kind, destination.format, destination.safeZone, [
+    ...zones,
+    ...band,
+    ...taken,
+  ]);
 
   return elementFrom(beat, overlay, box, durationMs);
+}
+
+function elementTiming(overlay: Overlay, sceneDurationMs: number): Timing {
+  return {
+    enterMs: Math.min(overlay.atMs, Math.max(0, sceneDurationMs - 1)),
+    exitMs: Math.min(overlay.atMs + overlay.durationMs, sceneDurationMs),
+  };
+}
+
+function sharesTime(a: Timing, b: Timing): boolean {
+  return a.enterMs < b.exitMs && b.enterMs < a.exitMs;
 }
 
 function overlayWindow(beat: Beat, overlay: Overlay): Interval {
@@ -297,8 +326,7 @@ function faceZones(input: FaceZoneInput): Box[] {
 function elementFrom(beat: Beat, overlay: Overlay, box: Box, sceneDurationMs: number): Element {
   const base = {
     id: `${beat.id}-${overlay.id}`,
-    enterMs: Math.min(overlay.atMs, Math.max(0, sceneDurationMs - 1)),
-    exitMs: Math.min(overlay.atMs + overlay.durationMs, sceneDurationMs),
+    ...elementTiming(overlay, sceneDurationMs),
     box,
     emphasis: overlay.emphasis,
   };

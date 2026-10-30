@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { destinations, type SafeZone } from "../destinations";
+import { intersectionArea } from "../layout/geometry";
 import { overlapRatio } from "../layout/keepOut";
 import { fitsInBox } from "../layout/textWidth";
 import { registers } from "../registers";
@@ -15,6 +16,7 @@ export const QaIssueSchema = z.object({
     "text-overflow",
     "safe-zone",
     "avoid-zone",
+    "elements-overlap",
     "voice-overflow",
     "plan-over-cap",
     "plan-over-source",
@@ -128,7 +130,34 @@ function sceneIssues(doc: VideoDoc, scene: Scene, avoid: Box[]): QaIssue[] {
     });
   }
 
-  return [...issues, ...scene.elements.flatMap((element) => elementIssues(doc, scene, element, avoid))];
+  return [
+    ...issues,
+    ...scene.elements.flatMap((element) => elementIssues(doc, scene, element, avoid)),
+    ...overlapIssues(scene),
+  ];
+}
+
+function overlapIssues(scene: Scene): QaIssue[] {
+  const issues: QaIssue[] = [];
+
+  scene.elements.forEach((element, index) => {
+    for (const other of scene.elements.slice(index + 1)) {
+      if (!sharesTime(element, other) || intersectionArea(element.box, other.box) === 0) continue;
+      issues.push({
+        code: "elements-overlap",
+        severity: "error",
+        message: `Elements "${element.id}" and "${other.id}" overlap`,
+        sceneId: scene.id,
+        elementId: element.id,
+      });
+    }
+  });
+
+  return issues;
+}
+
+function sharesTime(a: Element, b: Element): boolean {
+  return a.enterMs < b.exitMs && b.enterMs < a.exitMs;
 }
 
 function elementIssues(doc: VideoDoc, scene: Scene, element: Element, avoid: Box[]): QaIssue[] {

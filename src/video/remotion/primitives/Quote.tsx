@@ -1,5 +1,5 @@
 import { fitTextOnNLines } from "@remotion/layout-utils";
-import { accentColor, type PrimitiveProps, white } from "../theme";
+import { accentColor, type PrimitiveProps, textShadow, white } from "../theme";
 import { ElementBox } from "./ElementBox";
 
 const maxLines = 3;
@@ -27,7 +27,17 @@ export function Quote({ element, theme, frame }: PrimitiveProps<"quote">) {
         style={{ width: bar, borderRadius: bar, backgroundColor: accentColor(theme), marginRight: bar * 2 }}
       />
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-        <div style={{ fontSize, fontWeight: 700, lineHeight: 1.12, color: white }}>{element.text}</div>
+        <div
+          style={{
+            fontSize,
+            fontWeight: 700,
+            lineHeight: 1.12,
+            color: white,
+            textShadow: textShadow(fontSize),
+          }}
+        >
+          {element.text}
+        </div>
         {element.author ? (
           <div
             style={{
@@ -36,6 +46,7 @@ export function Quote({ element, theme, frame }: PrimitiveProps<"quote">) {
               fontWeight: 500,
               color: white,
               opacity: 0.8,
+              textShadow: textShadow(fontSize),
             }}
           >
             {element.author}

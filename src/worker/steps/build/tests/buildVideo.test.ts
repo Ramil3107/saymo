@@ -3,6 +3,7 @@ import sampleContentJson from "../../../../../fixtures/content.sample.json" with
 import footagePlanJson from "../../../../../fixtures/plan.footage.json" with { type: "json" };
 import textPlanJson from "../../../../../fixtures/plan.text.json" with { type: "json" };
 import { destinations } from "../../../../video/destinations";
+import { intersectionArea } from "../../../../video/layout/geometry";
 import { captionBand } from "../../../../video/layout/safeZones";
 import { ContentMapSchema } from "../../../../video/schema/content";
 import { PlanSchema } from "../../../../video/schema/plan";
@@ -153,4 +154,19 @@ test("buildVideo keeps an unvoiced beat at its planned length when voiced beats 
   const doc = buildVideo(textPlan, null, { voice }, brand);
   expect(doc.scenes.map((s) => s.durationMs)).toEqual([8300, 9300, 4000]);
   expect(doc.durationMs).toBe(8300 + 9300 + 4000);
+});
+
+test("buildVideo keeps elements that share time in a scene apart", () => {
+  const first = textPlan.beats[0];
+  if (!first) throw new Error("fixture has no beats");
+  const overlays = [
+    { id: "h", kind: "headline" as const, text: "Ends Sunday midnight", atMs: 0, durationMs: 2000 },
+    { id: "s", kind: "sticker" as const, text: "Hurry", atMs: 0, durationMs: 2000 },
+  ];
+  const plan = { ...textPlan, beats: [{ ...first, overlays }, ...textPlan.beats.slice(1)] };
+
+  const [headline, sticker] = buildVideo(plan, null, {}, brand).scenes[0]?.elements ?? [];
+  if (!headline || !sticker) throw new Error("scene has no elements");
+
+  expect(intersectionArea(headline.box, sticker.box)).toBe(0);
 });

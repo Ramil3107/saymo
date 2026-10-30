@@ -1,7 +1,7 @@
 import { fitText } from "@remotion/layout-utils";
 import { interpolate, useCurrentFrame } from "remotion";
 import { frameToMs } from "../frames";
-import { accentColor, type PrimitiveProps, white } from "../theme";
+import { accentColor, type PrimitiveProps, textShadow, white } from "../theme";
 import { ElementBox } from "./ElementBox";
 
 const countUpMs = 900;
@@ -41,13 +41,20 @@ export function BigNumber({ element, theme, frame }: PrimitiveProps<"big-number"
           lineHeight: 1,
           letterSpacing: "-0.04em",
           color: accentColor(theme),
+          textShadow: textShadow(valueSize),
         }}
       >
         {countUp(element.value, progress)}
       </div>
       {element.label ? (
         <div
-          style={{ marginTop: valueSize * 0.12, fontSize: valueSize * 0.32, fontWeight: 700, color: white }}
+          style={{
+            marginTop: valueSize * 0.12,
+            fontSize: valueSize * 0.32,
+            fontWeight: 700,
+            color: white,
+            textShadow: textShadow(valueSize),
+          }}
         >
           {element.label}
         </div>
