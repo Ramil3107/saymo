@@ -62,7 +62,21 @@ export const BeatSchema = z.object({
 
 export type Beat = z.infer<typeof BeatSchema>;
 
-export const CaptionStyleSchema = z.enum(["rail", "keyword-box", "karaoke", "box", "pop"]);
+export const CaptionStyleSchema = z.enum([
+  "rail",
+  "keyword-box",
+  "karaoke",
+  "karaoke-pill",
+  "box",
+  "pop",
+  "bold-center",
+  "minimal",
+  "weight-shift",
+  "marker",
+  "typewriter",
+  "editorial",
+  "outline",
+]);
 
 export type CaptionStyle = z.infer<typeof CaptionStyleSchema>;
 

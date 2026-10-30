@@ -1,15 +1,14 @@
 import { AbsoluteFill, Sequence, useVideoConfig } from "remotion";
-import { destinations, type SafeZone } from "../destinations";
+import { destinations, formatSize } from "../destinations";
 import { tempos } from "../motion/tempo";
 import { registers } from "../registers";
 import type { Element, Scene, VideoDoc } from "../schema/video";
+import { CaptionLayer } from "./captions/CaptionLayer";
 import { loadBrandFont } from "./fonts";
 import { sceneFrames } from "./frames";
 import { Background } from "./primitives/Background";
 import { BigNumber } from "./primitives/BigNumber";
 import { Camera } from "./primitives/Camera";
-import { CaptionRail } from "./primitives/CaptionRail";
-import { Captions } from "./primitives/Captions";
 import { Chip } from "./primitives/Chip";
 import { Footage } from "./primitives/Footage";
 import { Headline } from "./primitives/Headline";
@@ -36,7 +35,14 @@ export function SaymoVideo(doc: VideoDoc) {
           <SceneView scene={scene} doc={doc} theme={theme} />
         </Sequence>
       ))}
-      {doc.captions ? <CaptionsView captions={doc.captions} theme={theme} safeZone={safeZone} /> : null}
+      {doc.captions ? (
+        <CaptionLayer
+          captions={doc.captions}
+          theme={theme}
+          safeZone={safeZone}
+          frame={formatSize(doc.format)}
+        />
+      ) : null}
       {doc.music && musicSrc ? <MusicTrack music={doc.music} src={musicSrc} /> : null}
       {doc.voice.map((voice) => {
         const src = assetSrc(doc, voice.assetId);
@@ -85,16 +91,6 @@ function ElementView({ element, theme, frame }: { element: Element; theme: Theme
     case "list":
       return <ListPanel element={element} theme={theme} frame={frame} />;
   }
-}
-
-function CaptionsView(props: {
-  captions: NonNullable<VideoDoc["captions"]>;
-  theme: Theme;
-  safeZone: SafeZone;
-}) {
-  const { style } = props.captions;
-  if (style === "rail" || style === "keyword-box") return <CaptionRail {...props} />;
-  return <Captions {...props} captions={{ ...props.captions, style }} />;
 }
 
 function findAsset(doc: VideoDoc, id: string) {

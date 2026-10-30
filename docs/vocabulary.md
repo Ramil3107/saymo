@@ -11,7 +11,7 @@ The vocabulary is a set of React components on Remotion that take their paramete
 | Footage | trimmed video clip, background footage, image, logo, shape, Lottie |
 | Camera | push, punch-in, pan, parallax over an image or screenshot |
 | Text | headline, subheading, big number with a counter, quote, lower third, chip (paper pill sized to its text, optional badge such as Fe or 01, pops in with a blur and floats), sticker, title-card (section label and a big title on a dark panel), list (title and numbered items on a dark side panel) |
-| Captions | rail (a short phrase whose words appear as they are said, keywords in the accent color, a scrim below), keyword-box (three words at a time in heavy capitals, each word pops in as it is said, a keyword gets an accent box that sweeps under it and turns its text dark only where the box has passed, text color picked for contrast with the box), karaoke, box and pop styles |
+| Captions | thirteen presets built from one caption look, see [Captions](#captions) |
 | Enters and exits | fade, slide, mask, by word, by letter, typewriter |
 | Accents | marker, underline, ring, pulse, shake, flash |
 | Transitions | cut, fade, slide, wipe, push |
@@ -50,6 +50,39 @@ The register of a video picks its tempo: `driving-launch` and `playful-sale` mov
 - `Chevrons` (`remotion/accents`): three chevrons lit one after another.
 
 `pnpm remotion:lab` also renders `runs/lab/type-lab.mp4`: a typed hook, a size and alignment hierarchy with rising words, tracking in, words popping one by one, a reveal with a marker, a punch with a color swap, a counter with a unit, a label and a ghost, and corner labels around a price count. These components join the video document in step 7, when the director learns them.
+
+## Captions
+
+A caption style is a preset of one caption look (`src/video/captions/looks.ts`), and one renderer draws every look (`src/video/remotion/captions`). The look sets:
+
+- how many words a page holds: one or two, three, four, or a line;
+- letter case, weight, size and place (the caption band at the bottom or a band in the middle);
+- how a word enters when it is said: pop, rise, fade, typed letter by letter, thickening from light to heavy, or filling an outline;
+- what an unsaid word does: not there yet, hidden in its place, dim or shown;
+- the mark on the word being said: color, an accent pill or a scale;
+- the mark on a keyword: color, an accent box that sweeps under the word and turns it dark where it has passed, a marker, or italics;
+- the backing: a text shadow, a scrim at the bottom, or a dark or light pill under each line;
+- the font: the brand font or a serif.
+
+The size shrinks to fit the longest word into the band. Text on an accent box or pill takes a color picked for contrast.
+
+| Preset | What it looks like |
+| --- | --- |
+| `rail` | a short phrase, words rise as they are said, unsaid words dim, keywords in the accent color, a scrim |
+| `keyword-box` | three words in heavy capitals, each pops in as it is said, keywords in an accent box |
+| `bold-center` | one or two huge words in the middle of the frame |
+| `pop` | three words in capitals, the word being said grows |
+| `karaoke` | a line, the word being said in the accent color |
+| `karaoke-pill` | a line, an accent pill under the word being said |
+| `box` | a line on a dark rounded pill |
+| `minimal` | one lowercase line in a light weight |
+| `weight-shift` | words thicken from light to heavy as they are said |
+| `marker` | keywords get a marker sweep |
+| `typewriter` | a line typed letter by letter on a white pill that grows with the text |
+| `editorial` | a serif line with keywords in italics |
+| `outline` | outlined capitals that fill as they are said |
+
+`pnpm remotion:captions` cuts nine seconds of `runs/face-v2`, takes its transcript and keywords, and renders every preset over it to `runs/lab/caption-lab.mp4`, locally and without the API.
 
 ## Catalog
 

@@ -1,8 +1,7 @@
 import { join } from "node:path";
 import { z } from "zod";
 import { speechIntervals } from "../../../video/audio/ducking";
-import { captionPages } from "../../../video/captions/pages";
-import { railPages } from "../../../video/captions/rail";
+import { pagesFor } from "../../../video/captions/looks";
 import { rebaseWords } from "../../../video/captions/timeline";
 import { type Destination, destinations, formatSize } from "../../../video/destinations";
 import { chipSize } from "../../../video/layout/chipSize";
@@ -101,7 +100,6 @@ const sourceAssetId = "source";
 const musicAssetId = "music";
 const musicVolume = 0.9;
 const musicDuckTo = 0.25;
-const keywordBoxWords = 3;
 
 export function buildVideo(
   plan: Plan,
@@ -443,25 +441,12 @@ function shiftWords(words: TranscriptWord[], byMs: number): TranscriptWord[] {
 
 function pagesWithin(words: TranscriptWord[], slot: Slot, style: Plan["captions"]["style"]): CaptionPage[] {
   const endMs = slot.startMs + slot.durationMs;
-  const pages = phrasePages(words, style);
+  const pages = pagesFor(style, words);
 
   return pages.map((page) => ({
     ...page,
     durationMs: Math.min(page.durationMs, Math.max(0, endMs - page.startMs)),
   }));
-}
-
-function phrasePages(words: TranscriptWord[], style: Plan["captions"]["style"]): CaptionPage[] {
-  switch (style) {
-    case "rail":
-      return railPages(words);
-    case "keyword-box":
-      return railPages(words, { maxWords: keywordBoxWords });
-    case "karaoke":
-    case "box":
-    case "pop":
-      return captionPages(words);
-  }
 }
 
 function documentAssets(assets: BuildAssets): VideoDoc["assets"] {

@@ -18,6 +18,7 @@
     "remotion:studio": "remotion studio src/video/remotion/index.ts",
     "remotion:still": "remotion still src/video/remotion/index.ts saymo --props=fixtures/video.sample.json --frame=45 runs/still.png",
     "remotion:lab": "remotion render src/video/remotion/index.ts motion-lab runs/lab/motion-lab.mp4 && remotion render src/video/remotion/index.ts type-lab runs/lab/type-lab.mp4",
+    "remotion:captions": "tsx src/cli/captionLab.ts && remotion render src/video/remotion/index.ts caption-lab runs/lab/caption-lab.mp4 --public-dir=runs/lab/public --props=runs/lab/caption-lab.json",
     "remotion:render": "remotion render src/video/remotion/index.ts saymo --props=fixtures/video.sample.json runs/sample.mp4",
     "render:fixture": "tsx src/cli/renderFixture.ts",
     "spike": "tsx src/cli/spike.ts"
