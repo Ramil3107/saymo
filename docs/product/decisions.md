@@ -4,6 +4,12 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-10-30 · A sound-effect layer from CC0 and ElevenLabs sounds
+
+- **Decided:** the video gets a sound-effect track next to the voice and the music, which adds to the spec's audio minimum. It starts with 30–60 core sounds (whoosh, sub-hit, pop, click, riser, impact, ding, typing), curated from Freesound CC0 and generated with ElevenLabs sound effects on a paid plan, kept in Saymo's own storage. Each sound stores the offset of its peak, so a whoosh peaks on the cut. The style of the video sets how many sounds it gets: loud styles put them on cuts and text entrances, calm styles use them rarely or not at all.
+- **Why:** the loud styles, now equal options, do not work without sound effects. CC0 needs no attribution, ElevenLabs output is royalty-free on paid plans and the key is already in use; about $7 for 60 generations plus a plan of about $5–6 a month.
+- **Rejected:** Epidemic sound effects through the music API (the price is set by their sales team); no sound effects in v1; libraries that require attribution (Zapsplat, CC BY).
+
 ### 2026-10-30 · Graphics come from a large vocabulary, not per-video code
 
 - **Decided:** the director keeps choosing and configuring components; the model writes no code per video, as in the 2026-10-28 entry "The model writes data, the engine executes". The vocabulary grows large: from 17 primitives to about a hundred components in the base (the lead's estimate, refined in the design), each with variants, partly ported from HyperFrames, Remocn and Remotion's own packages, and it keeps growing after the base. Variety comes from the size of the library times a choice made per video and per beat from context, and coherence rules keep each video in one style. Loud creator styles (word-by-word captions, whoosh on cuts, punch zooms) and calm ones are equal options chosen by context; neither is the default everywhere. A hybrid, where the model writes code for one or two special moments of a video, may come after v1, once it is clear where the library falls short.
