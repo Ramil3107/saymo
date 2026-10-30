@@ -22,4 +22,21 @@ The `spike` skill adds a row from `runs/<id>/metrics.json`. The owner sets the e
 
 | Run | Input | Destination | Transcription (provider, s, $) | Vision (frames, s, $) | Director (model, tokens, s, $) | Build (s) | Render (where, s, $) | Total (s, $) | Eyeball score 1–5 | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | face on camera: Synevo doctor, 1:49, 464×848, Ukrainian speech, `runs/20261030-1333-face` | reels | elevenlabs, 8.2 s, $0.012 | 55 frames: Rekognition 26.1 s $0.055, Claude Opus 5.5 32.6 s $0.286 | claude-opus-5-5, 3 224 in / 8 290 out, 71.2 s, $0.196 | 0.0 | local, 83.0 s, $0 | 221 s, $0.549 | [owner] | [owner] |
+| 2 | screen recording: task app on a phone, 39 s, 1206×2622, no speech, `runs/20261030-1337-screen` | reels | — (silent source) | 20 frames: Rekognition 6.4 s $0.020, Claude Opus 5.5 16.9 s $0.128 | claude-opus-5-5, 1 501 in / 2 894 out, 28.1 s, $0.065 | 0.0 | local, 14.4 s, $0 | 65.8 s, $0.212 | [owner] | [owner] |
+| 3 | vertical phone footage: Ichnya recipe, 59 s, 2160×3840, Ukrainian speech, `runs/20261030-1338-phone` | reels | elevenlabs, 4.3 s, $0.007 | 29 frames: Rekognition 8.4 s $0.029, Claude Opus 5.5 19.6 s $0.156 | claude-opus-5-5, 2 983 in / 6 411 out, 56.3 s, $0.141 | 0.0 | local, 74.9 s, $0 | 163.5 s, $0.332 | [owner] | [owner] |
 | 4 | text: a product launch, `runs/20261030-1310-saymo-turns-your-raw-phone-foota` | reels | — | — | claude-opus-5-5, 128 in / 2 682 out, 29.1 s, $0.071 | 0.0 | local, 6.4 s, $0 | 35.5 s, $0.071 | [owner] | [owner] |
+| 5 | text: a sale, `runs/20261030-1341-black-friday-at-saymo-40-off-the` | reels | — | — | claude-opus-5-5, 133 in / 2 733 out, 33.0 s, $0.056 | 0.0 | local, 5.2 s, $0 | 38.1 s, $0.056 | [owner] | [owner] |
+
+Run 1 is vertical and shorter than the interview the plan asked for: the owner had no horizontal interview at hand. Runs 1 and 3 are the owner's own client footage, run 2 is a silent iPhone screen recording. Render is local on a MacBook; Lambda waits for the quotas of the new AWS account.
+
+## What the runs showed
+
+Observations by the lead, before the owner's scores:
+
+- **Cost.** A two-minute talking head costs about $0.55 and 3.7 minutes, of which vision is $0.34 (Rekognition $0.06, Opus descriptions $0.29) and the director $0.20. Text-only runs cost $0.06 and 40 seconds. Vision is the lever: 60 frames through Opus is half the bill.
+- **Director.** With continuous speech the director keeps the full source in order (runs 1 and 3) and asks whether to cut it down; with a silent screen recording it cuts 39 s to 16 s by the shots and frame notes (run 2). Copy stays in the language of the speech. One run asked whose name to show in the lower third, a question the plan card is meant for.
+- **Faces.** Rekognition found the doctor in 47 of 55 frames and nothing on hands-only food footage. Keep-out zones worked: no element landed on a face.
+- **Legibility.** A white headline over the white lab sheet in run 1 is unreadable: elements have no scrim or contrast rule. Long chip texts shrink to a tiny font instead of wrapping. The count-up animation of `big-number` reads "1" for half a second on the way to "2" when the number is a step index.
+- **Screen recordings.** Fit-cover crops a phone screen recording and the `big-number` landed on the app's own text: screen footage needs fit-contain and keep-out zones for on-screen text.
+- **Captions.** In sync in both languages, box and pop styles; the caption band keeps overlays out.
