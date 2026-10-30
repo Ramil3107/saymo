@@ -2,6 +2,12 @@
 
 Entries are added by the `learn` skill, newest on top.
 
+### 2026-10-30 · Motion taste comes from watched video, not from articles
+
+- **What happened:** The vocabulary research set the quality bar from articles, vendor blogs and interface motion systems (Material, Carbon, Fluent, Apple) and concluded that restraint wins: one change every 3 seconds, few curves, rare overshoot, the loud creator style as dated. It recommended gl-transitions for their licence and their Remotion adapter. The owner looked at the gallery and found it dated, disagreed about the loud style, and pointed at Higgsfield and motionvid, where motion itself is the content: how elements appear, leave and transform.
+- **Lesson:** Interface motion is meant to go unnoticed, and in motion graphics the motion is the thing people watch. Texts about video describe averages. A catalogue's size and licence say nothing about how it looks, so the reference has to be videos the owner likes, broken down frame by frame, and every piece has to be judged on a render.
+- **Rule:** `.claude/skills/vocab/SKILL.md`: a primitive starts from a reference clip the owner likes, broken down frame by frame (timings, curves, how elements enter, leave and transform), and joins the vocabulary only after the owner has seen it rendered. Taste rules such as cadence, overshoot and accent budgets belong to a style, not to the whole vocabulary.
+
 ### 2026-10-30 · A spike render without a vocabulary reads as the product
 
 - **What happened:** The stage 0 renders proved the pipeline, but with six bare primitives and no composition they looked like a bad product to the owner, who compared them with hand-made reels and asked what there was to evaluate. A design spike the same day closed most of the gap and the owner reordered the work: vocabulary first.
