@@ -1,10 +1,9 @@
 import type { CSSProperties } from "react";
-import { type MoveSpec, mix } from "../../motion/moves";
+import type { MoveSpec } from "../../motion/moves";
 import { eased, staggered } from "../../motion/timeline";
+import { mixRect, type Rect, rectStyle } from "../accents/geometry";
 import { Move, useMs } from "../motion/Move";
 import type { DemoProps, Palette } from "./looks";
-
-type Rect = { x: number; y: number; w: number; h: number };
 
 const startMs = 200;
 const highlightAtMs = 1400;
@@ -69,19 +68,6 @@ function tileRect(index: number, width: number, height: number): Rect {
     w: width * 0.4,
     h: width * 0.26,
   };
-}
-
-function mixRect(from: Rect, to: Rect, p: number): Rect {
-  return {
-    x: mix(from.x, to.x, p),
-    y: mix(from.y, to.y, p),
-    w: mix(from.w, to.w, p),
-    h: mix(from.h, to.h, p),
-  };
-}
-
-function rectStyle(rect: Rect): CSSProperties {
-  return { position: "absolute", left: rect.x, top: rect.y, width: rect.w, height: rect.h };
 }
 
 function photo(palette: Palette, index: number): CSSProperties {

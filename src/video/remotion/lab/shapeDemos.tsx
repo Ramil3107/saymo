@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { interpolateColors } from "remotion";
 import { flipFace, type MoveSpec, mix } from "../../motion/moves";
 import { eased, type Float, floatAt, staggered } from "../../motion/timeline";
+import { Burst } from "../accents/Burst";
 import { Chevrons } from "../accents/Chevrons";
 import { Move, useMs } from "../motion/Move";
 import type { DemoProps, Palette } from "./looks";
@@ -15,8 +16,6 @@ const chipsExitAtMs = 3900;
 const floatDegrees = 0.8;
 const chips = ["Same-day slots", "No waiting list", "From $29"];
 const months = ["NOV", "DEC", "JAN"];
-const burstRays = 10;
-const rayAngles = Array.from({ length: burstRays }, (_, ray) => (ray / burstRays) * Math.PI * 2);
 
 const column: CSSProperties = {
   position: "absolute",
@@ -99,7 +98,13 @@ export function MorphBurstDemo({ look, width }: DemoProps) {
           <div style={morphBox(width, palette, shrunk, widened)}>
             <span style={{ fontSize: width * 0.09, fontWeight: 900, color: palette.surface }}>Saymo</span>
           </div>
-          <Burst ms={ms} atMs={widenAtMs + tempo.moveMs} look={look} width={width} />
+          <Burst
+            at={{ x: boxWidthOf(width, shrunk, widened), y: 0 }}
+            atMs={widenAtMs + tempo.moveMs}
+            size={width * 0.15}
+            tempo={tempo}
+            color={palette.ink}
+          />
         </div>
       </Move>
     </div>
@@ -177,9 +182,12 @@ function pillStyle(palette: Palette, width: number): CSSProperties {
   };
 }
 
+function boxWidthOf(width: number, shrunk: number, widened: number): number {
+  return widened > 0 ? mix(width * 0.08, width * 0.62, widened) : mix(width * 0.72, width * 0.08, shrunk);
+}
+
 function morphBox(width: number, palette: Palette, shrunk: number, widened: number): CSSProperties {
-  const boxWidth =
-    widened > 0 ? mix(width * 0.08, width * 0.62, widened) : mix(width * 0.72, width * 0.08, shrunk);
+  const boxWidth = boxWidthOf(width, shrunk, widened);
 
   return {
     width: boxWidth,
@@ -192,30 +200,6 @@ function morphBox(width: number, palette: Palette, shrunk: number, widened: numb
     alignItems: "center",
     justifyContent: "center",
   };
-}
-
-function Burst(props: { ms: number; atMs: number; look: DemoProps["look"]; width: number }) {
-  const { ms, atMs, look, width } = props;
-  const p = eased(ms, atMs, look.tempo.moveMs * 3, look.tempo.enterCurve);
-  if (p <= 0 || p >= 1) return null;
-
-  const size = width * 0.3;
-  const inner = mix(0.25, 0.42, p) * size;
-  const outer = inner + (1 - p) * size * 0.14;
-
-  return (
-    <svg width={size} height={size} style={burstBox(size)} aria-hidden>
-      {rayAngles.map((angle) => (
-        <line
-          key={angle}
-          {...rayEnds(angle, size / 2, inner, outer)}
-          stroke={look.palette.ink}
-          strokeWidth={width * 0.006}
-          strokeLinecap="round"
-        />
-      ))}
-    </svg>
-  );
 }
 
 function CalendarCard(props: { month: string; flipAtMs: number; look: DemoProps["look"]; width: number }) {
@@ -242,19 +226,6 @@ function CalendarCard(props: { month: string; flipAtMs: number; look: DemoProps[
       </div>
     </div>
   );
-}
-
-function burstBox(size: number): CSSProperties {
-  return { position: "absolute", right: -size * 0.45, top: -size * 0.45 };
-}
-
-function rayEnds(angle: number, center: number, inner: number, outer: number) {
-  return {
-    x1: center + Math.cos(angle) * inner,
-    y1: center + Math.sin(angle) * inner,
-    x2: center + Math.cos(angle) * outer,
-    y2: center + Math.sin(angle) * outer,
-  };
 }
 
 function badgeCircle(size: number): CSSProperties {

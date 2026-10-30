@@ -51,6 +51,23 @@ The register of a video picks its tempo: `driving-launch` and `playful-sale` mov
 
 `pnpm remotion:lab` also renders `runs/lab/type-lab.mp4`: a typed hook, a size and alignment hierarchy with rising words, tracking in, words popping one by one, a reveal with a marker, a punch with a color swap, a counter with a unit, a label and a ghost, and corner labels around a price count. These components join the video document in step 7, when the director learns them.
 
+## Accents and textures
+
+`src/video/remotion/accents` holds the shapes that carry rhythm and point at things. Each one reads the tempo, so `snap` flashes where `glide` wipes:
+
+- `GrowFrame`: a frame grows from a point to the edges, thick at first, and the shot flashes the frame's color (Higgsfield).
+- `FlashBlocks`: color blocks over a collage, two frames each in `snap`, wiped in and out in `glide`.
+- `Burst` and `Sparkles`: radial lines that fly apart, four-point stars that pop in one by one and keep twinkling.
+- `DrawnArrow`: a curved stroke drawn from tail to tip, its head opening when it arrives.
+- `SelectionBox`: a design-tool selection drawn around a tag, corner handles popping in one by one (motionvid).
+- `Scribble`: a hand-drawn circle that overshoots its start, or a wavy underline.
+- `Cursor`: a pointer travels to a target and clicks, with a ring spreading from the tip.
+- `CornerBrackets`: viewfinder brackets that close in on a subject.
+- `Chevrons`: three chevrons lit one after another.
+- Textures: `Grain` (film grain with a new seed every frame), `PaperGrid` (a faint grid with a vignette), `Halftone` (dots fading across the picture), `Blobs` (soft color fields drifting behind the content).
+
+`pnpm remotion:lab` also renders `runs/lab/accent-lab.mp4`, nine demos over a still of `runs/face-v2` that `src/cli/labAssets.ts` prepares in `runs/lab/public`.
+
 ## Captions
 
 A caption style is a preset of one caption look (`src/video/captions/looks.ts`), and one renderer draws every look (`src/video/remotion/captions`). The look sets:
@@ -123,7 +140,7 @@ Each step ends with a render the owner reviews.
 
 1. Motion system: moves to enter, leave, transform and stay alive, timed by the style (fast like Higgsfield, smooth like motionvid), and choreography: stagger, sync to spoken words, sync to the music beat. A motion lab composition plays every move in both styles. Built on 2026-10-30, except the sync to words and to the beat.
 2. Kinetic type: letter type-on, word by word, rolling counters, split, color swap, a punch from giant size, outline numerals, captions with boxed keywords. Built on 2026-10-30: titles, counters, corner labels and `keyword-box` captions.
-3. Shapes and accents: chevrons, growing frames, flash squares, bursts and sparkles, drawn arrows, selection handles, grain, grid and halftone textures.
+3. Shapes and accents: chevrons, growing frames, flash squares, bursts and sparkles, drawn arrows, selection handles, grain, grid and halftone textures. Built on 2026-10-30, with scribbles, a cursor, viewfinder brackets and drifting color fields; the pixel mosaic is still to do.
 4. Media: photo collage, a thumbnail that becomes a player, a grid that lights the cell being named, UI cards with a camera into a detail, flipping states, cut-out figures (background removal).
 5. Transitions: cut, flash cut, panel wipe, perspective push, zoom into a detail, mosaic resolve, dissolve.
 6. Styles: one like Higgsfield and one like motionvid first, each with its own cadence, curves and accent budget.

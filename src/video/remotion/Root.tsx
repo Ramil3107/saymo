@@ -3,6 +3,7 @@ import sampleDoc from "../../../fixtures/video.sample.json" with { type: "json" 
 import { formatSize } from "../destinations";
 import { type VideoDoc, VideoDocSchema } from "../schema/video";
 import { fps, msToFrame } from "./frames";
+import { AccentLab, accentDemos } from "./lab/AccentLab";
 import { CaptionLab, captionLabMetadata } from "./lab/CaptionLab";
 import { captionLabDefaults } from "./lab/captionLabProps";
 import { labFrames, labSize } from "./lab/LabReel";
@@ -25,6 +26,13 @@ export function Root() {
         component={MotionLab}
         fps={fps}
         durationInFrames={labFrames(motionDemos)}
+        {...labSize}
+      />
+      <Composition
+        id="accent-lab"
+        component={AccentLab}
+        fps={fps}
+        durationInFrames={labFrames(accentDemos)}
         {...labSize}
       />
       <Composition
