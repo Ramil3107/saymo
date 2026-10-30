@@ -1,5 +1,7 @@
 import { z } from "zod";
+import type { Exit } from "./motion/moves";
 import type { TempoId } from "./motion/tempo";
+import type { RegisterId } from "./registers";
 import type { CaptionStyle } from "./schema/plan";
 import type { Transition } from "./schema/video";
 import type { TitleEntrance } from "./type/schedule";
@@ -36,6 +38,7 @@ export type Style = {
   captions: CaptionStyle[];
   transitions: Transition[];
   titleEntrances: TitleEntrance[];
+  exit: Exit;
   accents: Accent[];
 };
 
@@ -57,6 +60,7 @@ export const styles: Record<StyleId, Style> = {
     captions: ["bold-center", "keyword-box", "pop", "outline"],
     transitions: ["flash", "whip", "pixelate", "zoom", "cut"],
     titleEntrances: ["type", "punch", "spread", "pop"],
+    exit: "smear",
     accents: ["chevrons", "flash-blocks", "grow-frame", "brackets", "burst"],
   },
   "clean-paper": {
@@ -76,6 +80,14 @@ export const styles: Record<StyleId, Style> = {
     captions: ["keyword-box", "karaoke-pill", "marker", "typewriter", "minimal"],
     transitions: ["wipe", "dip", "zoom", "cut"],
     titleEntrances: ["rise", "type", "reveal"],
+    exit: "fade",
     accents: ["sparkles", "selection", "arrow", "scribble", "cursor"],
   },
+};
+
+export const defaultStyle: Record<RegisterId, StyleId> = {
+  "driving-launch": "bold-pop",
+  "playful-sale": "bold-pop",
+  "serious-clinical": "clean-paper",
+  "rich-premium": "clean-paper",
 };

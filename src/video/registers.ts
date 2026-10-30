@@ -1,5 +1,4 @@
 import { z } from "zod";
-import type { TempoId } from "./motion/tempo";
 
 export const RegisterIdSchema = z.enum([
   "driving-launch",
@@ -13,7 +12,6 @@ export type RegisterId = z.infer<typeof RegisterIdSchema>;
 export type RegisterTokens = {
   sceneMs: [number, number];
   minHoldMs: number;
-  tempo: TempoId;
   fontWeight: [number, number];
   maxElements: number;
   maxConcurrentMotions: number;
@@ -24,7 +22,6 @@ export const registers: Record<RegisterId, RegisterTokens> = {
   "driving-launch": {
     sceneMs: [1500, 2500],
     minHoldMs: 700,
-    tempo: "snap",
     fontWeight: [800, 900],
     maxElements: 4,
     maxConcurrentMotions: 2,
@@ -33,7 +30,6 @@ export const registers: Record<RegisterId, RegisterTokens> = {
   "serious-clinical": {
     sceneMs: [3000, 4500],
     minHoldMs: 1200,
-    tempo: "glide",
     fontWeight: [500, 700],
     maxElements: 3,
     maxConcurrentMotions: 1,
@@ -42,7 +38,6 @@ export const registers: Record<RegisterId, RegisterTokens> = {
   "rich-premium": {
     sceneMs: [2500, 4000],
     minHoldMs: 1000,
-    tempo: "glide",
     fontWeight: [600, 800],
     maxElements: 5,
     maxConcurrentMotions: 2,
@@ -51,7 +46,6 @@ export const registers: Record<RegisterId, RegisterTokens> = {
   "playful-sale": {
     sceneMs: [1500, 2500],
     minHoldMs: 700,
-    tempo: "snap",
     fontWeight: [800, 900],
     maxElements: 6,
     maxConcurrentMotions: 3,

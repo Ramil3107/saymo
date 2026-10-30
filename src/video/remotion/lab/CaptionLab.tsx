@@ -3,12 +3,13 @@ import type { CalculateMetadataFunction } from "remotion";
 import { AbsoluteFill, Sequence, staticFile } from "remotion";
 import { pagesFor } from "../../captions/looks";
 import { destinations } from "../../destinations";
-import { tempos } from "../../motion/tempo";
 import { registers } from "../../registers";
 import type { CaptionStyle } from "../../schema/plan";
+import { defaultStyle } from "../../styles";
 import { CaptionLayer } from "../captions/CaptionLayer";
 import { loadBrandFont } from "../fonts";
 import { msToFrame } from "../frames";
+import { styleKit } from "../style/kit";
 import type { Theme } from "../theme";
 import { type CaptionLabProps, CaptionLabPropsSchema } from "./captionLabProps";
 
@@ -72,16 +73,11 @@ export function CaptionLab(lab: CaptionLabProps) {
 }
 
 function labTheme(lab: CaptionLabProps): Theme {
-  const register = registers[lab.register];
+  const brand = { colors: lab.colors, font: "Onest" };
+  const kit = styleKit(defaultStyle[lab.register], brand);
   const { fontFamily } = loadBrandFont("Onest");
 
-  return {
-    brand: { colors: lab.colors, font: "Onest" },
-    register,
-    tempo: tempos[register.tempo],
-    fontFamily,
-    safeZone,
-  };
+  return { brand, register: registers[lab.register], tempo: kit.tempo, kit, fontFamily, safeZone };
 }
 
 function CaptionPanel({ style, position, count, lab, theme }: PanelProps) {

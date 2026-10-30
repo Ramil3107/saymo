@@ -1,8 +1,10 @@
 import { z } from "zod";
 import { DestinationIdSchema, FormatSchema } from "../destinations";
 import { RegisterIdSchema } from "../registers";
+import { StyleIdSchema } from "../styles";
+import { TitleEntranceSchema, TitleLineSchema } from "../type/schedule";
 import { BoxSchema } from "./content";
-import { CameraSchema, CaptionStyleSchema } from "./plan";
+import { CameraSchema, CaptionStyleSchema, TransitionSchema } from "./plan";
 
 const ElementBaseSchema = z.object({
   id: z.string(),
@@ -25,20 +27,31 @@ export const ElementSchema = z.discriminatedUnion("kind", [
   ElementBaseSchema.extend({ kind: z.literal("sticker"), text: z.string() }),
   ElementBaseSchema.extend({ kind: z.literal("title-card"), text: z.string(), sub: z.string().optional() }),
   ElementBaseSchema.extend({ kind: z.literal("list"), text: z.string(), items: z.array(z.string()) }),
+  ElementBaseSchema.extend({
+    kind: z.literal("title"),
+    lines: z.array(TitleLineSchema).min(1),
+    entrance: TitleEntranceSchema,
+  }),
+  ElementBaseSchema.extend({
+    kind: z.literal("counter"),
+    value: z.number(),
+    prefix: z.string().optional(),
+    suffix: z.string().optional(),
+    label: z.string().optional(),
+  }),
+  ElementBaseSchema.extend({ kind: z.literal("corner-label"), text: z.string() }),
 ]);
 
 export type Element = z.infer<typeof ElementSchema>;
 
-export const TransitionSchema = z.enum(["cut", "flash", "wipe", "whip", "zoom", "pixelate", "dip"]);
-
-export type Transition = z.infer<typeof TransitionSchema>;
+export { type Transition, TransitionSchema } from "./plan";
 
 export const SceneSchema = z.object({
   id: z.string(),
   startMs: z.number(),
   durationMs: z.number(),
   background: z.object({
-    kind: z.enum(["brand", "solid", "gradient"]),
+    kind: z.enum(["brand", "solid", "gradient", "style"]),
     color: z.string().optional(),
   }),
   footage: z
@@ -81,6 +94,7 @@ const VideoDocFieldsSchema = z.object({
   durationMs: z.number(),
   destination: DestinationIdSchema,
   register: RegisterIdSchema,
+  style: StyleIdSchema.optional(),
   brand: z.object({
     colors: z.array(z.string()).min(1).max(3),
     font: z.string(),

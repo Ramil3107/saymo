@@ -92,7 +92,7 @@ function CounterNumber(props: Props & { prefix: string; suffix: string; value: n
       <Stable
         final={`${prefix}${numberFormat.format(to)}`}
         current={`${prefix}${numberFormat.format(value)}`}
-        style={{ fontSize, color: colors.accent, lineHeight: 1 }}
+        style={{ fontSize, color: colors.accent, lineHeight: 1, textShadow: colors.shadow }}
       />
       {suffix ? <span style={suffixStyle}>{suffix.trim()}</span> : null}
     </Move>
@@ -104,7 +104,14 @@ function Label(props: Props & { text: string }) {
 
   return (
     <Move spec={{ enter: "cut", atMs, exit }} tempo={tempo} unitPx={width}>
-      <div style={{ fontSize: width * labelShare, color: colors.ink, letterSpacing: "0.14em" }}>
+      <div
+        style={{
+          fontSize: width * labelShare,
+          color: colors.ink,
+          letterSpacing: "0.14em",
+          textShadow: colors.shadow,
+        }}
+      >
         <TypeOn text={text.toUpperCase()} atMs={atMs} tempo={tempo} />
       </div>
     </Move>

@@ -18,7 +18,7 @@ import {
 import { Move, useMs } from "../motion/Move";
 import { TypeOn } from "../motion/TypeOn";
 
-export type TypeColors = { ink: string; accent: string; alt: string; marker: string };
+export type TypeColors = { ink: string; accent: string; alt: string; marker: string; shadow?: string };
 
 export type TypeFont = { family: string; weight: number };
 
@@ -88,6 +88,7 @@ function TitleRow(props: RowProps) {
         fontWeight: font.weight,
         lineHeight,
         color: toneColor(line.tone, colors, tempo, ms, swapAtMs),
+        textShadow: colors.shadow,
       }}
     >
       <span style={markerStyle(colors.marker, marked)}>

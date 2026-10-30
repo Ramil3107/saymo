@@ -25,6 +25,7 @@ Every element has a stable id, a type from the vocabulary, parameters and timing
 | `durationMs` | number | Length of the video, the last scene ends here |
 | `destination` | destination id | Where the video goes, see [Destinations](#destinations) |
 | `register` | register id | Character of the video, see [Registers](#registers) |
+| `style` | style id, optional | The look of the whole video (`bold-pop` or `clean-paper`, see [Vocabulary](/vocabulary#styles)); without it the register picks one |
 | `brand` | object | `colors` (one to three), `font` and an optional `logo` |
 | `assets` | list | `id`, `kind` (`video`, `audio` or `image`), `src` and an optional `durationMs`. Scenes, music and voice refer to assets by `id` |
 | `scenes` | list of scenes | In order, with no gaps or overlaps: the first starts at 0, each next one starts where the previous one ends |
@@ -38,7 +39,7 @@ Fields of a scene:
 | --- | --- | --- |
 | `id` | string | Stable id, the same as the id of the beat the scene comes from |
 | `startMs`, `durationMs` | number | Position on the timeline of the video |
-| `background` | object | `kind` (`brand`, `solid` or `gradient`) and an optional `color` |
+| `background` | object | `kind` (`brand`, `solid`, `gradient` or `style`, the style's backdrop with its textures) and an optional `color` |
 | `footage` | object, optional | `assetId`, `fromMs` in the source video and `transform` (`scale`, `x`, `y`) |
 | `camera` | object, optional | `kind` (`none`, `push`, `punch-in` or `pan`) and `intensity` from 0 to 1 |
 | `elements` | list | The elements of the scene |
@@ -46,7 +47,7 @@ Fields of a scene:
 
 ## Elements
 
-An element is one of six kinds, picked by `kind`. Every element has an `id`, `enterMs` and `exitMs` (counted from the start of its scene), a `box` and an optional `emphasis` (`marker`, `underline` or `pulse`). The `box` is a rectangle `x`, `y`, `w`, `h` in fractions of the frame, from 0 to 1. On top of that:
+An element is one of eleven kinds, picked by `kind`. Every element has an `id`, `enterMs` and `exitMs` (counted from the start of its scene), a `box` and an optional `emphasis` (`marker`, `underline` or `pulse`). The `box` is a rectangle `x`, `y`, `w`, `h` in fractions of the frame, from 0 to 1. On top of that:
 
 - `headline`: `text` and an optional `sub`;
 - `chip`: `text`;
@@ -56,6 +57,9 @@ An element is one of six kinds, picked by `kind`. Every element has an `id`, `en
 - `sticker`: `text`.
 - `title-card`: `text` and an optional `sub` used as the section label; it fills the top panel of a `panel-top` beat.
 - `list`: `text` as the title and `items`; it fills the side panel of a `panel-side` beat.
+- `title`: `lines` (each a `text`, a `size` `xl`, `l`, `m` or `s`, a `tone` `ink`, `accent` or `alt`, an `align` and an optional `marked`) and an `entrance` (`type`, `rise`, `pop`, `spread`, `punch` or `reveal`); the kinetic title of the style.
+- `counter`: a numeric `value`, an optional `prefix`, `suffix` and `label`; it punches in and counts up.
+- `corner-label`: `text`; a small label typed in a corner, with chevrons in `bold-pop`.
 
 ## Schema rules
 
@@ -87,13 +91,13 @@ Frame sizes: 9:16 is 1080×1920, 1:1 is 1080×1080, 16:9 is 1920×1080, all at 3
 
 A register is the character of a video. It sets timings, curves, staggers, font weights and the number of elements in a scene. It has three axes: energy, tone and density. The presets are `driving-launch`, `serious-clinical`, `rich-premium` and `playful-sale`. The vocabulary reads the register and QA checks it.
 
-| Register | Scene length, ms | Min hold, ms | Tempo | Font weight | Max elements | Max concurrent motions | Music BPM |
+| Register | Scene length, ms | Min hold, ms | Default style | Font weight | Max elements | Max concurrent motions | Music BPM |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `driving-launch` | 1500–2500 | 700 | snap | 800–900 | 4 | 2 | 110–130 |
-| `serious-clinical` | 3000–4500 | 1200 | glide | 500–700 | 3 | 1 | 70–90 |
-| `rich-premium` | 2500–4000 | 1000 | glide | 600–800 | 5 | 2 | 80–100 |
-| `playful-sale` | 1500–2500 | 700 | snap | 800–900 | 6 | 3 | 120–140 |
+| `driving-launch` | 1500–2500 | 700 | bold-pop | 800–900 | 4 | 2 | 110–130 |
+| `serious-clinical` | 3000–4500 | 1200 | clean-paper | 500–700 | 3 | 1 | 70–90 |
+| `rich-premium` | 2500–4000 | 1000 | clean-paper | 600–800 | 5 | 2 | 80–100 |
+| `playful-sale` | 1500–2500 | 700 | bold-pop | 800–900 | 6 | 3 | 120–140 |
 
-Min hold is the shortest time something stays on screen. The tempo sets move lengths, staggers and curves; the tempos are described in [Vocabulary](/vocabulary#motion-system). Max concurrent motions is how many things may move at the same moment.
+Min hold is the shortest time something stays on screen. The default style is the one the register picks when the plan names none; the style sets the tempo, see [Vocabulary](/vocabulary#styles). Max concurrent motions is how many things may move at the same moment.
 
 The tables above are the exact fields of the first version. The constraints in the rules above are mandatory.

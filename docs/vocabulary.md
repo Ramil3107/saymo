@@ -38,7 +38,7 @@ External assets come only with permissive licenses, and a license manifest lives
 - **Remotion side** (`remotion/motion`): positions are whole pixels and a resting element has no transform (`pixels.ts`), because renderer tabs, and Lambda's browsers, round fractional positions differently and a still element would jump a pixel between frames. `Move` wraps an element in its pose, with a mask for `rise` and `sink` that leaves room for ascenders and descenders, and an SVG blur along x for `smear`; `TypeOn` types text with a caret.
 - **Motion lab**: `pnpm remotion:lab` renders `runs/lab/motion-lab.mp4`, ten demos with both tempos side by side: type on, rise, punch and count, pop with stagger and float, smear with chevrons, reveal with a color swap and a tilt out, a box that morphs into a name with a burst, a split that frames the subject, flips one by one, and a collage tile that grows into the frame.
 
-The register of a video picks its tempo: `driving-launch` and `playful-sale` move in `snap`, `serious-clinical` and `rich-premium` in `glide`. The document primitives move through `ElementBox`: chips and stickers pop in, float and collapse, the other elements lift in and fade out, and every exit ends exactly at the element's `exitMs`.
+The style of a video sets its tempo: `bold-pop` moves in `snap` and `clean-paper` in `glide`; a register without a style picks one (`driving-launch` and `playful-sale` take `bold-pop`, `serious-clinical` and `rich-premium` take `clean-paper`). The document primitives move through `ElementBox`: chips and stickers pop in, float and collapse, the other elements lift in and fade out, and every exit ends exactly at the element's `exitMs`.
 
 ## Kinetic type
 
@@ -49,7 +49,7 @@ The register of a video picks its tempo: `driving-launch` and `playful-sale` mov
 - `CornerLabel`: a small label typed in a corner with chasing chevrons, the HUD of Higgsfield's cards.
 - `Chevrons` (`remotion/accents`): three chevrons lit one after another.
 
-`pnpm remotion:lab` also renders `runs/lab/type-lab.mp4`: a typed hook, a size and alignment hierarchy with rising words, tracking in, words popping one by one, a reveal with a marker, a punch with a color swap, a counter with a unit, a label and a ghost, and corner labels around a price count. These components join the video document in step 7, when the director learns them.
+`pnpm remotion:lab` also renders `runs/lab/type-lab.mp4`: a typed hook, a size and alignment hierarchy with rising words, tracking in, words popping one by one, a reveal with a marker, a punch with a color swap, a counter with a unit, a label and a ghost, and corner labels around a price count. Titles, counters and corner labels are document elements since step 7 (`title`, `counter`, `corner-label`): the build places them like other overlays, and over footage they are drawn white with the brand highlight as the accent and a soft shadow. While a title is on screen the captions step aside (`src/video/captions/stepAside.ts`).
 
 ## Accents and textures
 
@@ -94,7 +94,7 @@ A scene enters by its `transition` and the scene before it leaves by the same on
 - `pixelate`: the old scene breaks into growing blocks and the new one resolves from them, through an SVG filter that needs no GPU.
 - `dip`: a fade through the dark brand color.
 
-The build still writes `cut`; the director learns transitions in step 7. `pnpm remotion:lab` also renders `runs/lab/transition-lab.mp4`, a before and after shot of `runs/face-v2` through each transition.
+The build writes the transition each beat names, `cut` by default. `pnpm remotion:lab` also renders `runs/lab/transition-lab.mp4`, a before and after shot of `runs/face-v2` through each transition.
 
 ## Styles
 
@@ -105,7 +105,7 @@ A style is the look of a whole video, kept as data in `src/video/styles.ts`: a n
 
 The brand gives the colors (`src/video/style/palette.ts`): the first brand color that is not near white becomes the accent, darkened until it reads at 3:1 on the background; a light brand color becomes the highlight, or the style's own; another dark brand color, or a deeper accent, becomes the second tone. `styleKit` in `src/video/remotion/style` folds the style, the brand palette, the display face and the brand's text face together, and `Backdrop` draws the background with the style's textures.
 
-`pnpm remotion:styles` renders a 14-second spot in both styles side by side with the brand colors of `runs/face-v2`: a hook, a counter, a collage with a tag, the footage with the style's captions, a call to action, joined by the style's transitions. The document gets a style, and the director learns to pick one, in step 7.
+`pnpm remotion:styles` renders a 14-second spot in both styles side by side with the brand colors of `runs/face-v2`: a hook, a counter, a collage with a tag, the footage with the style's captions, a call to action, joined by the style's transitions. Since step 7 the plan and the document carry a `style`; the director picks it from the summaries above, and every beat names the transition it enters by.
 
 ## Captions
 
@@ -183,7 +183,7 @@ Each step ends with a render the owner reviews.
 4. Media: photo collage, a thumbnail that becomes a player, a grid that lights the cell being named, UI cards with a camera into a detail, flipping states, cut-out figures (background removal). Built on 2026-10-30 with a burst of shots and a phone frame, except the cut-out figures.
 5. Transitions: cut, flash cut, panel wipe, perspective push, zoom into a detail, mosaic resolve, dissolve. Built on 2026-10-30 as cut, flash, wipe, whip, zoom, pixelate and dip; a dissolve would need scenes to overlap and is left out.
 6. Styles: one like Higgsfield and one like motionvid first, each with its own cadence, curves and accent budget. Built on 2026-10-30 as `bold-pop` and `clean-paper`, with the palette taken from the brand.
-7. The director and the build use them on `runs/face-v2` and on a text-mode ad, compared with the reference clips.
+7. The director and the build use them on `runs/face-v2` and on a text-mode ad, compared with the reference clips. Built on 2026-10-30 for styles, transitions, titles, counters and corner labels, checked on `runs/face-v2` with a hand-written plan; accents and media in the document, and a text-mode ad, are next.
 8. The sound-effect layer, synced to the moves.
 
 ### Gaps noted after the design spike

@@ -45,3 +45,11 @@ test("directorUserMessage in text mode carries the text and the page", () => {
   expect(message).toContain("Reports now export to PDF");
   expect(message).toContain("Acme makes reports");
 });
+
+test("the system prompt lists every style with its captions and transitions", () => {
+  const prompt = directorSystemPrompt();
+  expect(prompt).toContain("bold-pop:");
+  expect(prompt).toContain("clean-paper:");
+  expect(prompt).toContain("transitions wipe, dip, zoom, cut");
+  expect(prompt).toContain("counter (value is the number");
+});

@@ -1,11 +1,23 @@
 import type { CSSProperties } from "react";
 import { AbsoluteFill } from "remotion";
 import type { Scene } from "../../schema/video";
-import { ink, type Theme } from "../theme";
+import { Backdrop } from "../style/Textures";
+import { type Frame, ink, type Theme } from "../theme";
 
 type SceneBackground = Scene["background"];
 
-export function Background({ background, theme }: { background: SceneBackground; theme: Theme }) {
+export function Background({
+  background,
+  theme,
+  frame,
+}: {
+  background: SceneBackground;
+  theme: Theme;
+  frame: Frame;
+}) {
+  if (background.kind === "style")
+    return <Backdrop kit={theme.kit} width={frame.width} height={frame.height} />;
+
   return <AbsoluteFill style={backgroundStyle(background, theme)} />;
 }
 

@@ -4,6 +4,12 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-10-30 · The style owns the look and the tempo, the register keeps the pacing
+
+- **Decided:** a video has a style (`bold-pop` or `clean-paper` for now) that sets the display face, the tones, the textures, the tempo and the caption presets, transitions, title entrances and accents it draws from; the brand gives its colors. The register keeps the pacing (scene length, holds, density, music tempo) and picks a default style when the plan names none, so existing plans render as before. The director picks the style and each beat's transition; while a kinetic title is on screen the captions step aside. This is the lead's call.
+- **Why:** the register and the style both carried a tempo after step 6, and two owners for one value would drift. A title and a caption block stacked under it put two lines of the same message on screen at once, and the references let the title speak alone.
+- **Rejected:** tempo on the register with the style only as a skin (a bold look moving at a clinical pace would not read as that look); keeping captions under titles and shrinking the titles (the title loses its job as the loudest line).
+
 ### 2026-10-30 · Higgsfield's motion and motionvid's use cases are the reference
 
 - **Decided:** the vocabulary is measured against Higgsfield's motion graphics for energy and dynamics (bold kinetic type, fast collage, shapes and counters, hard cuts) and against motionvid's examples for the practical use cases: ads for a business or a product, launches and feature announcements, explainers, YouTube and talking-head reels; not AI avatars or generated footage. This replaces the Synevo reel as the reference in the entry "The vocabulary comes before the infrastructure". The work starts from motion, how elements appear, leave and transform (the lead's call), and the components are built on it.

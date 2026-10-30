@@ -13,7 +13,10 @@ export type StyleKit = {
   display: TypeFont;
   textFamily: string;
   colors: TypeColors;
+  onFootage: TypeColors;
 };
+
+const footageShadow = "0 2px 18px rgba(0, 0, 0, 0.55)";
 
 // Everything a scene needs to draw in a style: the style's own choices with the brand's colors and font folded in.
 export function styleKit(id: StyleId, brand: VideoDoc["brand"]): StyleKit {
@@ -28,5 +31,12 @@ export function styleKit(id: StyleId, brand: VideoDoc["brand"]): StyleKit {
     display: { family: displayFamily(style.display.font), weight: style.display.weight },
     textFamily: loadBrandFont(brand.font).fontFamily,
     colors: { ink: palette.ink, accent: palette.accent, alt: palette.alt, marker: palette.highlight },
+    onFootage: {
+      ink: "#FFFFFF",
+      accent: palette.highlight,
+      alt: palette.accent,
+      marker: palette.accent,
+      shadow: footageShadow,
+    },
   };
 }

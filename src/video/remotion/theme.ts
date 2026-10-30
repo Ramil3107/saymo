@@ -3,11 +3,13 @@ import type { Tempo } from "../motion/tempo";
 import type { RegisterTokens } from "../registers";
 import type { Element, VideoDoc } from "../schema/video";
 import { luminance } from "../style/color";
+import type { StyleKit } from "./style/kit";
 
 export type Theme = {
   brand: VideoDoc["brand"];
   register: RegisterTokens;
   tempo: Tempo;
+  kit: StyleKit;
   fontFamily: string;
   safeZone: SafeZone;
 };

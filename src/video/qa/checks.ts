@@ -232,7 +232,17 @@ function primaryText(element: Element): string {
       return element.value;
     case "lower-third":
       return element.name;
-    default:
+    case "title":
+      return element.lines.map((line) => line.text).join(" ");
+    case "counter":
+      return `${element.prefix ?? ""}${element.value}${element.suffix ?? ""}`;
+    case "headline":
+    case "chip":
+    case "quote":
+    case "sticker":
+    case "title-card":
+    case "list":
+    case "corner-label":
       return element.text;
   }
 }

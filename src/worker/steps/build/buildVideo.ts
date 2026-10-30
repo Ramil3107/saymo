@@ -2,6 +2,7 @@ import { join } from "node:path";
 import { z } from "zod";
 import { speechIntervals } from "../../../video/audio/ducking";
 import { pagesFor } from "../../../video/captions/looks";
+import { stepAside, type Window } from "../../../video/captions/stepAside";
 import { rebaseWords } from "../../../video/captions/timeline";
 import { type Destination, destinations, formatSize } from "../../../video/destinations";
 import { chipSize } from "../../../video/layout/chipSize";
@@ -30,6 +31,8 @@ import {
   type VideoDoc,
   VideoDocSchema,
 } from "../../../video/schema/video";
+import { defaultStyle } from "../../../video/styles";
+import type { TitleLine } from "../../../video/type/schedule";
 
 export const SpokenBeatSchema = z.object({
   beatId: z.string(),
@@ -142,6 +145,7 @@ export function buildVideo(
     durationMs: slots.reduce((sum, slot) => sum + slot.durationMs, 0),
     destination: plan.destination,
     register: plan.register,
+    style: plan.style ?? defaultStyle[plan.register],
     brand,
     assets: documentAssets(assets),
     scenes: built.map((scene) => scene.scene),
@@ -239,20 +243,23 @@ function buildScene(slot: Slot, context: SceneContext): BuiltScene {
     id: beat.id,
     startMs,
     durationMs,
-    background: { kind: "brand" },
+    background: beat.footage ? { kind: "brand" } : { kind: "style" },
     footage:
       beat.footage && transform
         ? { assetId: sourceAssetId, fromMs: beat.footage.fromMs, fit: framing.fit, transform }
         : undefined,
     camera: beat.camera,
     elements,
-    transition: "cut",
+    transition: beat.transition ?? "cut",
   };
 
   return {
     scene,
     words,
-    pages: words.length > 0 ? pagesWithin(words, slot, context.captionStyle) : [],
+    pages:
+      words.length > 0
+        ? stepAside(pagesWithin(words, slot, context.captionStyle), titleWindows(elements, startMs))
+        : [],
     voice: context.spoken ? { assetId: voiceAssetId(beat.id), atMs: startMs } : undefined,
   };
 }
@@ -423,7 +430,32 @@ function elementFrom(beat: Beat, overlay: Overlay, box: Box, sceneDurationMs: nu
       return { ...base, kind: "title-card", text: overlay.text, sub: overlay.sub };
     case "list":
       return { ...base, kind: "list", text: overlay.text, items: overlay.items ?? [] };
+    case "title":
+      return { ...base, kind: "title", lines: titleLines(overlay), entrance: overlay.entrance ?? "rise" };
+    case "counter":
+      return {
+        ...base,
+        kind: "counter",
+        value: counterValue(overlay),
+        prefix: overlay.prefix,
+        suffix: overlay.suffix,
+        label: overlay.sub,
+      };
+    case "corner-label":
+      return { ...base, kind: "corner-label", text: overlay.text };
   }
+}
+
+// A title without lines falls back to its text, with the sub as a smaller accent line.
+function titleLines(overlay: Overlay): TitleLine[] {
+  if (overlay.lines && overlay.lines.length > 0) return overlay.lines;
+
+  const main: TitleLine = { text: overlay.text, size: "l", tone: "ink", align: "center" };
+  return overlay.sub ? [main, { text: overlay.sub, size: "m", tone: "accent", align: "center" }] : [main];
+}
+
+function counterValue(overlay: Overlay): number {
+  return overlay.value ?? (Number.parseFloat(overlay.text.replace(/[^\d.-]/g, "")) || 0);
 }
 
 function sceneWords(slot: Slot, context: SceneContext): TranscriptWord[] {
@@ -437,6 +469,12 @@ function sceneWords(slot: Slot, context: SceneContext): TranscriptWord[] {
 
 function shiftWords(words: TranscriptWord[], byMs: number): TranscriptWord[] {
   return words.map((word) => ({ ...word, startMs: word.startMs + byMs, endMs: word.endMs + byMs }));
+}
+
+function titleWindows(elements: Element[], sceneStartMs: number): Window[] {
+  return elements
+    .filter((element) => element.kind === "title")
+    .map((element) => ({ startMs: sceneStartMs + element.enterMs, endMs: sceneStartMs + element.exitMs }));
 }
 
 function pagesWithin(words: TranscriptWord[], slot: Slot, style: Plan["captions"]["style"]): CaptionPage[] {

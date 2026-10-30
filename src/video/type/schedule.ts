@@ -1,15 +1,26 @@
+import { z } from "zod";
 import { enterMs } from "../motion/moves";
 import type { Tempo } from "../motion/tempo";
 
-export type TitleEntrance = "type" | "rise" | "pop" | "spread" | "punch" | "reveal";
+export const TitleEntranceSchema = z.enum(["type", "rise", "pop", "spread", "punch", "reveal"]);
 
-export type TitleSize = "xl" | "l" | "m" | "s";
+export type TitleEntrance = z.infer<typeof TitleEntranceSchema>;
 
-export type Tone = "ink" | "accent" | "alt";
+export const TitleLineSchema = z.object({
+  text: z.string(),
+  size: z.enum(["xl", "l", "m", "s"]),
+  tone: z.enum(["ink", "accent", "alt"]),
+  align: z.enum(["left", "center", "right"]),
+  marked: z.boolean().optional(),
+});
 
-export type Align = "left" | "center" | "right";
+export type TitleLine = z.infer<typeof TitleLineSchema>;
 
-export type TitleLine = { text: string; size: TitleSize; tone: Tone; align: Align; marked?: boolean };
+export type TitleSize = TitleLine["size"];
+
+export type Tone = TitleLine["tone"];
+
+export type Align = TitleLine["align"];
 
 export type LineCue = { atMs: number; words: { text: string; atMs: number }[] };
 

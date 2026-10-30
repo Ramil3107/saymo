@@ -316,6 +316,7 @@ function captionTheme(kit: StyleKit, lab: CaptionLabProps): Theme {
     brand: { colors: lab.colors, font: "Onest" },
     register,
     tempo: kit.tempo,
+    kit,
     fontFamily: kit.textFamily,
     safeZone: destinations.reels.safeZone,
   };

@@ -42,6 +42,7 @@ export function CornerLabel({ text, corner, chevrons, atMs, exit, colors, font, 
           fontWeight: font.weight,
           color: colors.ink,
           letterSpacing: "0.06em",
+          textShadow: colors.shadow,
         }}
       >
         <TypeOn text={text.toUpperCase()} atMs={atMs} tempo={tempo} />

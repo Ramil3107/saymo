@@ -2,6 +2,8 @@ import { z } from "zod";
 import { DestinationIdSchema } from "../destinations";
 import { LayoutSchema } from "../layout/layouts";
 import { RegisterIdSchema } from "../registers";
+import { StyleIdSchema } from "../styles";
+import { TitleEntranceSchema, TitleLineSchema } from "../type/schedule";
 
 const lengthToleranceMs = 200;
 const maxQuestions = 3;
@@ -21,6 +23,9 @@ export const OverlayKindSchema = z.enum([
   "sticker",
   "title-card",
   "list",
+  "title",
+  "counter",
+  "corner-label",
 ]);
 
 export type OverlayKind = z.infer<typeof OverlayKindSchema>;
@@ -33,6 +38,10 @@ export const CameraSchema = z.object({
 
 export type Camera = z.infer<typeof CameraSchema>;
 
+export const TransitionSchema = z.enum(["cut", "flash", "wipe", "whip", "zoom", "pixelate", "dip"]);
+
+export type Transition = z.infer<typeof TransitionSchema>;
+
 export const OverlaySchema = z.object({
   id: z.string(),
   kind: OverlayKindSchema,
@@ -40,6 +49,11 @@ export const OverlaySchema = z.object({
   sub: z.string().optional(),
   badge: z.string().optional(),
   items: z.array(z.string()).optional(),
+  lines: z.array(TitleLineSchema).optional(),
+  entrance: TitleEntranceSchema.optional(),
+  value: z.number().optional(),
+  prefix: z.string().optional(),
+  suffix: z.string().optional(),
   atMs: z.number(),
   durationMs: z.number(),
   emphasis: z.enum(["marker", "underline", "pulse"]).optional(),
@@ -55,6 +69,7 @@ export const BeatSchema = z.object({
   footage: z.object({ fromMs: z.number(), toMs: z.number() }).optional(),
   camera: CameraSchema.optional(),
   layout: LayoutSchema.optional(),
+  transition: TransitionSchema.optional(),
   copy: z.object({ headline: z.string().optional(), sub: z.string().optional() }).optional(),
   overlays: z.array(OverlaySchema),
   voiceText: z.string().optional(),
@@ -96,6 +111,7 @@ const PlanFieldsSchema = z.object({
   destination: DestinationIdSchema,
   lengthMs: z.number(),
   register: RegisterIdSchema,
+  style: StyleIdSchema.optional(),
   musicMood: z.string(),
   captions: z.object({
     enabled: z.boolean(),

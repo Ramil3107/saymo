@@ -2,6 +2,7 @@ import { type DestinationId, destinations } from "../../../video/destinations";
 import { registers } from "../../../video/registers";
 import type { ContentMap, FaceBox, FrameNote, Shot } from "../../../video/schema/content";
 import type { Transcript, TranscriptWord } from "../../../video/schema/transcript";
+import { styles } from "../../../video/styles";
 
 export type DirectorInput = {
   mode: "footage" | "text";
@@ -24,6 +25,9 @@ const rules = [
   "- when the transcript is empty, cut by the shots and the frame notes, keep captions disabled and say so in assumptions.",
   "- questions only about what changes the result and cannot be guessed (whose name to show, which product is the main one, which of several strong moments to cut); at most three; each with two to four options and a default. Everything else you decide and list under assumptions.",
   "- voiceover true only in text mode and only for narrative genres; in footage mode the footage's own speech is the voice.",
+  "- style is the one of the styles that fits the brand, the content and the register; captions.style, every beat's transition and every title entrance come from that style's lists.",
+  "- title lines are short, one or two words each and three lines at most, so the title can be set large; a longer thought goes to a headline or to the captions.",
+  "- a beat's transition is how it enters: cut inside a continuous talk; the style's other transitions at section changes and reveals, two to five per minute, never on every beat.",
   "- return only the plan object that matches the schema.",
 ];
 
@@ -33,13 +37,16 @@ export function directorSystemPrompt(): string {
     "",
     "Three entry modes: footage with motion graphics (the main one), text only (a video made entirely of graphics), and minimal (captions, cuts and zooms). Choose the mode from what you are given and from the destination; do not ask about it.",
     "",
-    "Vocabulary of overlays (kind: fields): headline (text, optional sub), chip (text of one to three words, optional badge of two or three characters such as Fe, B12 or 01), big-number (text is the number, sub is its label), lower-third (text is the name, sub is the role), quote (text, sub is the author), sticker (text), title-card (text is a title of two to five words, sub is a short section label such as '02 · Як перевіритись'), list (text is the title, items are two to six entries of one to four words). Layouts per beat: free (the default, chips float beside the subject), panel-top (a dark panel over the top of the frame holding a title-card, the subject moves down), panel-side (a dark panel over one side holding a list, the subject moves to the other side). Use panel layouts for section openers and enumerations, two to five per minute, never two beats in a row. Camera per beat: none, push, punch-in or pan with intensity 0 to 1. Captions styles, picked by the register and the content: rail (the default: a short phrase whose words appear as they are said, keywords in the accent color), keyword-box (three words in heavy capitals, words pop in as they are said, keywords in an accent box; creator and sale videos), bold-center (one or two huge words at a time in the middle of the frame; hooks and launches), pop (three words in capitals, the spoken word grows), karaoke (a line, the spoken word in the accent color), karaoke-pill (a line, an accent capsule under the spoken word), box (a line on a dark rounded pill; quiet and accessible), minimal (one lowercase line in a light weight; lifestyle and education), weight-shift (words thicken from light to heavy as they are said), marker (keywords get a marker sweep), typewriter (a line typed on a white pill), editorial (a serif line with keywords in italic; premium), outline (outlined capitals that fill as they are said). captions.keywords lists 15 to 40 words from the speech that deserve the accent color, spelled exactly as spoken; an empty list when there is no speech.",
+    "Vocabulary of overlays (kind: fields): headline (text, optional sub), chip (text of one to three words, optional badge of two or three characters such as Fe, B12 or 01), big-number (text is the number, sub is its label), lower-third (text is the name, sub is the role), quote (text, sub is the author), sticker (text), title-card (text is a title of two to five words, sub is a short section label such as '02 · Як перевіритись'), list (text is the title, items are two to six entries of one to four words), title (the kinetic headline of graphics beats: lines are one to three lines, each with text, size xl, l, m or s, tone ink, accent or alt, align left, center or right, and marked for a marker sweep under it; entrance comes from the style's title entrances), counter (value is the number, prefix and suffix such as - and %, sub is a short label; for one striking number), corner-label (text of one to three words, a small label in a corner, mostly in bold-pop). Layouts per beat: free (the default, chips float beside the subject), panel-top (a dark panel over the top of the frame holding a title-card, the subject moves down), panel-side (a dark panel over one side holding a list, the subject moves to the other side). Use panel layouts for section openers and enumerations, two to five per minute, never two beats in a row. Camera per beat: none, push, punch-in or pan with intensity 0 to 1. Captions styles, picked by the register and the content: rail (the default: a short phrase whose words appear as they are said, keywords in the accent color), keyword-box (three words in heavy capitals, words pop in as they are said, keywords in an accent box; creator and sale videos), bold-center (one or two huge words at a time in the middle of the frame; hooks and launches), pop (three words in capitals, the spoken word grows), karaoke (a line, the spoken word in the accent color), karaoke-pill (a line, an accent capsule under the spoken word), box (a line on a dark rounded pill; quiet and accessible), minimal (one lowercase line in a light weight; lifestyle and education), weight-shift (words thicken from light to heavy as they are said), marker (keywords get a marker sweep), typewriter (a line typed on a white pill), editorial (a serif line with keywords in italic; premium), outline (outlined capitals that fill as they are said). captions.keywords lists 15 to 40 words from the speech that deserve the accent color, spelled exactly as spoken; an empty list when there is no speech.",
     "",
     "Destinations:",
     destinationTable(),
     "",
     "Registers:",
     registerTable(),
+    "",
+    "Styles (the look of the whole video):",
+    styleTable(),
     "",
     "Rules:",
     ...rules,
@@ -70,10 +77,19 @@ function destinationTable(): string {
     .join("\n");
 }
 
+function styleTable(): string {
+  return Object.entries(styles)
+    .map(([id, style]) => {
+      const lists = `captions ${style.captions.join(", ")}; transitions ${style.transitions.join(", ")}; title entrances ${style.titleEntrances.join(", ")}`;
+      return `${id}: ${style.summary} Uses ${lists}.`;
+    })
+    .join("\n");
+}
+
 function registerTable(): string {
   return Object.entries(registers)
     .map(([id, r]) => {
-      const scene = `scene ${r.sceneMs[0]}–${r.sceneMs[1]} ms, min hold ${r.minHoldMs} ms, tempo ${r.tempo}`;
+      const scene = `scene ${r.sceneMs[0]}–${r.sceneMs[1]} ms, min hold ${r.minHoldMs} ms`;
       const look = `font weight ${r.fontWeight[0]}–${r.fontWeight[1]}, max ${r.maxElements} elements per beat`;
       return `${id}: ${scene}, ${look}, music ${r.musicBpm[0]}–${r.musicBpm[1]} bpm`;
     })

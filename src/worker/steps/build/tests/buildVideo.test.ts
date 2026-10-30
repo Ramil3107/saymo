@@ -359,3 +359,76 @@ test("buildVideo pages keyword-box captions three words at a time", () => {
   expect(pages.length).toBeGreaterThan(0);
   expect(pages.every((page) => page.tokens.length <= 3)).toBe(true);
 });
+
+test("buildVideo picks the style of the register unless the plan names one", () => {
+  expect(buildVideo(textPlan, null, {}, brand).style).toBe("bold-pop");
+
+  const calm = PlanSchema.parse({ ...textPlanJson, style: "clean-paper" });
+  expect(buildVideo(calm, null, {}, brand).style).toBe("clean-paper");
+});
+
+test("buildVideo draws text beats on the style backdrop and keeps each beat's transition", () => {
+  const beats = textPlanJson.beats.map((beat, index) =>
+    index === 1 ? { ...beat, transition: "whip" } : beat,
+  );
+  const doc = buildVideo(PlanSchema.parse({ ...textPlanJson, beats }), null, {}, brand);
+
+  expect(doc.scenes.every((scene) => scene.background.kind === "style")).toBe(true);
+  expect(doc.scenes.map((scene) => scene.transition)).toEqual(["cut", "whip", "cut"]);
+});
+
+test("buildVideo turns title, counter and corner-label overlays into kinetic elements", () => {
+  const first = textPlan.beats[0];
+  if (!first) throw new Error("The text plan has no beats");
+  const overlays = [
+    { id: "t", kind: "title", text: "Launch day", sub: "is here", atMs: 0, durationMs: 1500 },
+    {
+      id: "n",
+      kind: "counter",
+      text: "40%",
+      prefix: "-",
+      suffix: "%",
+      value: 40,
+      atMs: 1500,
+      durationMs: 700,
+    },
+    { id: "c", kind: "corner-label", text: "30 sec", atMs: 0, durationMs: 1500 },
+  ];
+  const plan = PlanSchema.parse({
+    ...textPlanJson,
+    beats: [{ ...first, overlays }, ...textPlan.beats.slice(1)],
+  });
+  const elements = buildVideo(plan, null, {}, brand).scenes[0]?.elements ?? [];
+
+  expect(elements.map((element) => element.kind)).toEqual(["title", "counter", "corner-label"]);
+  const title = elements[0];
+  expect(title?.kind === "title" ? title.lines.map((line) => line.text) : []).toEqual([
+    "Launch day",
+    "is here",
+  ]);
+  const counter = elements[1];
+  expect(counter?.kind === "counter" ? counter.value : undefined).toBe(40);
+});
+
+test("buildVideo starts no caption page while a title is on screen", () => {
+  const first = footagePlanJson.beats[0];
+  if (!first) throw new Error("The footage plan has no beats");
+  const title = { id: "t", kind: "title", text: "Launch", atMs: 0, durationMs: first.durationMs };
+  const plan = PlanSchema.parse({
+    ...footagePlanJson,
+    beats: [{ ...first, overlays: [title] }, ...footagePlanJson.beats.slice(1)],
+  });
+  const doc = buildVideo(
+    plan,
+    sampleContent,
+    { sourceVideo: { path: "in.mp4", info: sampleContent.source } },
+    brand,
+  );
+
+  const titled = doc.scenes[0];
+  const inside = (doc.captions?.pages ?? []).filter(
+    (page) => titled && page.startMs >= titled.startMs && page.startMs < titled.startMs + titled.durationMs,
+  );
+  expect(titled?.elements[0]?.kind).toBe("title");
+  expect(inside).toEqual([]);
+});

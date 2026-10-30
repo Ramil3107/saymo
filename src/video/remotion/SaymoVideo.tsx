@@ -1,8 +1,8 @@
 import { AbsoluteFill, Sequence, useVideoConfig } from "remotion";
 import { destinations, formatSize } from "../destinations";
-import { tempos } from "../motion/tempo";
 import { registers } from "../registers";
 import type { Element, Scene, VideoDoc } from "../schema/video";
+import { defaultStyle } from "../styles";
 import { CaptionLayer } from "./captions/CaptionLayer";
 import { loadBrandFont } from "./fonts";
 import { sceneFrames } from "./frames";
@@ -13,6 +13,7 @@ import { Camera } from "./primitives/Camera";
 import { Chip } from "./primitives/Chip";
 import { Footage } from "./primitives/Footage";
 import { Headline } from "./primitives/Headline";
+import { CornerElement, CounterElement, type Surface, TitleElement } from "./primitives/Kinetic";
 import { ListPanel } from "./primitives/ListPanel";
 import { LowerThird } from "./primitives/LowerThird";
 import { MusicTrack } from "./primitives/MusicTrack";
@@ -20,13 +21,12 @@ import { Quote } from "./primitives/Quote";
 import { Sticker } from "./primitives/Sticker";
 import { TitleCard } from "./primitives/TitleCard";
 import { VoiceTrack } from "./primitives/VoiceTrack";
+import { styleKit } from "./style/kit";
 import { accentColor, darken, type Frame, panelColor, type Theme, white } from "./theme";
 
 export function SaymoVideo(doc: VideoDoc) {
-  const { fontFamily } = loadBrandFont(doc.brand.font);
-  const safeZone = destinations[doc.destination].safeZone;
-  const register = registers[doc.register];
-  const theme: Theme = { brand: doc.brand, register, tempo: tempos[register.tempo], fontFamily, safeZone };
+  const theme = themeFor(doc);
+  const { fontFamily, safeZone } = theme;
   const musicSrc = doc.music ? assetSrc(doc, doc.music.assetId) : undefined;
 
   return (
@@ -47,6 +47,19 @@ export function SaymoVideo(doc: VideoDoc) {
       })}
     </AbsoluteFill>
   );
+}
+
+function themeFor(doc: VideoDoc): Theme {
+  const kit = styleKit(doc.style ?? defaultStyle[doc.register], doc.brand);
+
+  return {
+    brand: doc.brand,
+    register: registers[doc.register],
+    tempo: kit.tempo,
+    kit,
+    fontFamily: loadBrandFont(doc.brand.font).fontFamily,
+    safeZone: destinations[doc.destination].safeZone,
+  };
 }
 
 function Scenes({ doc, theme }: { doc: VideoDoc; theme: Theme }) {
@@ -77,20 +90,28 @@ function SceneView({ scene, doc, theme }: { scene: Scene; doc: VideoDoc; theme: 
 
   return (
     <AbsoluteFill>
-      <Background background={scene.background} theme={theme} />
+      <Background background={scene.background} theme={theme} frame={frame} />
       <Camera camera={scene.camera} durationMs={scene.durationMs}>
         {scene.footage && footageAsset ? (
           <Footage footage={scene.footage} asset={footageAsset} durationMs={scene.durationMs} theme={theme} />
         ) : null}
       </Camera>
       {scene.elements.map((element) => (
-        <ElementView key={element.id} element={element} theme={theme} frame={frame} />
+        <ElementView
+          key={element.id}
+          element={element}
+          theme={theme}
+          frame={frame}
+          surface={scene.background.kind === "style" ? "backdrop" : "footage"}
+        />
       ))}
     </AbsoluteFill>
   );
 }
 
-function ElementView({ element, theme, frame }: { element: Element; theme: Theme; frame: Frame }) {
+function ElementView(props: { element: Element; theme: Theme; frame: Frame; surface: Surface }) {
+  const { element, theme, frame, surface } = props;
+
   switch (element.kind) {
     case "headline":
       return <Headline element={element} theme={theme} frame={frame} />;
@@ -108,6 +129,12 @@ function ElementView({ element, theme, frame }: { element: Element; theme: Theme
       return <TitleCard element={element} theme={theme} frame={frame} />;
     case "list":
       return <ListPanel element={element} theme={theme} frame={frame} />;
+    case "title":
+      return <TitleElement element={element} theme={theme} frame={frame} surface={surface} />;
+    case "counter":
+      return <CounterElement element={element} theme={theme} frame={frame} surface={surface} />;
+    case "corner-label":
+      return <CornerElement element={element} theme={theme} frame={frame} surface={surface} />;
   }
 }
 
