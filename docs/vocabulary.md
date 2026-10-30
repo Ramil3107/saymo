@@ -68,6 +68,20 @@ The register of a video picks its tempo: `driving-launch` and `playful-sale` mov
 
 `pnpm remotion:lab` also renders `runs/lab/accent-lab.mp4`, nine demos over a still of `runs/face-v2` that `src/cli/labAssets.ts` prepares in `runs/lab/public`.
 
+## Media
+
+`src/video/remotion/media` moves photos, clips, documents and screens:
+
+- `Collage`: photos land one per frame along a staircase or scattered at small angles (Higgsfield).
+- `Flicker`: a burst of shots, hard cuts two frames apart in `snap`, quick crossfades in `glide`.
+- `ThumbToPlayer`: a tile grows into a player, and the player chrome appears when it lands: chevrons, a progress bar, a timecode.
+- `PhoneFrame`: a phone swings in from a turn in perspective, its screen holding a clip or a picture.
+- `NamedGrid`: a grid waits in grey, and each cell turns to color with a typed label when the speaker names it; the latest one is outlined (motionvid's talking-head reel).
+- `FocusCard`: the camera moves into one detail of a document or a screen, the rest dims, and the camera pulls back.
+- `Flip`: a card turns edge-on and comes back showing its other side.
+
+Cut-out figures need background removal, a service decision that is still open. `pnpm remotion:lab` also renders `runs/lab/media-lab.mp4`, seven demos over frames and a clip of `runs/face-v2`.
+
 ## Captions
 
 A caption style is a preset of one caption look (`src/video/captions/looks.ts`), and one renderer draws every look (`src/video/remotion/captions`). The look sets:
@@ -141,7 +155,7 @@ Each step ends with a render the owner reviews.
 1. Motion system: moves to enter, leave, transform and stay alive, timed by the style (fast like Higgsfield, smooth like motionvid), and choreography: stagger, sync to spoken words, sync to the music beat. A motion lab composition plays every move in both styles. Built on 2026-10-30, except the sync to words and to the beat.
 2. Kinetic type: letter type-on, word by word, rolling counters, split, color swap, a punch from giant size, outline numerals, captions with boxed keywords. Built on 2026-10-30: titles, counters, corner labels and `keyword-box` captions.
 3. Shapes and accents: chevrons, growing frames, flash squares, bursts and sparkles, drawn arrows, selection handles, grain, grid and halftone textures. Built on 2026-10-30, with scribbles, a cursor, viewfinder brackets and drifting color fields; the pixel mosaic is still to do.
-4. Media: photo collage, a thumbnail that becomes a player, a grid that lights the cell being named, UI cards with a camera into a detail, flipping states, cut-out figures (background removal).
+4. Media: photo collage, a thumbnail that becomes a player, a grid that lights the cell being named, UI cards with a camera into a detail, flipping states, cut-out figures (background removal). Built on 2026-10-30 with a burst of shots and a phone frame, except the cut-out figures.
 5. Transitions: cut, flash cut, panel wipe, perspective push, zoom into a detail, mosaic resolve, dissolve.
 6. Styles: one like Higgsfield and one like motionvid first, each with its own cadence, curves and accent budget.
 7. The director and the build use them on `runs/face-v2` and on a text-mode ad, compared with the reference clips.

@@ -10,8 +10,15 @@ import { VideoDocSchema } from "../video/schema/video";
 
 const publicDir = "runs/lab/public";
 const footageName = "caption-footage.mp4";
-const stillName = "subject.jpg";
-const stillFrame = "0003.jpg";
+const stills: Record<string, string> = {
+  "subject.jpg": "0003.jpg",
+  "face-1.jpg": "0001.jpg",
+  "face-2.jpg": "0026.jpg",
+  "face-3.jpg": "0036.jpg",
+  "face-4.jpg": "0045.jpg",
+  "face-5.jpg": "0051.jpg",
+  "document.jpg": "0016.jpg",
+};
 const propsPath = "runs/lab/caption-lab.json";
 const panelWidth = 540;
 
@@ -31,7 +38,7 @@ async function main(): Promise<void> {
 
   await mkdir(publicDir, { recursive: true });
   await cutFootage(join(runDir, "source.mp4"), fromMs, durationMs);
-  await copyStill(join(runDir, "frames", stillFrame));
+  for (const [name, frame] of Object.entries(stills)) await copyStill(join(runDir, "frames", frame), name);
   await writeJson(propsPath, await labProps(runDir, fromMs, durationMs));
   console.log(
     `lab assets: ${values.run} from ${fromMs} ms for ${durationMs} ms in ${publicDir}, props in ${propsPath}`,
@@ -45,17 +52,8 @@ async function cutFootage(source: string, fromMs: number, durationMs: number): P
   await runFfmpeg(["-y", ...window, "-i", source, ...video, "-c:a", "aac", join(publicDir, footageName)]);
 }
 
-async function copyStill(frame: string): Promise<void> {
-  await runFfmpeg([
-    "-y",
-    "-i",
-    frame,
-    "-vf",
-    `scale=${panelWidth}:-2`,
-    "-q:v",
-    "3",
-    join(publicDir, stillName),
-  ]);
+async function copyStill(frame: string, name: string): Promise<void> {
+  await runFfmpeg(["-y", "-i", frame, "-vf", `scale=${panelWidth}:-2`, "-q:v", "3", join(publicDir, name)]);
 }
 
 async function labProps(runDir: string, fromMs: number, durationMs: number): Promise<CaptionLabProps> {

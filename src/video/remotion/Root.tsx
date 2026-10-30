@@ -7,6 +7,7 @@ import { AccentLab, accentDemos } from "./lab/AccentLab";
 import { CaptionLab, captionLabMetadata } from "./lab/CaptionLab";
 import { captionLabDefaults } from "./lab/captionLabProps";
 import { labFrames, labSize } from "./lab/LabReel";
+import { MediaLab, mediaDemos } from "./lab/MediaLab";
 import { MotionLab, motionDemos } from "./lab/MotionLab";
 import { TypeLab, typeDemos } from "./lab/TypeLab";
 import { documentForRender } from "./renderDocument";
@@ -33,6 +34,13 @@ export function Root() {
         component={AccentLab}
         fps={fps}
         durationInFrames={labFrames(accentDemos)}
+        {...labSize}
+      />
+      <Composition
+        id="media-lab"
+        component={MediaLab}
+        fps={fps}
+        durationInFrames={labFrames(mediaDemos)}
         {...labSize}
       />
       <Composition
