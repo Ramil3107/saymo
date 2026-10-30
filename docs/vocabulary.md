@@ -33,3 +33,19 @@ External assets come only with permissive licenses, and a license manifest lives
 The catalog is an internal page where every primitive plays in every register and format. It is the map of the vocabulary, the base for visual tests and later a public showcase. A new primitive without a catalog card is not done. The catalog does not exist yet and arrives in stage 1.
 
 The watermark for the Free plan is also a primitive. Its design is up to the owner.
+
+## Next iteration: the vocabulary base
+
+The reference is the hand-made Synevo reel in `video-editing/synevo` (HyperFrames and GSAP, `project/index.html` and `project_v3`). The design spike reached its family on `runs/face-v2`; what the reference still has and the vocabulary does not:
+
+- Typography: a brand font with weights 600–900, a size scale per element, line spacing; fonts self-hosted.
+- Icons and symbols: badge icons in chips, animated SVG symbols (a crossed wheat, a red cross) with stroke reveals and a shake.
+- Accent cards: a pull-quote card with a marker highlight, a ring pulse and a shine.
+- Status plate: a lower third with status pills ("strict · lifelong").
+- Document camera: a camera that moves over a document in a card with highlighted rows.
+- Intro title: two masked lines with the subject cut out in front, needs background removal.
+- B-roll inserts with a slow zoom, and music ducked under the voice.
+- A catalog (Storybook-like) that shows every element in every register and format, with the director's prompt generated from it.
+- Caption styles beyond the rail: a line-level box, and the owner's note that word-per-box looks odd.
+
+Each step is checked on the same run: delete `video.json`, `qa.json`, `render.json` and `out.mp4` in `runs/face-v2`, then `pnpm spike runs/inputs/face.mp4 --run face-v2 --resume --render local`, and compare frames with the reference reel.

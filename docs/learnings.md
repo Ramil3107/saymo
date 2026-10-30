@@ -2,6 +2,12 @@
 
 Entries are added by the `learn` skill, newest on top.
 
+### 2026-10-30 · A spike render without a vocabulary reads as the product
+
+- **What happened:** The stage 0 renders proved the pipeline, but with six bare primitives and no composition they looked like a bad product to the owner, who compared them with hand-made reels and asked what there was to evaluate. A design spike the same day closed most of the gap and the owner reordered the work: vocabulary first.
+- **Lesson:** The owner judges what he sees, not what a stage was meant to prove. A spike that produces video must either carry one designed scene or be presented with a clear statement of what is and is not there yet.
+- **Rule:** `CLAUDE.md`, "How to work with me": when showing a render, say in one line what it proves and what is not there yet to be judged.
+
 ### 2026-10-30 · The default AWS sign-up is not a normal account
 
 - **What happened:** The owner signed up through the default AWS flow and got a "project": an account inside an AWS-managed organization, locked to the Stockholm Region by his address, with Rekognition unavailable there and every other Region denied by a service control policy. Hours went into IAM policies that were correct all along. Activating "advanced features" was refused for the account, so a second account was created through Sign up for AWS (advanced).

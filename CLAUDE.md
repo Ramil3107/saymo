@@ -4,7 +4,7 @@
 
 - Saymo turns a user's video or text into a social video.
 - A director running on a Claude model builds a plan of beats. The plan becomes the video document (data, not code), and Remotion renders the document to MP4.
-- Currently stage 0: the repository scaffold and the spike, `pnpm spike`. Next.js, the database and the queue come later.
+- Stage 0 (scaffold and spike) is done; the next iteration is the vocabulary base, built locally and checked on `runs/face-v2` against the reference reel in `../video-editing/synevo` (see `docs/vocabulary.md`). The application, database, queue, storage and deployment come after it.
 
 Spec: `docs/superpowers/specs/2026-10-28-saymo-v1-design.md`.
 
@@ -15,6 +15,7 @@ Spec: `docs/superpowers/specs/2026-10-28-saymo-v1-design.md`.
 - When a decision on technology, a service or architecture is needed, propose 2–3 options with pros and cons and your recommendation. The decision is the owner's.
 - Do not change technologies or architecture without an entry in `docs/product/decisions.md`.
 - Stay within the scope of the first version from the spec. If something beyond it comes up, say so and ask.
+- When showing the owner a render, say in one line what it proves and what is not there yet to be judged; the stage 0 spike was read as the product because that line was missing.
 - If documents contradict each other or the design, do not guess: show the discrepancy and ask.
 - Placeholders in square brackets (`[price]`, `[date]`) are open questions, not data.
 

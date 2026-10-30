@@ -4,6 +4,24 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-10-30 · The vocabulary comes before the infrastructure
+
+- **Decided:** the next iteration builds the vocabulary to a solid base, locally, with the Synevo reel from `video-editing/synevo` as the reference; the application, database, queue, storage and deployment (the spec's stage 2) come after it. Stages 1 and 2 of the spec swap places.
+- **Why:** the owner's call after the stage 0 review and the design spike: the engine is the product, the first renders with six bare primitives were not something to show, and the vocabulary needs sustained attention that is easier to give before the application exists.
+- **Rejected:** finishing the infrastructure first (proposed by the lead, kept as the step right after the vocabulary).
+
+### 2026-10-30 · The vocabulary approach stands after the design spike
+
+- **Decided:** keep building video from data and a vocabulary of components on Remotion. The design spike brought the Synevo talking head from bare primitives to the family of the hand-made reel in one day: rail captions with keywords, chips with badges and motion, title cards and list panels with panel layouts, documents and screens in a card.
+- **Why:** the gap the owner saw was an empty vocabulary and no composition layer, not the architecture. Per-video code written by the model stays rejected for the reasons in the design spec.
+- **Still open, with the lead's recommendation:** transcription ElevenLabs Scribe v2 (Deepgram misspells Ukrainian terms), frame descriptions on Sonnet 5.5 (same notes at half the cost), the director model (Opus 5.5 keeps the whole talk and asks whether to cut, Sonnet 5.5 cuts boldly at half the cost and time). Measurements in `docs/spike-results.md`.
+
+### 2026-10-30 · AWS runs in a classic account, not in the new "projects" experience
+
+- **Decided:** Saymo uses an AWS account created with Sign up for AWS (advanced), on the Paid plan, in us-east-1. The account from the default sign-up flow is abandoned.
+- **Why:** a "project" account is locked to one Region chosen by the owner's address (Stockholm), Rekognition does not exist there, every other Region is denied by an AWS-managed policy, and the account could not activate the advanced features that lift the limits.
+- **Consequence:** a brand-new account caps Lambda at 512 MB and 5 concurrent executions; the concurrency increase was requested, Lambda renders wait for it. Details in `docs/runbooks/lambda.md`.
+
 ### 2026-10-28 · Keep-out zones and overlay placement on footage
 
 - **Decided:** face keep-out zones are computed per overlay from the faces inside that overlay's own time window, padded by 0.02 and mapped through the scene's crop transform into frame coordinates. Placement takes the first free slot, then scans the safe area vertically, and falls back to the least-overlapping position. QA treats an overlap above 50% of the element as an error and anything smaller as a warning.
