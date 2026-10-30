@@ -62,6 +62,7 @@ const heightShare: Record<OverlayKind, number> = {
   sticker: 0.08,
 };
 
+const gutter = 0.04;
 const scanStep = 0.02;
 const scanEpsilon = 1e-9;
 const captionBottomGap = 0.02;
@@ -90,8 +91,14 @@ export function captionBand(safeZone: SafeZone): Box {
   };
 }
 
+// Elements keep a gutter from the safe zone, so nothing sits flush against the edge of the usable area.
 function innerArea(safeZone: SafeZone): Inner {
-  return { left: safeZone.left, right: 1 - safeZone.right, top: safeZone.top, bottom: 1 - safeZone.bottom };
+  return {
+    left: safeZone.left + gutter,
+    right: 1 - safeZone.right - gutter,
+    top: safeZone.top + gutter,
+    bottom: 1 - safeZone.bottom - gutter,
+  };
 }
 
 function overlaySize(kind: OverlayKind, inner: Inner): Size {
