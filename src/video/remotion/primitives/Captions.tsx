@@ -1,17 +1,15 @@
-import type { CSSProperties } from "react";
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import type { SafeZone } from "../../destinations";
 import { captionBand } from "../../layout/safeZones";
 import type { CaptionPage, VideoDoc } from "../../schema/video";
 import { frameToMs } from "../frames";
-import { accentColor, ink, type Theme, white } from "../theme";
+import type { Theme } from "../theme";
+import { captionGap, tokenStyle } from "./captionStyle";
 
 type CaptionsDoc = NonNullable<VideoDoc["captions"]>;
-type CaptionStyle = CaptionsDoc["style"];
 type Props = { captions: CaptionsDoc; theme: Theme; safeZone: SafeZone };
 
 const fontShare = 0.034;
-const popScale = 1.15;
 
 export function Captions({ captions, theme, safeZone }: Props) {
   const ms = frameToMs(useCurrentFrame());
@@ -34,7 +32,7 @@ export function Captions({ captions, theme, safeZone }: Props) {
         display: "flex",
         justifyContent: "center",
         flexWrap: "wrap",
-        gap: fontSize * 0.25,
+        gap: captionGap(captions.style, fontSize),
         fontSize,
         fontWeight: 800,
         lineHeight: 1.25,
@@ -57,22 +55,4 @@ export function Captions({ captions, theme, safeZone }: Props) {
 
 function isShowing(page: CaptionPage, ms: number): boolean {
   return ms >= page.startMs && ms < page.startMs + page.durationMs;
-}
-
-function tokenStyle(style: CaptionStyle, active: boolean, theme: Theme, fontSize: number): CSSProperties {
-  const shadow = `0 ${fontSize * 0.06}px ${fontSize * 0.3}px rgba(0,0,0,0.6)`;
-
-  switch (style) {
-    case "box":
-      return {
-        backgroundColor: active ? accentColor(theme) : white,
-        color: ink,
-        padding: `0 ${fontSize * 0.3}px`,
-        borderRadius: fontSize * 0.25,
-      };
-    case "pop":
-      return { color: white, transform: active ? `scale(${popScale})` : "none", textShadow: shadow };
-    case "karaoke":
-      return { color: active ? accentColor(theme) : white, textShadow: shadow };
-  }
 }
