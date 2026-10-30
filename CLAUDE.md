@@ -4,7 +4,7 @@
 
 - Saymo turns a user's video or text into a social video.
 - A director running on a Claude model builds a plan of beats. The plan becomes the video document (data, not code), and Remotion renders the document to MP4.
-- Stage 0 (scaffold and spike) is done; the next iteration is the vocabulary base, built locally and checked on `runs/face-v2` against the reference reel in `../video-editing/synevo` (see `docs/vocabulary.md`). The application, database, queue, storage and deployment come after it.
+- Stage 0 (scaffold and spike) is done; the next iteration is the vocabulary base, built locally and checked on `runs/face-v2`; the reference is Higgsfield for motion and motionvid for the use cases (see `docs/vocabulary.md`). The application, database, queue, storage and deployment come after it.
 
 Spec: `docs/superpowers/specs/2026-10-28-saymo-v1-design.md`.
 

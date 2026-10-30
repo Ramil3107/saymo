@@ -4,6 +4,18 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-10-30 · Higgsfield's motion and motionvid's use cases are the reference
+
+- **Decided:** the vocabulary is measured against Higgsfield's motion graphics for energy and dynamics (bold kinetic type, fast collage, shapes and counters, hard cuts) and against motionvid's examples for the practical use cases: ads for a business or a product, launches and feature announcements, explainers, YouTube and talking-head reels; not AI avatars or generated footage. This replaces the Synevo reel as the reference in the entry "The vocabulary comes before the infrastructure". The work starts from motion, how elements appear, leave and transform (the lead's call), and the components are built on it.
+- **Why:** the owner's call after looking at both sites: in motion graphics the motion is the content, and motionvid shows each example as a use case with a named style, which matches the per-video pack.
+- **Rejected:** the `video-editing` reels as the bar (average or below, the owner); interface motion systems as the default reference for motion.
+
+### 2026-10-30 · No shader transitions or GPU effects in v1
+
+- **Decided:** gl-transitions are not used, and v1 has no effect that needs a GPU: no shader transitions, WebGL backgrounds or WebGL 3D. Transitions are cuts and moves in ordinary DOM and SVG: a push with blur, a mask reveal, a zoom into a detail, a card that grows into the frame, a flash cut. Grain, gradients and device mockups use CSS, SVG or pre-rendered textures, and an effect a style needs, such as a glitch, is written in-house.
+- **Why:** the owner found the gl-transitions gallery dated, and the reference work uses none of it. Lambda has no GPU and software WebGL there is unmeasured; a GPU machine costs about $380 a month when always on, or a second provider when billed by the second, and renders a video slower than Lambda's chunked rendering.
+- **Rejected:** gl-transitions curated to 10–20 (the research's suggestion); GPU effects admitted after a Lambda benchmark; GPU machines outside Lambda.
+
 ### 2026-10-30 · A sound-effect layer from CC0 and ElevenLabs sounds
 
 - **Decided:** the video gets a sound-effect track next to the voice and the music, which adds to the spec's audio minimum. It starts with 30–60 core sounds (whoosh, sub-hit, pop, click, riser, impact, ding, typing), curated from Freesound CC0 and generated with ElevenLabs sound effects on a paid plan, kept in Saymo's own storage. Each sound stores the offset of its peak, so a whoosh peaks on the cut. The style of the video sets how many sounds it gets: loud styles put them on cuts and text entrances, calm styles use them rarely or not at all.

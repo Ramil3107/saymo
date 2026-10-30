@@ -36,7 +36,7 @@ The watermark for the Free plan is also a primitive. Its design is up to the own
 
 ## Next iteration: the vocabulary base
 
-The reference is the hand-made Synevo reel in `video-editing/synevo` (HyperFrames and GSAP, `project/index.html` and `project_v3`). The design spike reached its family on `runs/face-v2`; what the reference still has and the vocabulary does not:
+The reference is Higgsfield for motion (bold kinetic type, fast collage, shapes and counters, hard cuts) and motionvid for the use cases (business and product ads, launches, explainers, YouTube and talking-head reels). The hand-made Synevo reel in `video-editing/synevo` is no longer the bar. The work starts from motion: how elements appear, leave and transform. Gaps noted after the design spike on `runs/face-v2`:
 
 - Typography: a brand font with weights 600–900, a size scale per element, line spacing; fonts self-hosted.
 - Icons and symbols: badge icons in chips, animated SVG symbols (a crossed wheat, a red cross) with stroke reveals and a shake.
@@ -48,4 +48,4 @@ The reference is the hand-made Synevo reel in `video-editing/synevo` (HyperFrame
 - A catalog (Storybook-like) that shows every element in every register and format, with the director's prompt generated from it.
 - Caption styles beyond the rail: a line-level box, and the owner's note that word-per-box looks odd.
 
-Each step is checked on the same run: delete `video.json`, `qa.json`, `render.json` and `out.mp4` in `runs/face-v2`, then `pnpm spike runs/inputs/face.mp4 --run face-v2 --resume --render local`, and compare frames with the reference reel.
+Each step is checked on the same run: delete `video.json`, `qa.json`, `render.json` and `out.mp4` in `runs/face-v2`, then `pnpm spike runs/inputs/face.mp4 --run face-v2 --resume --render local`, and compare it with the reference clips.
