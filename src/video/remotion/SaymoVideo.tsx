@@ -31,20 +31,7 @@ export function SaymoVideo(doc: VideoDoc) {
 
   return (
     <AbsoluteFill style={{ backgroundColor: doc.brand.colors[0], fontFamily }}>
-      {doc.scenes.map((scene, index) => (
-        <Sequence key={scene.id} {...sceneFrames(scene)}>
-          <SceneTransition
-            into={scene.transition}
-            outof={doc.scenes[index + 1]?.transition ?? "cut"}
-            durationMs={scene.durationMs}
-            tempo={theme.tempo}
-            width={formatSize(doc.format).width}
-            colors={transitionColors(theme)}
-          >
-            <SceneView scene={scene} doc={doc} theme={theme} />
-          </SceneTransition>
-        </Sequence>
-      ))}
+      <Scenes doc={doc} theme={theme} />
       {doc.captions ? (
         <CaptionLayer
           captions={doc.captions}
@@ -59,6 +46,27 @@ export function SaymoVideo(doc: VideoDoc) {
         return src ? <VoiceTrack key={voice.assetId} voice={voice} src={src} /> : null;
       })}
     </AbsoluteFill>
+  );
+}
+
+function Scenes({ doc, theme }: { doc: VideoDoc; theme: Theme }) {
+  return (
+    <>
+      {doc.scenes.map((scene, index) => (
+        <Sequence key={scene.id} {...sceneFrames(scene)}>
+          <SceneTransition
+            into={scene.transition}
+            outof={doc.scenes[index + 1]?.transition ?? "cut"}
+            durationMs={scene.durationMs}
+            tempo={theme.tempo}
+            width={formatSize(doc.format).width}
+            colors={transitionColors(theme)}
+          >
+            <SceneView scene={scene} doc={doc} theme={theme} />
+          </SceneTransition>
+        </Sequence>
+      ))}
+    </>
   );
 }
 
