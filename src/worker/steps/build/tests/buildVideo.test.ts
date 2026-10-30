@@ -341,3 +341,21 @@ test("buildVideo leaves out an overlay that could only sit on another element", 
     }
   }
 });
+
+test("buildVideo pages keyword-box captions three words at a time", () => {
+  const plan = PlanSchema.parse({
+    ...footagePlan,
+    captions: { ...footagePlan.captions, style: "keyword-box" },
+  });
+  const doc = buildVideo(
+    plan,
+    sampleContent,
+    { sourceVideo: { path: "in.mp4", info: sampleContent.source } },
+    brand,
+  );
+  const pages = doc.captions?.pages ?? [];
+
+  expect(doc.captions?.style).toBe("keyword-box");
+  expect(pages.length).toBeGreaterThan(0);
+  expect(pages.every((page) => page.tokens.length <= 3)).toBe(true);
+});

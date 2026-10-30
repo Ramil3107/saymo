@@ -11,7 +11,7 @@ The vocabulary is a set of React components on Remotion that take their paramete
 | Footage | trimmed video clip, background footage, image, logo, shape, Lottie |
 | Camera | push, punch-in, pan, parallax over an image or screenshot |
 | Text | headline, subheading, big number with a counter, quote, lower third, chip (paper pill sized to its text, optional badge such as Fe or 01, pops in with a blur and floats), sticker, title-card (section label and a big title on a dark panel), list (title and numbered items on a dark side panel) |
-| Captions | rail (a short phrase whose words appear as they are said, keywords in the accent color, a scrim below), karaoke, box and pop styles |
+| Captions | rail (a short phrase whose words appear as they are said, keywords in the accent color, a scrim below), keyword-box (three words at a time in heavy capitals, each word pops in as it is said, a keyword gets an accent box that sweeps under it and turns its text dark only where the box has passed, text color picked for contrast with the box), karaoke, box and pop styles |
 | Enters and exits | fade, slide, mask, by word, by letter, typewriter |
 | Accents | marker, underline, ring, pulse, shake, flash |
 | Transitions | cut, fade, slide, wipe, push |
@@ -89,7 +89,7 @@ motionvid, a startup launch, a feature announcement and a talking-head reel:
 Each step ends with a render the owner reviews.
 
 1. Motion system: moves to enter, leave, transform and stay alive, timed by the style (fast like Higgsfield, smooth like motionvid), and choreography: stagger, sync to spoken words, sync to the music beat. A motion lab composition plays every move in both styles. Built on 2026-10-30, except the sync to words and to the beat.
-2. Kinetic type: letter type-on, word by word, rolling counters, split, color swap, a punch from giant size, outline numerals, captions with boxed keywords. Titles, counters and corner labels built on 2026-10-30; captions with boxed keywords are next.
+2. Kinetic type: letter type-on, word by word, rolling counters, split, color swap, a punch from giant size, outline numerals, captions with boxed keywords. Built on 2026-10-30: titles, counters, corner labels and `keyword-box` captions.
 3. Shapes and accents: chevrons, growing frames, flash squares, bursts and sparkles, drawn arrows, selection handles, grain, grid and halftone textures.
 4. Media: photo collage, a thumbnail that becomes a player, a grid that lights the cell being named, UI cards with a camera into a detail, flipping states, cut-out figures (background removal).
 5. Transitions: cut, flash cut, panel wipe, perspective push, zoom into a detail, mosaic resolve, dissolve.

@@ -28,7 +28,7 @@ Every element has a stable id, a type from the vocabulary, parameters and timing
 | `brand` | object | `colors` (one to three), `font` and an optional `logo` |
 | `assets` | list | `id`, `kind` (`video`, `audio` or `image`), `src` and an optional `durationMs`. Scenes, music and voice refer to assets by `id` |
 | `scenes` | list of scenes | In order, with no gaps or overlaps: the first starts at 0, each next one starts where the previous one ends |
-| `captions` | object, optional | `style` (`rail`, `karaoke`, `box` or `pop`), `keywords` (words shown in the accent color) and `pages`. A page has `text`, `startMs`, `durationMs` and `tokens`: words with their own `fromMs` and `toMs` |
+| `captions` | object, optional | `style` (`rail`, `keyword-box`, `karaoke`, `box` or `pop`), `keywords` (words shown in the accent color, or in an accent box for `keyword-box`) and `pages`. A page has `text`, `startMs`, `durationMs` and `tokens`: words with their own `fromMs` and `toMs` |
 | `music` | object, optional | `assetId`, `volume`, `duckTo` (the volume under speech) and `speech`, the intervals where the music ducks |
 | `voice` | list | `assetId` and `atMs`, the moment a voiceover clip starts |
 

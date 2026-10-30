@@ -92,8 +92,9 @@ function CaptionsView(props: {
   theme: Theme;
   safeZone: SafeZone;
 }) {
-  if (props.captions.style === "rail") return <CaptionRail {...props} />;
-  return <Captions {...props} captions={{ ...props.captions, style: props.captions.style }} />;
+  const { style } = props.captions;
+  if (style === "rail" || style === "keyword-box") return <CaptionRail {...props} />;
+  return <Captions {...props} captions={{ ...props.captions, style }} />;
 }
 
 function findAsset(doc: VideoDoc, id: string) {

@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import type { VideoDoc } from "../../schema/video";
 import { accentColor, ink, type Theme, white } from "../theme";
 
-export type CaptionStyle = Exclude<NonNullable<VideoDoc["captions"]>["style"], "rail">;
+export type CaptionStyle = Exclude<NonNullable<VideoDoc["captions"]>["style"], "rail" | "keyword-box">;
 
 export const popScale = 1.08;
 

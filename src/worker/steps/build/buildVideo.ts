@@ -101,6 +101,7 @@ const sourceAssetId = "source";
 const musicAssetId = "music";
 const musicVolume = 0.9;
 const musicDuckTo = 0.25;
+const keywordBoxWords = 3;
 
 export function buildVideo(
   plan: Plan,
@@ -442,12 +443,25 @@ function shiftWords(words: TranscriptWord[], byMs: number): TranscriptWord[] {
 
 function pagesWithin(words: TranscriptWord[], slot: Slot, style: Plan["captions"]["style"]): CaptionPage[] {
   const endMs = slot.startMs + slot.durationMs;
-  const pages = style === "rail" ? railPages(words) : captionPages(words);
+  const pages = phrasePages(words, style);
 
   return pages.map((page) => ({
     ...page,
     durationMs: Math.min(page.durationMs, Math.max(0, endMs - page.startMs)),
   }));
+}
+
+function phrasePages(words: TranscriptWord[], style: Plan["captions"]["style"]): CaptionPage[] {
+  switch (style) {
+    case "rail":
+      return railPages(words);
+    case "keyword-box":
+      return railPages(words, { maxWords: keywordBoxWords });
+    case "karaoke":
+    case "box":
+    case "pop":
+      return captionPages(words);
+  }
 }
 
 function documentAssets(assets: BuildAssets): VideoDoc["assets"] {

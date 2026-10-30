@@ -24,6 +24,8 @@ export const navy = "#0D1D42";
 export const paper = "rgba(255, 255, 255, 0.95)";
 export const white = "#FFFFFF";
 
+const lightLuminance = 0.4;
+
 export function textShadow(fontSize: number): string {
   return `0 ${fontSize * 0.04}px ${fontSize * 0.2}px rgba(0,0,0,0.35)`;
 }
@@ -39,10 +41,22 @@ export function darken(hex: string, amount: number): string {
   return `rgb(${r}, ${g}, ${b})`;
 }
 
+export function textOn(hex: string): string {
+  const channels = hex.replace("#", "").match(/.{2}/g);
+  if (!channels || channels.length < 3) return white;
+
+  const [r = 0, g = 0, b = 0] = channels.map((channel) => linearChannel(Number.parseInt(channel, 16) / 255));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > lightLuminance ? ink : white;
+}
+
 export function withAlpha(rgb: string, alpha: number): string {
   return rgb.replace("rgb(", "rgba(").replace(")", `, ${alpha})`);
 }
 
 export function accentColor(theme: Theme): string {
   return theme.brand.colors[1] ?? theme.brand.colors[0] ?? white;
+}
+
+function linearChannel(value: number): number {
+  return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
 }
