@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { tempos } from "../tempo";
-import { blink, chase, countAt, eased, lettersShown, staggered } from "../timeline";
+import { blink, chase, countAt, eased, floatAt, lettersShown, staggered } from "../timeline";
 
 const { snap, glide } = tempos;
 
@@ -68,5 +68,22 @@ describe("blink and chase", () => {
     const lit = [0, 1, 2].filter((index) => chase(250, 900, 3, index));
     expect(lit).toEqual([0]);
     expect(chase(400, 900, 3, 1)).toBe(true);
+  });
+});
+
+describe("floatAt", () => {
+  it("rests until the element has entered", () => {
+    expect(floatAt(500, 500, 1)).toEqual({ x: 0, y: 0, rotate: 0 });
+  });
+
+  it("eases in instead of starting at full speed", () => {
+    const early = floatAt(530, 500, 1);
+    expect(Math.abs(early.y)).toBeLessThan(0.01);
+  });
+
+  it("stays within one unit and differs between elements", () => {
+    const samples = Array.from({ length: 50 }, (_, step) => floatAt(500 + step * 97, 0, 2));
+    expect(samples.every((float) => Math.abs(float.y) <= 1 && Math.abs(float.x) <= 0.5)).toBe(true);
+    expect(floatAt(2000, 0, 0).y).not.toBeCloseTo(floatAt(2000, 0, 1).y);
   });
 });

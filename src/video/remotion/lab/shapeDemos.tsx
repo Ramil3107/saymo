@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { interpolateColors } from "remotion";
 import { flipFace, type MoveSpec, mix } from "../../motion/moves";
-import { chase, drift, eased, staggered } from "../../motion/timeline";
+import { chase, eased, type Float, floatAt, staggered } from "../../motion/timeline";
 import { Move, useMs } from "../motion/Move";
 import type { DemoProps, Palette } from "./looks";
 
@@ -9,7 +9,9 @@ const startMs = 250;
 const exitAtMs = 2400;
 const morphAtMs = 900;
 const flipAtMs = 1100;
-const driftPeriodMs = 1800;
+const floatShare = 0.011;
+const chipsExitAtMs = 3900;
+const floatDegrees = 0.8;
 const chips = ["Same-day slots", "No waiting list", "From $29"];
 const months = ["NOV", "DEC", "JAN"];
 const burstRays = 10;
@@ -35,9 +37,9 @@ export function PopChipsDemo({ look, width, height }: DemoProps) {
         const spec: MoveSpec = {
           enter: "pop",
           atMs: staggered(startMs, index, tempo.wordMs),
-          exit: { move: "collapse", atMs: staggered(exitAtMs, chips.length - index, tempo.staggerMs) },
+          exit: { move: "collapse", atMs: staggered(chipsExitAtMs, chips.length - index, tempo.staggerMs) },
         };
-        const offsetY = drift(ms, driftPeriodMs, index * 2) * height * 0.008;
+        const float = floatAt(ms, spec.atMs, index);
         return (
           <Move
             key={text}
@@ -46,7 +48,7 @@ export function PopChipsDemo({ look, width, height }: DemoProps) {
             unitPx={width}
             style={{ marginLeft: (index - 1) * width * 0.12 }}
           >
-            <Chip text={text} badge={String(index + 1)} palette={palette} width={width} offsetY={offsetY} />
+            <Chip text={text} badge={String(index + 1)} palette={palette} width={width} float={float} />
           </Move>
         );
       })}
@@ -139,8 +141,9 @@ export function FlipCardsDemo({ look, width, height }: DemoProps) {
   );
 }
 
-function Chip(props: { text: string; badge: string; palette: Palette; width: number; offsetY: number }) {
-  const { text, badge, palette, width, offsetY } = props;
+function Chip(props: { text: string; badge: string; palette: Palette; width: number; float: Float }) {
+  const { text, badge, palette, width, float } = props;
+  const amplitude = width * floatShare;
   const size = width * 0.075;
 
   return (
@@ -153,7 +156,7 @@ function Chip(props: { text: string; badge: string; palette: Palette; width: num
         borderRadius: 999,
         backgroundColor: palette.surface,
         boxShadow: "0 10px 28px rgba(10, 10, 20, 0.14)",
-        transform: `translateY(${offsetY}px)`,
+        transform: `translate(${float.x * amplitude}px, ${float.y * amplitude}px) rotate(${float.rotate * floatDegrees}deg)`,
         fontSize: width * 0.055,
         fontWeight: 700,
         color: palette.ink,

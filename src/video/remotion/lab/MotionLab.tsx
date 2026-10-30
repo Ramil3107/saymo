@@ -6,38 +6,41 @@ import { CollageGrowDemo } from "./mediaDemos";
 import { FlipCardsDemo, MorphBurstDemo, PopChipsDemo, SmearChevronsDemo } from "./shapeDemos";
 import { PunchCountDemo, RevealSwapDemo, RiseDemo, SplitDemo, TypeOnDemo } from "./textDemos";
 
-type Demo = { title: string; component: ComponentType<DemoProps> };
+type Demo = { title: string; component: ComponentType<DemoProps>; durationMs: number };
 
 const demoMs = 3000;
+const longDemoMs = 4500;
 const panel = { width: 540, height: 960, top: 92, gap: 80 };
 const labWidth = 1920;
 const labHeight = 1080;
 const labBackground = "#101014";
 
 const demos: Demo[] = [
-  { title: "Type on, letter by letter", component: TypeOnDemo },
-  { title: "Words rise from a mask", component: RiseDemo },
-  { title: "Punch in and count", component: PunchCountDemo },
-  { title: "Pop with stagger, drift, collapse", component: PopChipsDemo },
-  { title: "Smear in and out, chevrons", component: SmearChevronsDemo },
-  { title: "Reveal, color swap, tilt out", component: RevealSwapDemo },
-  { title: "Morph a box into a name, burst", component: MorphBurstDemo },
-  { title: "Split to frame the subject", component: SplitDemo },
-  { title: "Flip state one by one", component: FlipCardsDemo },
-  { title: "Collage, grow into the frame, tilt out", component: CollageGrowDemo },
+  { title: "Type on, letter by letter", component: TypeOnDemo, durationMs: demoMs },
+  { title: "Words rise from a mask", component: RiseDemo, durationMs: demoMs },
+  { title: "Punch in and count", component: PunchCountDemo, durationMs: demoMs },
+  { title: "Pop with stagger, float, collapse", component: PopChipsDemo, durationMs: longDemoMs },
+  { title: "Smear in and out, chevrons", component: SmearChevronsDemo, durationMs: demoMs },
+  { title: "Reveal, color swap, tilt out", component: RevealSwapDemo, durationMs: demoMs },
+  { title: "Morph a box into a name, burst", component: MorphBurstDemo, durationMs: demoMs },
+  { title: "Split to frame the subject", component: SplitDemo, durationMs: demoMs },
+  { title: "Flip state one by one", component: FlipCardsDemo, durationMs: demoMs },
+  { title: "Collage, grow into the frame, tilt out", component: CollageGrowDemo, durationMs: demoMs },
 ];
 
 export const motionLabSize = { width: labWidth, height: labHeight };
 
-export const motionLabFrames = msToFrame(demoMs * demos.length);
+export const motionLabFrames = msToFrame(demos.reduce((total, demo) => total + demo.durationMs, 0));
 
 export function MotionLab() {
-  const demoFrames = msToFrame(demoMs);
-
   return (
     <AbsoluteFill style={{ backgroundColor: labBackground }}>
       {demos.map((demo, index) => (
-        <Sequence key={demo.title} from={index * demoFrames} durationInFrames={demoFrames}>
+        <Sequence
+          key={demo.title}
+          from={msToFrame(startOf(index))}
+          durationInFrames={msToFrame(demo.durationMs)}
+        >
           <Header title={`${index + 1} · ${demo.title}`} />
           <Panel look={snapLook} left={labWidth / 2 - panel.gap / 2 - panel.width} demo={demo} />
           <Panel look={glideLook} left={labWidth / 2 + panel.gap / 2} demo={demo} />
@@ -45,6 +48,10 @@ export function MotionLab() {
       ))}
     </AbsoluteFill>
   );
+}
+
+function startOf(index: number): number {
+  return demos.slice(0, index).reduce((total, demo) => total + demo.durationMs, 0);
 }
 
 function Header({ title }: { title: string }) {

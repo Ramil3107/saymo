@@ -1,5 +1,5 @@
 import type { Tempo } from "./tempo";
-import { eased } from "./timeline";
+import { eased, linear, smoothstep } from "./timeline";
 
 export type Enter = "cut" | "fade" | "pop" | "punch" | "rise" | "drop" | "smear" | "reveal";
 
@@ -19,6 +19,8 @@ export type Pose = {
 };
 
 export type MoveSpec = { enter: Enter; atMs: number; exit?: { move: Exit; atMs: number } };
+
+export type Progress = { eased: number; linear: number };
 
 export const restPose: Pose = {
   opacity: 1,
@@ -56,7 +58,8 @@ const collapseToScale = 0.2;
 const tiltToDegrees = -40;
 const tiltToX = -0.6;
 const tiltToScale = 0.7;
-const fastOpacity = 3;
+const fadeInShare = 0.4;
+const fadeOutShare = 0.8;
 
 export function enterMs(move: Enter, tempo: Tempo): number {
   return Math.round(enterLength[move] * tempo.moveMs);
@@ -68,25 +71,25 @@ export function exitMs(move: Exit, tempo: Tempo): number {
 
 export function poseAt(ms: number, spec: MoveSpec, tempo: Tempo): Pose | null {
   if (ms < spec.atMs) return null;
-  if (spec.exit && ms >= spec.exit.atMs + exitMs(spec.exit.move, tempo)) return null;
+  if (spec.exit && ms > spec.exit.atMs + exitMs(spec.exit.move, tempo)) return null;
 
   const enterCurve = spec.enter === "pop" ? tempo.popCurve : tempo.enterCurve;
-  const entered = enterPose(spec.enter, eased(ms, spec.atMs, enterMs(spec.enter, tempo), enterCurve));
+  const entered = enterPose(spec.enter, progress(ms, spec.atMs, enterMs(spec.enter, tempo), enterCurve));
   if (!spec.exit) return entered;
 
-  const left = eased(ms, spec.exit.atMs, exitMs(spec.exit.move, tempo), tempo.exitCurve);
+  const left = progress(ms, spec.exit.atMs, exitMs(spec.exit.move, tempo), tempo.exitCurve);
   return combine(entered, exitPose(spec.exit.move, left));
 }
 
-export function enterPose(move: Enter, p: number): Pose {
+export function enterPose(move: Enter, { eased: p, linear: t }: Progress): Pose {
   const away = 1 - p;
-  const shown = Math.min(1, p * fastOpacity);
+  const shown = smoothstep(Math.min(1, t / fadeInShare));
 
   switch (move) {
     case "cut":
       return restPose;
     case "fade":
-      return { ...restPose, opacity: p };
+      return { ...restPose, opacity: smoothstep(t) };
     case "pop":
       return { ...restPose, opacity: shown, scale: popFromScale + (1 - popFromScale) * p };
     case "punch":
@@ -102,14 +105,14 @@ export function enterPose(move: Enter, p: number): Pose {
   }
 }
 
-export function exitPose(move: Exit, q: number): Pose {
-  const left = 1 - q;
+export function exitPose(move: Exit, { eased: q, linear: t }: Progress): Pose {
+  const left = 1 - smoothstep(Math.min(1, t / fadeOutShare));
 
   switch (move) {
     case "cut":
-      return q >= 1 ? { ...restPose, opacity: 0 } : restPose;
+      return t >= 1 ? { ...restPose, opacity: 0 } : restPose;
     case "fade":
-      return { ...restPose, opacity: left };
+      return { ...restPose, opacity: 1 - smoothstep(t) };
     case "collapse":
       return { ...restPose, opacity: left, scale: 1 - (1 - collapseToScale) * q };
     case "sink":
@@ -119,7 +122,7 @@ export function exitPose(move: Exit, q: number): Pose {
     case "tilt":
       return {
         ...restPose,
-        opacity: 1 - q * q,
+        opacity: left,
         x: tiltToX * q,
         rotateY: tiltToDegrees * q,
         scale: 1 - (1 - tiltToScale) * q,
@@ -148,6 +151,10 @@ export function flipFace(p: number): { scaleX: number; back: boolean } {
 
 export function mix(from: number, to: number, p: number): number {
   return from + (to - from) * p;
+}
+
+function progress(ms: number, startMs: number, durationMs: number, curve: Tempo["enterCurve"]): Progress {
+  return { eased: eased(ms, startMs, durationMs, curve), linear: linear(ms, startMs, durationMs) };
 }
 
 function smearPose(offset: number, opacity: number): Pose {
