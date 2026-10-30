@@ -3,7 +3,9 @@ import sampleDoc from "../../../fixtures/video.sample.json" with { type: "json" 
 import { formatSize } from "../destinations";
 import { type VideoDoc, VideoDocSchema } from "../schema/video";
 import { fps, msToFrame } from "./frames";
-import { MotionLab, motionLabFrames, motionLabSize } from "./lab/MotionLab";
+import { labFrames, labSize } from "./lab/LabReel";
+import { MotionLab, motionDemos } from "./lab/MotionLab";
+import { TypeLab, typeDemos } from "./lab/TypeLab";
 import { documentForRender } from "./renderDocument";
 import { SaymoVideo } from "./SaymoVideo";
 
@@ -20,8 +22,15 @@ export function Root() {
         id="motion-lab"
         component={MotionLab}
         fps={fps}
-        durationInFrames={motionLabFrames}
-        {...motionLabSize}
+        durationInFrames={labFrames(motionDemos)}
+        {...labSize}
+      />
+      <Composition
+        id="type-lab"
+        component={TypeLab}
+        fps={fps}
+        durationInFrames={labFrames(typeDemos)}
+        {...labSize}
       />
     </>
   );

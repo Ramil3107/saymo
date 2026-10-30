@@ -21,13 +21,6 @@ const floatDegrees = 0.8;
 
 export function ElementBox({ element, theme, frame, children, style, preset = "rise" }: Props) {
   const height = element.box.h * frame.height;
-  const box: CSSProperties = {
-    position: "absolute",
-    left: element.box.x * frame.width,
-    top: element.box.y * frame.height,
-    width: element.box.w * frame.width,
-    height,
-  };
   const inner: CSSProperties = { alignItems: "center", justifyContent: "flex-start", ...style };
 
   return (
@@ -36,7 +29,7 @@ export function ElementBox({ element, theme, frame, children, style, preset = "r
         spec={specFor(element, theme, preset)}
         tempo={theme.tempo}
         unitPx={height}
-        style={box}
+        style={boxStyle(element, frame)}
         innerStyle={inner}
       >
         {preset === "pop" ? (
@@ -49,6 +42,16 @@ export function ElementBox({ element, theme, frame, children, style, preset = "r
       </Move>
     </div>
   );
+}
+
+function boxStyle(element: Element, frame: Frame): CSSProperties {
+  return {
+    position: "absolute",
+    left: element.box.x * frame.width,
+    top: element.box.y * frame.height,
+    width: element.box.w * frame.width,
+    height: element.box.h * frame.height,
+  };
 }
 
 function specFor(element: Element, theme: Theme, preset: MotionPreset): MoveSpec {

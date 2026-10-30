@@ -1,7 +1,8 @@
 import type { CSSProperties } from "react";
 import { interpolateColors } from "remotion";
 import { flipFace, type MoveSpec, mix } from "../../motion/moves";
-import { chase, eased, type Float, floatAt, staggered } from "../../motion/timeline";
+import { eased, type Float, floatAt, staggered } from "../../motion/timeline";
+import { Chevrons } from "../accents/Chevrons";
 import { Move, useMs } from "../motion/Move";
 import type { DemoProps, Palette } from "./looks";
 
@@ -16,7 +17,6 @@ const chips = ["Same-day slots", "No waiting list", "From $29"];
 const months = ["NOV", "DEC", "JAN"];
 const burstRays = 10;
 const rayAngles = Array.from({ length: burstRays }, (_, ray) => (ray / burstRays) * Math.PI * 2);
-const chevronCount = 3;
 
 const column: CSSProperties = {
   position: "absolute",
@@ -60,27 +60,22 @@ export function SmearChevronsDemo({ look, width }: DemoProps) {
   const { palette, tempo } = look;
   const ms = useMs();
   const chevronsOn = ms >= startMs + tempo.moveMs && ms < exitAtMs;
-  const pill: CSSProperties = {
-    padding: `${width * 0.03}px ${width * 0.06}px`,
-    borderRadius: 999,
-    backgroundColor: palette.accent,
-    color: palette.surface,
-    fontSize: width * 0.065,
-    fontWeight: 800,
-    letterSpacing: "0.06em",
-  };
 
   return (
     <div style={{ ...column, flexDirection: "row", gap: width * 0.04 }}>
-      {chevronsOn ? <Chevrons ms={ms} look={look} width={width} pointing="right" /> : null}
+      {chevronsOn ? (
+        <Chevrons tempo={tempo} color={palette.accent} size={width * 0.07} pointing="right" />
+      ) : null}
       <Move
         spec={{ enter: "smear", atMs: startMs, exit: { move: "smear", atMs: exitAtMs } }}
         tempo={tempo}
         unitPx={width}
       >
-        <div style={pill}>NEW FEATURE</div>
+        <div style={pillStyle(palette, width)}>NEW FEATURE</div>
       </Move>
-      {chevronsOn ? <Chevrons ms={ms} look={look} width={width} pointing="left" /> : null}
+      {chevronsOn ? (
+        <Chevrons tempo={tempo} color={palette.accent} size={width * 0.07} pointing="left" />
+      ) : null}
     </div>
   );
 }
@@ -170,30 +165,16 @@ function Chip(props: { text: string; badge: string; palette: Palette; width: num
   );
 }
 
-function Chevrons(props: { ms: number; look: DemoProps["look"]; width: number; pointing: "left" | "right" }) {
-  const { ms, look, width, pointing } = props;
-  const size = width * 0.07;
-  const order = Array.from({ length: chevronCount }, (_, index) =>
-    pointing === "right" ? index : chevronCount - 1 - index,
-  );
-
-  return (
-    <svg width={size * chevronCount * 0.7} height={size} viewBox={`0 0 ${chevronCount * 7} 10`} aria-hidden>
-      {order.map((step, position) => (
-        <polyline
-          key={step}
-          points={pointing === "right" ? "1,1 5,5 1,9" : "5,1 1,5 5,9"}
-          transform={`translate(${position * 7}, 0)`}
-          fill="none"
-          stroke={look.palette.accent}
-          strokeWidth={2.2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={chase(ms, look.tempo.blinkMs * 2, chevronCount, step) ? 1 : 0.25}
-        />
-      ))}
-    </svg>
-  );
+function pillStyle(palette: Palette, width: number): CSSProperties {
+  return {
+    padding: `${width * 0.03}px ${width * 0.06}px`,
+    borderRadius: 999,
+    backgroundColor: palette.accent,
+    color: palette.surface,
+    fontSize: width * 0.065,
+    fontWeight: 800,
+    letterSpacing: "0.06em",
+  };
 }
 
 function morphBox(width: number, palette: Palette, shrunk: number, widened: number): CSSProperties {

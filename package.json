@@ -17,7 +17,7 @@
     "docs:preview": "vitepress preview docs",
     "remotion:studio": "remotion studio src/video/remotion/index.ts",
     "remotion:still": "remotion still src/video/remotion/index.ts saymo --props=fixtures/video.sample.json --frame=45 runs/still.png",
-    "remotion:lab": "remotion render src/video/remotion/index.ts motion-lab runs/lab/motion-lab.mp4",
+    "remotion:lab": "remotion render src/video/remotion/index.ts motion-lab runs/lab/motion-lab.mp4 && remotion render src/video/remotion/index.ts type-lab runs/lab/type-lab.mp4",
     "remotion:render": "remotion render src/video/remotion/index.ts saymo --props=fixtures/video.sample.json runs/sample.mp4",
     "render:fixture": "tsx src/cli/renderFixture.ts",
     "spike": "tsx src/cli/spike.ts"

@@ -40,6 +40,17 @@ External assets come only with permissive licenses, and a license manifest lives
 
 The register of a video picks its tempo: `driving-launch` and `playful-sale` move in `snap`, `serious-clinical` and `rich-premium` in `glide`. The document primitives move through `ElementBox`: chips and stickers pop in, float and collapse, the other elements lift in and fade out, and every exit ends exactly at the element's `exitMs`.
 
+## Kinetic type
+
+`src/video/type/schedule.ts` times a title: when each line and word starts for an entrance, and when the whole entrance ends. `src/video/remotion/type` draws it:
+
+- `KineticTitle`: lines with a size (`xl`, `l`, `m`, `s`, fitted to the width), a tone (`ink`, `accent`, `alt`) and an alignment. The title enters by `type` (letter by letter, a caret on the last line), `rise` or `pop` (word by word), `spread` (tracking in), `punch` or `reveal` (line by line). A `marked` line gets a marker sweep after the entrance. A color swap at `swapAtMs` flips ink and accent, with a two-frame flash in `snap`. The whole title leaves by any exit.
+- `Counter`: a number punches in and counts to its value, stepped in `snap` and smooth in `glide`, with a prefix, a smaller suffix, a label typed when it lands and an optional giant outline ghost. The number keeps the width of its final value, so it does not jitter while counting.
+- `CornerLabel`: a small label typed in a corner with chasing chevrons, the HUD of Higgsfield's cards.
+- `Chevrons` (`remotion/accents`): three chevrons lit one after another.
+
+`pnpm remotion:lab` also renders `runs/lab/type-lab.mp4`: a typed hook, a size and alignment hierarchy with rising words, tracking in, words popping one by one, a reveal with a marker, a punch with a color swap, a counter with a unit, a label and a ghost, and corner labels around a price count. These components join the video document in step 7, when the director learns them.
+
 ## Catalog
 
 The catalog is an internal page where every primitive plays in every register and format. It is the map of the vocabulary, the base for visual tests and later a public showcase. A new primitive without a catalog card is not done. The catalog does not exist yet and arrives in stage 1.
@@ -77,8 +88,8 @@ motionvid, a startup launch, a feature announcement and a talking-head reel:
 
 Each step ends with a render the owner reviews.
 
-1. Motion system: moves to enter, leave, transform and stay alive, timed by the style (fast like Higgsfield, smooth like motionvid), and choreography: stagger, sync to spoken words, sync to the music beat. A motion lab composition plays every move in both styles.
-2. Kinetic type: letter type-on, word by word, rolling counters, split, color swap, a punch from giant size, outline numerals, captions with boxed keywords.
+1. Motion system: moves to enter, leave, transform and stay alive, timed by the style (fast like Higgsfield, smooth like motionvid), and choreography: stagger, sync to spoken words, sync to the music beat. A motion lab composition plays every move in both styles. Built on 2026-10-30, except the sync to words and to the beat.
+2. Kinetic type: letter type-on, word by word, rolling counters, split, color swap, a punch from giant size, outline numerals, captions with boxed keywords. Titles, counters and corner labels built on 2026-10-30; captions with boxed keywords are next.
 3. Shapes and accents: chevrons, growing frames, flash squares, bursts and sparkles, drawn arrows, selection handles, grain, grid and halftone textures.
 4. Media: photo collage, a thumbnail that becomes a player, a grid that lights the cell being named, UI cards with a camera into a detail, flipping states, cut-out figures (background removal).
 5. Transitions: cut, flash cut, panel wipe, perspective push, zoom into a detail, mosaic resolve, dissolve.
