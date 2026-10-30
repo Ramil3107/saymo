@@ -6,7 +6,11 @@
   "lengthMs": 15000,
   "register": "driving-launch",
   "musicMood": "upbeat, modern",
-  "captions": { "enabled": true, "style": "karaoke" },
+  "captions": {
+    "enabled": true,
+    "style": "karaoke",
+    "keywords": []
+  },
   "voiceover": true,
   "beats": [
     {

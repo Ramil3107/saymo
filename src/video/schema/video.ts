@@ -2,7 +2,7 @@ import { z } from "zod";
 import { DestinationIdSchema, FormatSchema } from "../destinations";
 import { RegisterIdSchema } from "../registers";
 import { BoxSchema } from "./content";
-import { CameraSchema } from "./plan";
+import { CameraSchema, CaptionStyleSchema } from "./plan";
 
 const ElementBaseSchema = z.object({
   id: z.string(),
@@ -83,7 +83,8 @@ const VideoDocFieldsSchema = z.object({
   scenes: z.array(SceneSchema),
   captions: z
     .object({
-      style: z.enum(["karaoke", "box", "pop"]),
+      style: CaptionStyleSchema,
+      keywords: z.array(z.string()),
       pages: z.array(CaptionPageSchema),
     })
     .optional(),

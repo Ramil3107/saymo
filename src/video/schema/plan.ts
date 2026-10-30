@@ -56,6 +56,10 @@ export const BeatSchema = z.object({
 
 export type Beat = z.infer<typeof BeatSchema>;
 
+export const CaptionStyleSchema = z.enum(["rail", "karaoke", "box", "pop"]);
+
+export type CaptionStyle = z.infer<typeof CaptionStyleSchema>;
+
 export const QuestionSchema = z.object({
   id: z.string(),
   text: z.string(),
@@ -75,7 +79,8 @@ const PlanFieldsSchema = z.object({
   musicMood: z.string(),
   captions: z.object({
     enabled: z.boolean(),
-    style: z.enum(["karaoke", "box", "pop"]),
+    style: CaptionStyleSchema,
+    keywords: z.array(z.string()),
   }),
   voiceover: z.boolean(),
   beats: z.array(BeatSchema),

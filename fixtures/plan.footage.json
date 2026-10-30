@@ -1,12 +1,21 @@
 {
   "title": "Why we rebuilt reporting",
   "summary": "A founder explains in 45 seconds why reports now export to PDF in one click, and how much faster it is.",
-  "cast": [{ "name": "Maya Chen", "role": "Co-founder" }],
+  "cast": [
+    {
+      "name": "Maya Chen",
+      "role": "Co-founder"
+    }
+  ],
   "destination": "reels",
   "lengthMs": 45000,
   "register": "driving-launch",
   "musicMood": "driving, confident",
-  "captions": { "enabled": true, "style": "karaoke" },
+  "captions": {
+    "enabled": true,
+    "style": "karaoke",
+    "keywords": []
+  },
   "voiceover": false,
   "beats": [
     {
@@ -14,8 +23,14 @@
       "role": "hook",
       "startMs": 0,
       "durationMs": 3000,
-      "footage": { "fromMs": 12000, "toMs": 15000 },
-      "camera": { "kind": "punch-in", "intensity": 0.6 },
+      "footage": {
+        "fromMs": 12000,
+        "toMs": 15000
+      },
+      "camera": {
+        "kind": "punch-in",
+        "intensity": 0.6
+      },
       "overlays": [
         {
           "id": "o1",
@@ -32,7 +47,10 @@
       "role": "setup",
       "startMs": 3000,
       "durationMs": 9000,
-      "footage": { "fromMs": 0, "toMs": 9000 },
+      "footage": {
+        "fromMs": 0,
+        "toMs": 9000
+      },
       "overlays": []
     },
     {
@@ -40,8 +58,14 @@
       "role": "message",
       "startMs": 12000,
       "durationMs": 15000,
-      "footage": { "fromMs": 15000, "toMs": 30000 },
-      "camera": { "kind": "push", "intensity": 0.4 },
+      "footage": {
+        "fromMs": 15000,
+        "toMs": 30000
+      },
+      "camera": {
+        "kind": "push",
+        "intensity": 0.4
+      },
       "overlays": [
         {
           "id": "o1",
@@ -57,7 +81,10 @@
       "role": "proof",
       "startMs": 27000,
       "durationMs": 12000,
-      "footage": { "fromMs": 30000, "toMs": 42000 },
+      "footage": {
+        "fromMs": 30000,
+        "toMs": 42000
+      },
       "overlays": [
         {
           "id": "o1",
@@ -75,8 +102,14 @@
       "role": "cta",
       "startMs": 39000,
       "durationMs": 6000,
-      "footage": { "fromMs": 42000, "toMs": 48000 },
-      "copy": { "headline": "Try it free", "sub": "No card needed" },
+      "footage": {
+        "fromMs": 42000,
+        "toMs": 48000
+      },
+      "copy": {
+        "headline": "Try it free",
+        "sub": "No card needed"
+      },
       "overlays": [
         {
           "id": "o1",

@@ -4,9 +4,9 @@ import { captionBand } from "../../layout/safeZones";
 import type { CaptionPage, VideoDoc } from "../../schema/video";
 import { frameToMs } from "../frames";
 import type { Theme } from "../theme";
-import { captionGap, tokenStyle } from "./captionStyle";
+import { type CaptionStyle, captionGap, tokenStyle } from "./captionStyle";
 
-type CaptionsDoc = NonNullable<VideoDoc["captions"]>;
+type CaptionsDoc = Omit<NonNullable<VideoDoc["captions"]>, "style"> & { style: CaptionStyle };
 type Props = { captions: CaptionsDoc; theme: Theme; safeZone: SafeZone };
 
 const fontShare = 0.034;

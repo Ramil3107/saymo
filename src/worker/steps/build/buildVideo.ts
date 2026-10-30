@@ -2,6 +2,7 @@ import { join } from "node:path";
 import { z } from "zod";
 import { speechIntervals } from "../../../video/audio/ducking";
 import { captionPages } from "../../../video/captions/pages";
+import { railPages } from "../../../video/captions/rail";
 import { rebaseWords } from "../../../video/captions/timeline";
 import { type Destination, destinations, formatSize } from "../../../video/destinations";
 import { fitCover } from "../../../video/layout/fitCover";
@@ -63,6 +64,7 @@ type SceneContext = {
   source: Size | undefined;
   target: Size;
   captionsOn: boolean;
+  captionStyle: Plan["captions"]["style"];
   spoken: SpokenBeat | undefined;
 };
 
@@ -106,6 +108,7 @@ export function buildVideo(
       source,
       target,
       captionsOn: plan.captions.enabled,
+      captionStyle: plan.captions.style,
       spoken: spokenByBeat.get(slot.beat.id),
     }),
   );
@@ -113,7 +116,9 @@ export function buildVideo(
   const words = built.flatMap((scene) => scene.words);
   const pages = built.flatMap((scene) => scene.pages);
   const captions =
-    plan.captions.enabled && pages.length > 0 ? { style: plan.captions.style, pages } : undefined;
+    plan.captions.enabled && pages.length > 0
+      ? { style: plan.captions.style, keywords: plan.captions.keywords, pages }
+      : undefined;
   const music = assets.music
     ? { assetId: musicAssetId, volume: musicVolume, duckTo: musicDuckTo, speech: speechIntervals(words) }
     : undefined;
@@ -234,7 +239,7 @@ function buildScene(slot: Slot, context: SceneContext): BuiltScene {
   return {
     scene,
     words,
-    pages: words.length > 0 ? pagesWithin(words, slot) : [],
+    pages: words.length > 0 ? pagesWithin(words, slot, context.captionStyle) : [],
     voice: context.spoken ? { assetId: voiceAssetId(beat.id), atMs: startMs } : undefined,
   };
 }
@@ -361,10 +366,11 @@ function shiftWords(words: TranscriptWord[], byMs: number): TranscriptWord[] {
   return words.map((word) => ({ ...word, startMs: word.startMs + byMs, endMs: word.endMs + byMs }));
 }
 
-function pagesWithin(words: TranscriptWord[], slot: Slot): CaptionPage[] {
+function pagesWithin(words: TranscriptWord[], slot: Slot, style: Plan["captions"]["style"]): CaptionPage[] {
   const endMs = slot.startMs + slot.durationMs;
+  const pages = style === "rail" ? railPages(words) : captionPages(words);
 
-  return captionPages(words).map((page) => ({
+  return pages.map((page) => ({
     ...page,
     durationMs: Math.min(page.durationMs, Math.max(0, endMs - page.startMs)),
   }));

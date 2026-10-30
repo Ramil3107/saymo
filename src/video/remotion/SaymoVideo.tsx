@@ -1,5 +1,5 @@
 import { AbsoluteFill, Sequence, useVideoConfig } from "remotion";
-import { destinations } from "../destinations";
+import { destinations, type SafeZone } from "../destinations";
 import { registers } from "../registers";
 import type { Element, Scene, VideoDoc } from "../schema/video";
 import { loadBrandFont } from "./fonts";
@@ -7,6 +7,7 @@ import { sceneFrames } from "./frames";
 import { Background } from "./primitives/Background";
 import { BigNumber } from "./primitives/BigNumber";
 import { Camera } from "./primitives/Camera";
+import { CaptionRail } from "./primitives/CaptionRail";
 import { Captions } from "./primitives/Captions";
 import { Chip } from "./primitives/Chip";
 import { Footage } from "./primitives/Footage";
@@ -31,7 +32,7 @@ export function SaymoVideo(doc: VideoDoc) {
           <SceneView scene={scene} doc={doc} theme={theme} />
         </Sequence>
       ))}
-      {doc.captions ? <Captions captions={doc.captions} theme={theme} safeZone={safeZone} /> : null}
+      {doc.captions ? <CaptionsView captions={doc.captions} theme={theme} safeZone={safeZone} /> : null}
       {doc.music && musicSrc ? <MusicTrack music={doc.music} src={musicSrc} /> : null}
       {doc.voice.map((voice) => {
         const src = assetSrc(doc, voice.assetId);
@@ -76,6 +77,15 @@ function ElementView({ element, theme, frame }: { element: Element; theme: Theme
     case "sticker":
       return <Sticker element={element} theme={theme} frame={frame} />;
   }
+}
+
+function CaptionsView(props: {
+  captions: NonNullable<VideoDoc["captions"]>;
+  theme: Theme;
+  safeZone: SafeZone;
+}) {
+  if (props.captions.style === "rail") return <CaptionRail {...props} />;
+  return <Captions {...props} captions={{ ...props.captions, style: props.captions.style }} />;
 }
 
 function findAsset(doc: VideoDoc, id: string) {
