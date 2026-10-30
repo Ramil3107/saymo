@@ -96,6 +96,17 @@ A scene enters by its `transition` and the scene before it leaves by the same on
 
 The build still writes `cut`; the director learns transitions in step 7. `pnpm remotion:lab` also renders `runs/lab/transition-lab.mp4`, a before and after shot of `runs/face-v2` through each transition.
 
+## Styles
+
+A style is the look of a whole video, kept as data in `src/video/styles.ts`: a name and a summary for the director, a tempo, the display face and its case, the tones (background, ink, surface, muted and a default highlight), the textures, and the caption presets, transitions, title entrances and accents it draws from. The register keeps the pacing (scene length, holds, density); the style decides how it looks.
+
+- `bold-pop`, after Higgsfield: Unbounded in capitals on off-white with drifting color fields and grain, `snap`; captions `bold-center`, `keyword-box`, `pop`, `outline`; transitions flash, whip, pixelate, zoom; titles typed, punched, tracked in or popped; chevrons, flash blocks, growing frames, brackets, bursts.
+- `clean-paper`, after motionvid: Inter in sentence case on warm paper with a faint grid, `glide`; captions `keyword-box`, `karaoke-pill`, `marker`, `typewriter`, `minimal`; transitions wipe, dip, zoom; titles rising, typed or revealed; sparkles, selection boxes, drawn arrows, scribbles, a cursor.
+
+The brand gives the colors (`src/video/style/palette.ts`): the first brand color that is not near white becomes the accent, darkened until it reads at 3:1 on the background; a light brand color becomes the highlight, or the style's own; another dark brand color, or a deeper accent, becomes the second tone. `styleKit` in `src/video/remotion/style` folds the style, the brand palette, the display face and the brand's text face together, and `Backdrop` draws the background with the style's textures.
+
+`pnpm remotion:styles` renders a 14-second spot in both styles side by side with the brand colors of `runs/face-v2`: a hook, a counter, a collage with a tag, the footage with the style's captions, a call to action, joined by the style's transitions. The document gets a style, and the director learns to pick one, in step 7.
+
 ## Captions
 
 A caption style is a preset of one caption look (`src/video/captions/looks.ts`), and one renderer draws every look (`src/video/remotion/captions`). The look sets:
@@ -171,7 +182,7 @@ Each step ends with a render the owner reviews.
 3. Shapes and accents: chevrons, growing frames, flash squares, bursts and sparkles, drawn arrows, selection handles, grain, grid and halftone textures. Built on 2026-10-30, with scribbles, a cursor, viewfinder brackets and drifting color fields; the pixel mosaic is still to do.
 4. Media: photo collage, a thumbnail that becomes a player, a grid that lights the cell being named, UI cards with a camera into a detail, flipping states, cut-out figures (background removal). Built on 2026-10-30 with a burst of shots and a phone frame, except the cut-out figures.
 5. Transitions: cut, flash cut, panel wipe, perspective push, zoom into a detail, mosaic resolve, dissolve. Built on 2026-10-30 as cut, flash, wipe, whip, zoom, pixelate and dip; a dissolve would need scenes to overlap and is left out.
-6. Styles: one like Higgsfield and one like motionvid first, each with its own cadence, curves and accent budget.
+6. Styles: one like Higgsfield and one like motionvid first, each with its own cadence, curves and accent budget. Built on 2026-10-30 as `bold-pop` and `clean-paper`, with the palette taken from the brand.
 7. The director and the build use them on `runs/face-v2` and on a text-mode ad, compared with the reference clips.
 8. The sound-effect layer, synced to the moves.
 

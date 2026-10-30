@@ -2,6 +2,7 @@ import type { SafeZone } from "../destinations";
 import type { Tempo } from "../motion/tempo";
 import type { RegisterTokens } from "../registers";
 import type { Element, VideoDoc } from "../schema/video";
+import { luminance } from "../style/color";
 
 export type Theme = {
   brand: VideoDoc["brand"];
@@ -42,11 +43,7 @@ export function darken(hex: string, amount: number): string {
 }
 
 export function textOn(hex: string): string {
-  const channels = hex.replace("#", "").match(/.{2}/g);
-  if (!channels || channels.length < 3) return white;
-
-  const [r = 0, g = 0, b = 0] = channels.map((channel) => linearChannel(Number.parseInt(channel, 16) / 255));
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b > lightLuminance ? ink : white;
+  return (luminance(hex) ?? 0) > lightLuminance ? ink : white;
 }
 
 export function withAlpha(rgb: string, alpha: number): string {
@@ -55,8 +52,4 @@ export function withAlpha(rgb: string, alpha: number): string {
 
 export function accentColor(theme: Theme): string {
   return theme.brand.colors[1] ?? theme.brand.colors[0] ?? white;
-}
-
-function linearChannel(value: number): number {
-  return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
 }

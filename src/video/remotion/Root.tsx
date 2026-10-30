@@ -9,6 +9,7 @@ import { captionLabDefaults } from "./lab/captionLabProps";
 import { labFrames, labSize } from "./lab/LabReel";
 import { MediaLab, mediaDemos } from "./lab/MediaLab";
 import { MotionLab, motionDemos } from "./lab/MotionLab";
+import { StyleLab, styleLabMetadata } from "./lab/StyleLab";
 import { TransitionLab, transitionDemos } from "./lab/TransitionLab";
 import { TypeLab, typeDemos } from "./lab/TypeLab";
 import { documentForRender } from "./renderDocument";
@@ -49,6 +50,15 @@ export function Root() {
         component={TransitionLab}
         fps={fps}
         durationInFrames={labFrames(transitionDemos)}
+        {...labSize}
+      />
+      <Composition
+        id="style-lab"
+        component={StyleLab}
+        defaultProps={captionLabDefaults}
+        calculateMetadata={styleLabMetadata}
+        fps={fps}
+        durationInFrames={1}
         {...labSize}
       />
       <Composition

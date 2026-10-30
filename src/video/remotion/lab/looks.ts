@@ -1,7 +1,6 @@
-import { loadFont as loadInter } from "@remotion/google-fonts/Inter";
-import { loadFont as loadUnbounded } from "@remotion/google-fonts/Unbounded";
 import type { CSSProperties } from "react";
 import { type Tempo, tempos } from "../../motion/tempo";
+import { displayFamily } from "../fonts";
 
 export type Palette = {
   background: string;
@@ -23,13 +22,10 @@ export type Look = {
 
 export type DemoProps = { look: Look; width: number; height: number };
 
-const unbounded = loadUnbounded("normal", { weights: ["500", "700", "900"], subsets: ["latin", "cyrillic"] });
-const inter = loadInter("normal", { weights: ["500", "700", "800", "900"], subsets: ["latin", "cyrillic"] });
-
 export const snapLook: Look = {
   name: "SNAP · fast, like Higgsfield",
   tempo: tempos.snap,
-  fontFamily: unbounded.fontFamily,
+  fontFamily: displayFamily("unbounded"),
   palette: {
     background: "#F6F4EF",
     ink: "#0A0A0D",
@@ -49,7 +45,7 @@ export const snapLook: Look = {
 export const glideLook: Look = {
   name: "GLIDE · smooth, like motionvid",
   tempo: tempos.glide,
-  fontFamily: inter.fontFamily,
+  fontFamily: displayFamily("inter"),
   palette: {
     background: "#F1F1F4",
     ink: "#15151A",
