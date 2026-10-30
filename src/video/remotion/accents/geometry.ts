@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { mix } from "../../motion/moves";
+import { wholePx } from "../motion/pixels";
 
 export type Rect = { x: number; y: number; w: number; h: number };
 
@@ -15,5 +16,11 @@ export function mixRect(from: Rect, to: Rect, p: number): Rect {
 }
 
 export function rectStyle(rect: Rect): CSSProperties {
-  return { position: "absolute", left: rect.x, top: rect.y, width: rect.w, height: rect.h };
+  return {
+    position: "absolute",
+    left: wholePx(rect.x),
+    top: wholePx(rect.y),
+    width: wholePx(rect.w),
+    height: wholePx(rect.h),
+  };
 }

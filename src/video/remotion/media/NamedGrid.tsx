@@ -3,8 +3,9 @@ import { Img } from "remotion";
 import { poseAt } from "../../motion/moves";
 import type { Tempo } from "../../motion/tempo";
 import { eased, staggered } from "../../motion/timeline";
-import type { Rect } from "../accents/geometry";
+import { type Rect, rectStyle } from "../accents/geometry";
 import { useMs } from "../motion/Move";
+import { restingTransform } from "../motion/pixels";
 import { TypeOn } from "../motion/TypeOn";
 
 export type GridCell = { src: string; label: string; namedAtMs: number };
@@ -92,14 +93,10 @@ function cellRect(index: number, columns: number, rows: number, area: Rect): Rec
 
 function cellStyle(rect: Rect, opacity: number, scale: number): CSSProperties {
   return {
-    position: "absolute",
-    left: rect.x,
-    top: rect.y,
-    width: rect.w,
-    height: rect.h,
+    ...rectStyle(rect),
     overflow: "hidden",
     opacity,
-    transform: `scale(${scale})`,
+    transform: restingTransform(`scale(${scale})`, scale === 1),
   };
 }
 

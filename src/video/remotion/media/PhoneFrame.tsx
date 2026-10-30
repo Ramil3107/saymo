@@ -4,6 +4,7 @@ import type { Tempo } from "../../motion/tempo";
 import { eased, linear, smoothstep } from "../../motion/timeline";
 import { type Rect, rectStyle } from "../accents/geometry";
 import { useMs } from "../motion/Move";
+import { restingTransform } from "../motion/pixels";
 
 type Props = { rect: Rect; atMs: number; tempo: Tempo; children: ReactNode };
 
@@ -39,7 +40,10 @@ function bodyStyle(rect: Rect, settled: number, shown: number): CSSProperties {
   return {
     ...rectStyle(rect),
     opacity: shown,
-    transform: `perspective(${rect.w * 4}px) translateY(${rise}px) rotateY(${turn}deg)`,
+    transform: restingTransform(
+      `perspective(${rect.w * 4}px) translateY(${rise}px) rotateY(${turn}deg)`,
+      rise === 0 && turn === 0,
+    ),
     borderRadius: rect.w * radiusShare,
     backgroundColor: bezelColor,
     padding: rect.w * bezelShare,

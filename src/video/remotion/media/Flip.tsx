@@ -3,6 +3,7 @@ import { flipFace } from "../../motion/moves";
 import type { Tempo } from "../../motion/tempo";
 import { eased } from "../../motion/timeline";
 import { useMs } from "../motion/Move";
+import { restingTransform } from "../motion/pixels";
 
 type Props = { front: ReactNode; back: ReactNode; atMs: number; tempo: Tempo; style?: CSSProperties };
 
@@ -12,5 +13,7 @@ const flipMoves = 2;
 export function Flip({ front, back, atMs, tempo, style }: Props) {
   const face = flipFace(eased(useMs(), atMs, tempo.quickMs * flipMoves, tempo.moveCurve));
 
-  return <div style={{ ...style, transform: `scaleX(${face.scaleX})` }}>{face.back ? back : front}</div>;
+  const transform = restingTransform(`scaleX(${face.scaleX})`, face.scaleX === 1);
+
+  return <div style={{ ...style, transform }}>{face.back ? back : front}</div>;
 }

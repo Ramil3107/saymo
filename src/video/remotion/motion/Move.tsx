@@ -3,6 +3,7 @@ import { useCurrentFrame } from "remotion";
 import { type MoveSpec, type Pose, poseAt } from "../../motion/moves";
 import type { Tempo } from "../../motion/tempo";
 import { frameToMs } from "../frames";
+import { restingTransform } from "./pixels";
 
 type Props = {
   spec: MoveSpec;
@@ -65,14 +66,28 @@ function poseStyle(pose: Pose, unitPx: number, filterId: string): CSSProperties 
 
   return {
     opacity: pose.opacity,
-    transform: [
-      `perspective(${unitPx * perspectiveUnits}px)`,
-      `translate(${pose.x * 100}%, ${(pose.y + pose.maskY * maskTravel) * 100}%)`,
-      `rotateY(${pose.rotateY}deg)`,
-      `scale(${pose.scale})`,
-      `scaleX(${pose.scaleX})`,
-    ].join(" "),
+    transform: restingTransform(
+      [
+        `perspective(${unitPx * perspectiveUnits}px)`,
+        `translate(${pose.x * 100}%, ${(pose.y + pose.maskY * maskTravel) * 100}%)`,
+        `rotateY(${pose.rotateY}deg)`,
+        `scale(${pose.scale})`,
+        `scaleX(${pose.scaleX})`,
+      ].join(" "),
+      isResting(pose),
+    ),
     filter: filters.length > 0 ? filters.join(" ") : undefined,
     clipPath: pose.clipRight > visibleThreshold ? `inset(0 ${pose.clipRight * 100}% 0 0)` : undefined,
   };
+}
+
+function isResting(pose: Pose): boolean {
+  return (
+    pose.x === 0 &&
+    pose.y === 0 &&
+    pose.maskY === 0 &&
+    pose.rotateY === 0 &&
+    pose.scale === 1 &&
+    pose.scaleX === 1
+  );
 }

@@ -3,6 +3,7 @@ import { exitMs, type MoveSpec } from "../../motion/moves";
 import { floatAt } from "../../motion/timeline";
 import type { Element } from "../../schema/video";
 import { Move, useMs } from "../motion/Move";
+import { wholePx } from "../motion/pixels";
 import type { Frame, Theme } from "../theme";
 
 export type MotionPreset = "pop" | "rise";
@@ -47,10 +48,10 @@ export function ElementBox({ element, theme, frame, children, style, preset = "r
 function boxStyle(element: Element, frame: Frame): CSSProperties {
   return {
     position: "absolute",
-    left: element.box.x * frame.width,
-    top: element.box.y * frame.height,
-    width: element.box.w * frame.width,
-    height: element.box.h * frame.height,
+    left: wholePx(element.box.x * frame.width),
+    top: wholePx(element.box.y * frame.height),
+    width: wholePx(element.box.w * frame.width),
+    height: wholePx(element.box.h * frame.height),
   };
 }
 

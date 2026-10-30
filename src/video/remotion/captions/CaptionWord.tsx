@@ -4,6 +4,7 @@ import { type CaptionLook, typedLetters, wordPhase } from "../../captions/looks"
 import { mix, poseAt } from "../../motion/moves";
 import { eased, linear, smoothstep } from "../../motion/timeline";
 import type { CaptionPage } from "../../schema/video";
+import { restingTransform } from "../motion/pixels";
 import { accentColor, ink, type Theme, textOn, textShadow, white } from "../theme";
 
 export type WordProps = {
@@ -125,7 +126,10 @@ function baseStyle({ look, fontSize }: WordProps, motion: Motion): CSSProperties
 
   return {
     opacity: motion.opacity,
-    transform: `translateY(${motion.riseEm}em) scale(${motion.scale})`,
+    transform: restingTransform(
+      `translateY(${motion.riseEm}em) scale(${motion.scale})`,
+      motion.riseEm === 0 && motion.scale === 1,
+    ),
     fontWeight: Math.round(motion.weight),
     color:
       look.enter === "fill"

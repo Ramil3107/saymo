@@ -3,8 +3,9 @@ import { Img } from "remotion";
 import { poseAt } from "../../motion/moves";
 import type { Tempo } from "../../motion/tempo";
 import { staggered } from "../../motion/timeline";
-import type { Rect } from "../accents/geometry";
+import { type Rect, rectStyle } from "../accents/geometry";
 import { useMs } from "../motion/Move";
+import { restingTransform } from "../motion/pixels";
 
 export type CollageLayout = "staircase" | "scatter";
 
@@ -57,14 +58,10 @@ export function tileOf(layout: CollageLayout, index: number, count: number, area
 
 function tileStyle({ rect, rotate }: Tile, opacity: number, scale: number): CSSProperties {
   return {
-    position: "absolute",
-    left: rect.x,
-    top: rect.y,
-    width: rect.w,
-    height: rect.h,
+    ...rectStyle(rect),
     objectFit: "cover",
     opacity,
-    transform: `rotate(${rotate}deg) scale(${scale})`,
+    transform: restingTransform(`rotate(${rotate}deg) scale(${scale})`, rotate === 0 && scale === 1),
     boxShadow: "0 10px 30px rgba(10,10,20,0.28)",
     border: "3px solid #FFFFFF",
   };

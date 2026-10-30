@@ -7,6 +7,7 @@ import { captionBand } from "../../layout/safeZones";
 import type { CaptionPage, VideoDoc } from "../../schema/video";
 import { serifFamily } from "../fonts";
 import { useMs } from "../motion/Move";
+import { wholePx } from "../motion/pixels";
 import type { Frame, Theme } from "../theme";
 import { CaptionWord } from "./CaptionWord";
 
@@ -109,9 +110,9 @@ function pageStyle(
 
   return {
     position: "absolute",
-    left: band.x * frame.width,
-    width: band.w * frame.width,
-    bottom: bottom * frame.height,
+    left: wholePx(band.x * frame.width),
+    width: wholePx(band.w * frame.width),
+    bottom: wholePx(bottom * frame.height),
     textAlign: "center",
     fontSize,
     lineHeight,

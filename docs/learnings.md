@@ -2,6 +2,12 @@
 
 Entries are added by the `learn` skill, newest on top.
 
+### 2026-10-30 · A still element jumped a pixel between renderer tabs
+
+- **What happened:** In the media lab the photos of a finished collage twitched. Frames rendered as stills were identical, and a render with one browser tab was clean. The default render splits frames across several tabs, and tabs placed an element with a fractional position and a 2D transform a pixel apart, so neighbouring frames from different tabs jumped by up to 254 levels of brightness. Lambda splits a video across many browsers in the same way, so every product render was exposed.
+- **Lesson:** A frame must not depend on the browser that drew it. Fractional positions and transforms on resting elements are where tabs disagree, and stills or a single-tab render hide it.
+- **Rule:** `.claude/skills/vocab/SKILL.md`: positions are whole pixels and a resting element has no transform (`wholePx` and `restingTransform` in `src/video/remotion/motion/pixels.ts`); after rendering a primitive with the default concurrency, measure the frame-to-frame change over a still stretch (ffmpeg `tblend` and `signalstats` YMAX) and expect only compression noise, under about 10.
+
 ### 2026-10-30 · Motion taste comes from watched video, not from articles
 
 - **What happened:** The vocabulary research set the quality bar from articles, vendor blogs and interface motion systems (Material, Carbon, Fluent, Apple) and concluded that restraint wins: one change every 3 seconds, few curves, rare overshoot, the loud creator style as dated. It recommended gl-transitions for their licence and their Remotion adapter. The owner looked at the gallery and found it dated, disagreed about the loud style, and pointed at Higgsfield and motionvid, where motion itself is the content: how elements appear, leave and transform.
