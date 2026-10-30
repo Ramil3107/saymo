@@ -25,7 +25,7 @@ export function Headline({ element, theme, frame }: PrimitiveProps<"headline">) 
       element={element}
       theme={theme}
       frame={frame}
-      style={{ flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}
+      style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}
     >
       <div
         style={{
