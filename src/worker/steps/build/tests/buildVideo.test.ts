@@ -265,3 +265,52 @@ test("buildVideo puts a list in a side panel away from the face", () => {
   expect(list.items).toEqual(["нудота", "блювота"]);
   expect(list.box.x).toBeGreaterThan(0.5);
 });
+
+test("buildVideo shows a screen shot in a card and a face shot as cover", () => {
+  const beat = footagePlan.beats[0];
+  const footage = beat?.footage;
+  if (!footage) throw new Error("fixture beat has no footage");
+  const screenNotes = [1, 2, 3].map((n) => ({
+    tMs: footage.fromMs + n * 500,
+    description: "a lab sheet",
+    kind: "screen" as const,
+    onScreenText: [],
+  }));
+  const content = { ...sampleContent, frames: [...screenNotes, ...sampleContent.frames], faces: [] };
+
+  const doc = buildVideo(
+    footagePlan,
+    content,
+    { sourceVideo: { path: "in.mp4", info: content.source } },
+    brand,
+  );
+
+  expect(doc.scenes[0]?.footage?.fit).toBe("card");
+  expect(doc.scenes[1]?.footage?.fit).toBe("cover");
+});
+
+test("buildVideo turns a headline over a document card into a title strip above the card", () => {
+  const beat = footagePlan.beats[0];
+  const footage = beat?.footage;
+  if (!beat || !footage) throw new Error("fixture beat has no footage");
+  const screenNotes = [1, 2, 3].map((n) => ({
+    tMs: footage.fromMs + n * 500,
+    description: "a lab sheet",
+    kind: "screen" as const,
+    onScreenText: [],
+  }));
+  const content = { ...sampleContent, frames: [...screenNotes, ...sampleContent.frames], faces: [] };
+  const overlays = [
+    { id: "h", kind: "headline" as const, text: "Стандарти лабораторії", atMs: 0, durationMs: 3000 },
+  ];
+  const plan = { ...footagePlan, beats: [{ ...beat, overlays }, ...footagePlan.beats.slice(1)] };
+
+  const scene = buildVideo(plan, content, { sourceVideo: { path: "in.mp4", info: content.source } }, brand)
+    .scenes[0];
+  const title = scene?.elements[0];
+  if (!scene?.footage || !title) throw new Error("scene has no elements");
+
+  expect(title.kind).toBe("title-card");
+  expect(title.box.h).toBe(0.26);
+  expect(scene.footage.transform.y).toBeGreaterThanOrEqual(0.26 * 1920);
+});

@@ -1,6 +1,7 @@
 type Size = { width: number; height: number };
 type Point = { x: number; y: number };
 type Margins = { top?: number; bottom?: number; left?: number; right?: number };
+type Area = { x: number; y: number; w: number; h: number };
 
 export type CoverTransform = { scale: number; x: number; y: number };
 
@@ -35,6 +36,19 @@ export function fitCover(
     scale,
     x: clamp(target.width * anchor.x - at.x * scaled.width, minX, maxX),
     y: clamp(target.height * anchor.y - at.y * scaled.height, minY, maxY),
+  };
+}
+
+// Scales the source to fit inside an area of the target (frame fractions) and centers it there.
+export function fitContain(source: Size, target: Size, area: Area): CoverTransform {
+  const areaWidth = area.w * target.width;
+  const areaHeight = area.h * target.height;
+  const scale = Math.min(areaWidth / source.width, areaHeight / source.height);
+
+  return {
+    scale,
+    x: area.x * target.width + (areaWidth - source.width * scale) / 2,
+    y: area.y * target.height + (areaHeight - source.height * scale) / 2,
   };
 }
 

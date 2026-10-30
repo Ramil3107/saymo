@@ -41,6 +41,7 @@ export const SceneSchema = z.object({
     .object({
       assetId: z.string(),
       fromMs: z.number(),
+      fit: z.enum(["cover", "card"]).optional(),
       transform: z.object({ scale: z.number(), x: z.number(), y: z.number() }),
     })
     .optional(),

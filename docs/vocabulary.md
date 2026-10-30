@@ -17,7 +17,7 @@ The vocabulary is a set of React components on Remotion that take their paramete
 | Transitions | cut, fade, slide, wipe, push |
 | Backgrounds | color, gradient, brand, blurred footage |
 | Audio | music ducked under the voice, voice, loudness normalization |
-| Layout | per beat: free (chips float beside the subject in slots with keep-out zones), panel-top (a title card over the top 46%, the footage zooms and slides so the face sits below), panel-side (a list over one side, the face moves to the other); safe zones per destination with a 4% gutter |
+| Layout | per beat: free (chips float beside the subject in slots with keep-out zones), panel-top (a title card over the top 46%, the footage zooms and slides so the face sits below), panel-side (a list over one side, the face moves to the other); over a document or screen card the top panel is a short title strip and a headline becomes that strip; safe zones per destination with a 4% gutter |
 
 ## Where primitives come from
 

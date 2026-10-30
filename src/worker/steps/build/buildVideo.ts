@@ -6,10 +6,12 @@ import { railPages } from "../../../video/captions/rail";
 import { rebaseWords } from "../../../video/captions/timeline";
 import { type Destination, destinations, formatSize } from "../../../video/destinations";
 import { chipSize } from "../../../video/layout/chipSize";
-import { fitCover } from "../../../video/layout/fitCover";
+import { fitContain, fitCover } from "../../../video/layout/fitCover";
 import { keepOutErrorShare, keepOutZones, overlapRatio } from "../../../video/layout/keepOut";
 import {
+  cardArea,
   coverOptionsFor,
+  type Fit,
   isPanelKind,
   type Layout,
   panelBox,
@@ -65,7 +67,7 @@ type Point = { x: number; y: number };
 type Transform = { scale: number; x: number; y: number };
 type Interval = { startMs: number; endMs: number };
 type Slot = { beat: Beat; startMs: number; durationMs: number };
-type Framing = { layout: Layout; side: Side };
+type Framing = { layout: Layout; side: Side; fit: Fit };
 type Timing = { enterMs: number; exitMs: number };
 
 type SceneContext = {
@@ -240,7 +242,7 @@ function buildScene(slot: Slot, context: SceneContext): BuiltScene {
     background: { kind: "brand" },
     footage:
       beat.footage && transform
-        ? { assetId: sourceAssetId, fromMs: beat.footage.fromMs, transform }
+        ? { assetId: sourceAssetId, fromMs: beat.footage.fromMs, fit: framing.fit, transform }
         : undefined,
     camera: beat.camera,
     elements,
@@ -256,15 +258,32 @@ function buildScene(slot: Slot, context: SceneContext): BuiltScene {
 }
 
 function framingFor(beat: Beat, context: SceneContext): Framing {
+  const fit = fitFor(beat, context.content);
   const hasPanel = beat.overlays.some((overlay) => isPanelKind(overlay.kind));
-  const layout = beat.layout ?? (hasPanel ? "panel-top" : "free");
+  const hasTitle = fit === "card" && beat.overlays.some((overlay) => overlay.kind === "headline");
+  const layout = beat.layout ?? (hasPanel || hasTitle ? "panel-top" : "free");
   const focus = beat.footage ? faceFocus(context.content, beat.footage) : undefined;
 
-  return { layout, side: panelSide(focus) };
+  return { layout, side: panelSide(focus), fit };
+}
+
+// A shot whose frames are mostly a screen or a document is shown inside a card, not stretched over the frame.
+function fitFor(beat: Beat, content: ContentMap | null): Fit {
+  if (!beat.footage || !content) return "cover";
+  const { fromMs, toMs } = beat.footage;
+  const notes = content.frames.filter((frame) => frame.tMs >= fromMs && frame.tMs <= toMs);
+  const screens = notes.filter((frame) => frame.kind === "screen").length;
+
+  return notes.length > 0 && screens * 2 >= notes.length ? "card" : "cover";
 }
 
 function footageTransform(beat: Beat, context: SceneContext, framing: Framing): Transform | undefined {
   if (!beat.footage || !context.source) return undefined;
+
+  if (framing.fit === "card") {
+    const area = cardArea(framing.layout, framing.side, context.destination.safeZone, context.captionsOn);
+    return fitContain(context.source, context.target, area);
+  }
 
   const focus = faceFocus(context.content, beat.footage);
   return fitCover(context.source, context.target, focus, coverOptionsFor(framing.layout, framing.side));
@@ -286,20 +305,35 @@ function placeElements(
   framing: Framing,
 ): Element[] {
   const placed: Element[] = [];
-  const panel = framing.layout === "free" ? [] : [panelBox(framing.layout, framing.side)];
+  const { beat, durationMs } = slot;
+  const panel = framing.layout === "free" ? undefined : panelBox(framing.layout, framing.side, framing.fit);
+  const card =
+    framing.fit === "card"
+      ? cardArea(framing.layout, framing.side, context.destination.safeZone, context.captionsOn)
+      : undefined;
+  const reserved = [panel, card].filter((box): box is Box => box !== undefined);
 
-  for (const overlay of slot.beat.overlays) {
-    if (isPanelKind(overlay.kind) && framing.layout !== "free") {
-      placed.push(elementFrom(slot.beat, overlay, panelBox(framing.layout, framing.side), slot.durationMs));
+  for (const overlay of beat.overlays) {
+    if (panel && fillsPanel(overlay, framing)) {
+      placed.push(elementFrom(beat, asPanelOverlay(overlay), panel, durationMs));
       continue;
     }
-    const timing = elementTiming(overlay, slot.durationMs);
+    const timing = elementTiming(overlay, durationMs);
     const taken = placed.filter((element) => sharesTime(element, timing)).map((element) => element.box);
-    const element = placeElement(overlay, slot, transform, context, [...panel, ...taken]);
+    const element = placeElement(overlay, slot, transform, context, [...reserved, ...taken]);
     if (element) placed.push(element);
   }
 
   return placed;
+}
+
+function fillsPanel(overlay: Overlay, framing: Framing): boolean {
+  return isPanelKind(overlay.kind) || (framing.fit === "card" && overlay.kind === "headline");
+}
+
+// A headline over a document becomes the title strip above the card.
+function asPanelOverlay(overlay: Overlay): Overlay {
+  return overlay.kind === "headline" ? { ...overlay, kind: "title-card" } : overlay;
 }
 
 function placeElement(

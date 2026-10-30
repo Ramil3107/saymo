@@ -18,13 +18,17 @@ export function TitleCard({ element, theme, frame }: PrimitiveProps<"title-card"
   const width = frame.width * (1 - 2 * horizontal);
   const labelSize = frame.height * labelShare;
 
+  const paddingTop = frame.height * (theme.safeZone.top + 0.03);
+  const labelBlock = element.sub ? labelSize * 1.9 : 0;
+  const available = element.box.h * frame.height - paddingTop - labelBlock;
+
   const { fontSize } = fitTextOnNLines({
     text: element.text,
     maxLines,
     maxBoxWidth: width,
     fontFamily: theme.fontFamily,
     fontWeight: 900,
-    maxFontSize: frame.height * titleShare,
+    maxFontSize: Math.min(frame.height * titleShare, available / (maxLines * 1.1)),
   });
 
   return (
@@ -34,7 +38,7 @@ export function TitleCard({ element, theme, frame }: PrimitiveProps<"title-card"
           width: "100%",
           height: "100%",
           background: `linear-gradient(180deg, ${panel} 0%, ${panel} 72%, ${withAlpha(panel, 0)} 100%)`,
-          paddingTop: frame.height * (theme.safeZone.top + 0.03),
+          paddingTop,
           paddingLeft: frame.width * horizontal,
           paddingRight: frame.width * horizontal,
           display: "flex",

@@ -12,3 +12,8 @@ test("panelSide takes the side away from the face", () => {
   expect(panelSide({ x: 0.7, y: 0.3 })).toBe("left");
   expect(panelSide(undefined)).toBe("right");
 });
+
+test("a top panel over a card scene is a short title strip", () => {
+  expect(panelBox("panel-top", "left", "card")).toEqual({ x: 0, y: 0, w: 1, h: 0.26 });
+  expect(panelBox("panel-top", "left", "cover")).toEqual({ x: 0, y: 0, w: 1, h: 0.46 });
+});

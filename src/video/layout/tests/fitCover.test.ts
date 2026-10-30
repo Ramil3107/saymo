@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { fitCover } from "../fitCover";
+import { fitContain, fitCover } from "../fitCover";
 
 test("fitCover fills 9:16 from 16:9 and keeps the face in frame", () => {
   const t = fitCover({ width: 1920, height: 1080 }, { width: 1080, height: 1920 }, { x: 0.2, y: 0.5 });
@@ -42,4 +42,15 @@ test("fitCover keeps the footage covering the frame beside a side panel", () => 
 
   expect(shifted.x).toBeLessThanOrEqual(0.45 * target.width + 1e-6);
   expect(shifted.x + source.width * shifted.scale).toBeGreaterThanOrEqual(target.width - 1e-6);
+});
+
+test("fitContain fits a phone recording inside an area and centers it", () => {
+  const source = { width: 1206, height: 2622 };
+  const target = { width: 1080, height: 1920 };
+  const area = { x: 0.06, y: 0.18, w: 0.88, h: 0.5 };
+  const placed = fitContain(source, target, area);
+
+  expect(placed.scale).toBeCloseTo((0.5 * 1920) / 2622, 6);
+  expect(placed.x + (source.width * placed.scale) / 2).toBeCloseTo((0.06 + 0.44) * 1080, 3);
+  expect(placed.y).toBeCloseTo(0.18 * 1920, 3);
 });

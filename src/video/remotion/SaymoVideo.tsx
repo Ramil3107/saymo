@@ -54,7 +54,7 @@ function SceneView({ scene, doc, theme }: { scene: Scene; doc: VideoDoc; theme: 
       <Background background={scene.background} theme={theme} />
       <Camera camera={scene.camera} durationMs={scene.durationMs}>
         {scene.footage && footageAsset ? (
-          <Footage footage={scene.footage} asset={footageAsset} durationMs={scene.durationMs} />
+          <Footage footage={scene.footage} asset={footageAsset} durationMs={scene.durationMs} theme={theme} />
         ) : null}
       </Camera>
       {scene.elements.map((element) => (
