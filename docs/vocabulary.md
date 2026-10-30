@@ -36,7 +36,47 @@ The watermark for the Free plan is also a primitive. Its design is up to the own
 
 ## Next iteration: the vocabulary base
 
-The reference is Higgsfield for motion (bold kinetic type, fast collage, shapes and counters, hard cuts) and motionvid for the use cases (business and product ads, launches, explainers, YouTube and talking-head reels). The hand-made Synevo reel in `video-editing/synevo` is no longer the bar. The work starts from motion: how elements appear, leave and transform. Gaps noted after the design spike on `runs/face-v2`:
+The reference is Higgsfield for motion (bold kinetic type, fast collage, shapes and counters, hard cuts) and motionvid for the use cases (business and product ads, launches, explainers, YouTube and talking-head reels). The hand-made Synevo reel in `video-editing/synevo` is no longer the bar. The work starts from motion: how elements appear, leave and transform.
+
+### What the references do
+
+A frame-by-frame breakdown of the owner's screen recordings of 2026-10-30, kept in `runs/references/`.
+
+Higgsfield, the Kling 4.0 card:
+
+- Moves take 2–4 frames at 30 fps and are followed by holds of 0.5–1.5 s; the contrast between snap and stillness is the energy.
+- Text types on one letter per frame ("KL", "KLI", "KLIN", "KLING"), counters roll in three slots one after another (10, 20, 30), words slide up from under the frame edge.
+- Text transforms instead of leaving: "4K" splits so the 4 and the K frame the face, a giant "10" shrinks into place, a three-line title collapses into one small line, colors swap from pink to blue for two frames.
+- Shapes carry the rhythm: blinking chevrons, a pink frame that grows from the center to the frame edge, solid squares flashing over images, giant outline numerals in the background.
+- Collage: small photos appear one per frame in a staircase or scattered, tinted pink or halftoned; a one- or two-frame flash insert of another image; a pixel mosaic that resolves into the shot.
+- A thumbnail in the collage grows into a video player, and the player leaves skewed in perspective while the next word pushes in.
+- Hot pink, black and neon lime on off-white with pastel blobs; a squared display face.
+
+motionvid, a startup launch, a feature announcement and a talking-head reel:
+
+- Moves take 200–400 ms, something is always in motion, and changes follow the voice.
+- Shapes morph into content: an empty input box collapses into a pill that widens to reveal the product name, then a burst of lines and sparkles; a label smears in from the side with motion blur.
+- Typing with a caret at about ten characters a second; as "Paid monthly." types, three calendar cards flip one by one from "1" to a green "Paid".
+- The camera moves into a detail of a UI card while the rest fades; a dark panel wipes across to the next scene.
+- Talking-head reel: the speaker in the lower half on paper, the upper half changes with each phrase: b-roll with stamped labels, a 2×2 grid where the cell for the word being said turns to color while the others stay grey, a cut-out figure with highlighted muscles and an arrow drawn toward them. Captions show two or three words with the keyword in a colored box.
+- Every example names its style (Sticker Launch, Warm Paper, Floating Dark UI, Apple, Sketchbook, Vox, Bold Caption): thick outlines and paper grain, or clean UI on light grey.
+
+### Order of work
+
+Each step ends with a render the owner reviews.
+
+1. Motion system: moves to enter, leave, transform and stay alive, timed by the style (fast like Higgsfield, smooth like motionvid), and choreography: stagger, sync to spoken words, sync to the music beat. A motion lab composition plays every move in both styles.
+2. Kinetic type: letter type-on, word by word, rolling counters, split, color swap, a punch from giant size, outline numerals, captions with boxed keywords.
+3. Shapes and accents: chevrons, growing frames, flash squares, bursts and sparkles, drawn arrows, selection handles, grain, grid and halftone textures.
+4. Media: photo collage, a thumbnail that becomes a player, a grid that lights the cell being named, UI cards with a camera into a detail, flipping states, cut-out figures (background removal).
+5. Transitions: cut, flash cut, panel wipe, perspective push, zoom into a detail, mosaic resolve, dissolve.
+6. Styles: one like Higgsfield and one like motionvid first, each with its own cadence, curves and accent budget.
+7. The director and the build use them on `runs/face-v2` and on a text-mode ad, compared with the reference clips.
+8. The sound-effect layer, synced to the moves.
+
+### Gaps noted after the design spike
+
+Most of them fold into the steps above:
 
 - Typography: a brand font with weights 600–900, a size scale per element, line spacing; fonts self-hosted.
 - Icons and symbols: badge icons in chips, animated SVG symbols (a crossed wheat, a red cross) with stroke reveals and a shake.
