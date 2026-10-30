@@ -1,10 +1,12 @@
 import type { SafeZone } from "../destinations";
+import type { Tempo } from "../motion/tempo";
 import type { RegisterTokens } from "../registers";
 import type { Element, VideoDoc } from "../schema/video";
 
 export type Theme = {
   brand: VideoDoc["brand"];
   register: RegisterTokens;
+  tempo: Tempo;
   fontFamily: string;
   safeZone: SafeZone;
 };

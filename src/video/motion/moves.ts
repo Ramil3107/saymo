@@ -1,7 +1,7 @@
 import type { Tempo } from "./tempo";
 import { eased, linear, smoothstep } from "./timeline";
 
-export type Enter = "cut" | "fade" | "pop" | "punch" | "rise" | "drop" | "smear" | "reveal";
+export type Enter = "cut" | "fade" | "pop" | "punch" | "rise" | "lift" | "drop" | "smear" | "reveal";
 
 export type Exit = "cut" | "fade" | "collapse" | "sink" | "smear" | "tilt";
 
@@ -41,6 +41,7 @@ const enterLength: Record<Enter, number> = {
   pop: 1,
   punch: 1.6,
   rise: 1,
+  lift: 1,
   drop: 1.2,
   smear: 1,
   reveal: 1.4,
@@ -51,6 +52,7 @@ const exitLength: Record<Exit, number> = { cut: 0, fade: 1, collapse: 1, sink: 1
 const popFromScale = 0.6;
 const punchFromScale = 3.2;
 const dropFromY = -0.6;
+const liftFromY = 0.12;
 const smearDistance = 0.8;
 const smearStretch = 0.4;
 const smearBlur = 0.6;
@@ -96,6 +98,8 @@ export function enterPose(move: Enter, { eased: p, linear: t }: Progress): Pose 
       return { ...restPose, opacity: shown, scale: punchFromScale + (1 - punchFromScale) * p };
     case "rise":
       return { ...restPose, maskY: away };
+    case "lift":
+      return { ...restPose, opacity: shown, y: liftFromY * away };
     case "drop":
       return { ...restPose, opacity: shown, y: dropFromY * away };
     case "smear":

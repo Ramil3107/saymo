@@ -1,10 +1,13 @@
 import { expect, test } from "vitest";
 import { estimateTextWidth } from "../../layout/textWidth";
+import { tempos } from "../../motion/tempo";
+import { registers } from "../../registers";
 import { captionGap, popScale, tokenStyle } from "../primitives/captionStyle";
 
 const theme = {
   brand: { colors: ["#2D4BFF", "#FFD23F"], font: "Onest" },
-  register: undefined as never,
+  register: registers["serious-clinical"],
+  tempo: tempos.glide,
   fontFamily: "Onest",
   safeZone: { top: 0.14, bottom: 0.22, left: 0.04, right: 0.14 },
 };

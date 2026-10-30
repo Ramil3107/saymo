@@ -1,5 +1,6 @@
 import { AbsoluteFill, Sequence, useVideoConfig } from "remotion";
 import { destinations, type SafeZone } from "../destinations";
+import { tempos } from "../motion/tempo";
 import { registers } from "../registers";
 import type { Element, Scene, VideoDoc } from "../schema/video";
 import { loadBrandFont } from "./fonts";
@@ -24,7 +25,8 @@ import type { Frame, Theme } from "./theme";
 export function SaymoVideo(doc: VideoDoc) {
   const { fontFamily } = loadBrandFont(doc.brand.font);
   const safeZone = destinations[doc.destination].safeZone;
-  const theme: Theme = { brand: doc.brand, register: registers[doc.register], fontFamily, safeZone };
+  const register = registers[doc.register];
+  const theme: Theme = { brand: doc.brand, register, tempo: tempos[register.tempo], fontFamily, safeZone };
   const musicSrc = doc.music ? assetSrc(doc, doc.music.assetId) : undefined;
 
   return (

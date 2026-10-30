@@ -87,13 +87,13 @@ Frame sizes: 9:16 is 1080×1920, 1:1 is 1080×1080, 16:9 is 1920×1080, all at 3
 
 A register is the character of a video. It sets timings, curves, staggers, font weights and the number of elements in a scene. It has three axes: energy, tone and density. The presets are `driving-launch`, `serious-clinical`, `rich-premium` and `playful-sale`. The vocabulary reads the register and QA checks it.
 
-| Register | Scene length, ms | Min hold, ms | Stagger, ms | Easing | Overshoot | Font weight | Max elements | Max concurrent motions | Music BPM |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `driving-launch` | 1500–2500 | 700 | 40 | snap | 1.4 | 800–900 | 4 | 2 | 110–130 |
-| `serious-clinical` | 3000–4500 | 1200 | 80 | settle | 0 | 500–700 | 3 | 1 | 70–90 |
-| `rich-premium` | 2500–4000 | 1000 | 60 | drift | 0.6 | 600–800 | 5 | 2 | 80–100 |
-| `playful-sale` | 1500–2500 | 700 | 50 | bounce | 1.8 | 800–900 | 6 | 3 | 120–140 |
+| Register | Scene length, ms | Min hold, ms | Tempo | Font weight | Max elements | Max concurrent motions | Music BPM |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `driving-launch` | 1500–2500 | 700 | snap | 800–900 | 4 | 2 | 110–130 |
+| `serious-clinical` | 3000–4500 | 1200 | glide | 500–700 | 3 | 1 | 70–90 |
+| `rich-premium` | 2500–4000 | 1000 | glide | 600–800 | 5 | 2 | 80–100 |
+| `playful-sale` | 1500–2500 | 700 | snap | 800–900 | 6 | 3 | 120–140 |
 
-Min hold is the shortest time something stays on screen. Stagger is the delay between elements that enter one after another. Max concurrent motions is how many things may move at the same moment.
+Min hold is the shortest time something stays on screen. The tempo sets move lengths, staggers and curves; the tempos are described in [Vocabulary](/vocabulary#motion-system). Max concurrent motions is how many things may move at the same moment.
 
 The tables above are the exact fields of the first version. The constraints in the rules above are mandatory.

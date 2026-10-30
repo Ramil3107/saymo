@@ -73,7 +73,7 @@ function destinationTable(): string {
 function registerTable(): string {
   return Object.entries(registers)
     .map(([id, r]) => {
-      const scene = `scene ${r.sceneMs[0]}–${r.sceneMs[1]} ms, min hold ${r.minHoldMs} ms, easing ${r.easing}`;
+      const scene = `scene ${r.sceneMs[0]}–${r.sceneMs[1]} ms, min hold ${r.minHoldMs} ms, tempo ${r.tempo}`;
       const look = `font weight ${r.fontWeight[0]}–${r.fontWeight[1]}, max ${r.maxElements} elements per beat`;
       return `${id}: ${scene}, ${look}, music ${r.musicBpm[0]}–${r.musicBpm[1]} bpm`;
     })

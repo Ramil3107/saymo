@@ -15,6 +15,8 @@ type Props = {
 
 const perspectiveUnits = 8;
 const visibleThreshold = 0.01;
+const maskClip = "inset(-25% -12% -30% -12%)";
+const maskTravel = 1.35;
 
 const centered: CSSProperties = {
   width: "100%",
@@ -38,7 +40,7 @@ export function Move({ spec, tempo, unitPx, style, innerStyle, children }: Props
   const smearPx = pose.smear * unitPx;
 
   return (
-    <div style={{ ...style, overflow: masked ? "hidden" : undefined }}>
+    <div style={{ ...style, clipPath: masked ? maskClip : undefined }}>
       {smearPx > visibleThreshold ? <SmearFilter id={filterId} px={smearPx} /> : null}
       <div style={{ ...centered, ...poseStyle(pose, unitPx, filterId), ...innerStyle }}>{children}</div>
     </div>
@@ -65,7 +67,7 @@ function poseStyle(pose: Pose, unitPx: number, filterId: string): CSSProperties 
     opacity: pose.opacity,
     transform: [
       `perspective(${unitPx * perspectiveUnits}px)`,
-      `translate(${pose.x * 100}%, ${(pose.y + pose.maskY) * 100}%)`,
+      `translate(${pose.x * 100}%, ${(pose.y + pose.maskY * maskTravel) * 100}%)`,
       `rotateY(${pose.rotateY}deg)`,
       `scale(${pose.scale})`,
       `scaleX(${pose.scaleX})`,

@@ -16,7 +16,7 @@ import {
 } from "../moves";
 import { tempos } from "../tempo";
 
-const enters: Enter[] = ["cut", "fade", "pop", "punch", "rise", "drop", "smear", "reveal"];
+const enters: Enter[] = ["cut", "fade", "pop", "punch", "rise", "lift", "drop", "smear", "reveal"];
 const exits: Exit[] = ["cut", "fade", "collapse", "sink", "smear", "tilt"];
 const { snap, glide } = tempos;
 const poseKeys: (keyof Pose)[] = [
