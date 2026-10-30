@@ -41,8 +41,8 @@ Slices in `features/`: auth, brand, library, generation, editing, rendering, rev
 | Storage and rendering | S3 with CloudFront, Remotion Lambda |
 | Auth and billing | Better Auth, Paddle or Lemon Squeezy |
 | Email, analytics, errors | Resend and React Email, PostHog, Sentry |
-| Models | Claude through the Anthropic SDK (tool use for structured output, prompt caching), ElevenLabs for voice |
+| Models | Claude through the Anthropic SDK (tool use for structured output, prompt caching), ElevenLabs for voice and transcription, AWS Rekognition for faces |
 | Quality | Biome, Vitest, Playwright for the main path, GitHub Actions |
 | Hosting | Railway for web, worker and Postgres; AWS only for Lambda, S3 and CloudFront |
 
-Remotion 4.x is free for companies of up to three people and its terms change in 5.0, so recheck the license on upgrade. The director and vision run on a Sonnet-class model and cheap edits on a Haiku-class one; the final choice follows the spike measurements.
+Remotion 4.x is free for companies of up to three people and its terms change in 5.0, so recheck the license on upgrade. Frame descriptions run on Claude Sonnet 5.5 and the director on Claude Opus 5.5 until Opus and Sonnet are compared on the vocabulary base; cheap edits go to a Haiku-class model. The reasons are in the [decision log](/product/decisions).

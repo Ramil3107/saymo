@@ -18,7 +18,7 @@ const envSchema = z.object({
   REMOTION_LAMBDA_FUNCTION_NAME: optionalString,
   REMOTION_SERVE_URL: optionalString,
   SAYMO_DIRECTOR_MODEL: stringWithDefault("claude-opus-5-5"),
-  SAYMO_VISION_MODEL: stringWithDefault("claude-opus-5-5"),
+  SAYMO_VISION_MODEL: stringWithDefault("claude-sonnet-5-5"),
   SAYMO_VISION_BUDGET_USD: emptyAsMissing(z.coerce.number().default(1)),
 });
 

@@ -18,8 +18,8 @@ A job can move to `failed` at any step. In `analyzing`, transcription and frame 
 | --- | --- | --- | --- |
 | 1 | Upload | Straight to S3 in parts, with resume. ffprobe checks that it is a video within the length limit | |
 | 2 | Ingest | Fast part first: audio track, shot boundaries, keyframes. Then in the background: normalized source and 720p proxy | seconds, background 1–2 min |
-| 3 | Transcription | Words with timestamps, speakers, language. ElevenLabs Scribe or Deepgram, chosen in the spike | 20–60 s |
-| 4 | Frame understanding | Faces and people per frame (ONNX or AWS Rekognition, chosen in the spike), keyframe descriptions from Claude. Result: the content map | 20–40 s |
+| 3 | Transcription | Words with timestamps, speakers, language. ElevenLabs Scribe v2, with Deepgram Nova 3 as the reserve | 20–60 s |
+| 4 | Frame understanding | Faces per frame from AWS Rekognition, keyframe descriptions from Claude Sonnet 5.5. Result: the content map | 20–40 s |
 | 5 | Director | Waits for steps 3 and 4. Claude writes the plan from the transcript and the content map. In text mode the input is the text and the linked page | 30–60 s |
 | 6 | Questions | If the plan has questions, the job waits in `awaiting_answers`. Answers merge into the plan; the director is not called again if they match the defaults | waits for the user |
 | 7 | Build | Deterministic: plan to video document. Voice from ElevenLabs when needed, scenes fit the speech, captions come from word timings | seconds plus voice |

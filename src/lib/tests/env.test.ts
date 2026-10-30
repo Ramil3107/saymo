@@ -4,6 +4,7 @@ import { loadEnv, requireEnv } from "../env";
 test("defaults apply when variables are missing", () => {
   const env = loadEnv({});
   expect(env.SAYMO_DIRECTOR_MODEL).toBe("claude-opus-5-5");
+  expect(env.SAYMO_VISION_MODEL).toBe("claude-sonnet-5-5");
   expect(env.AWS_REGION).toBe("us-east-1");
   expect(env.SAYMO_VISION_BUDGET_USD).toBe(1);
 });

@@ -19,7 +19,7 @@ Copy `.env.example` to `.env` and fill it in. `.env` is git-ignored.
 | --- | --- | --- |
 | `ANTHROPIC_API_KEY` | director and frame descriptions (Claude) | [console.anthropic.com](https://console.anthropic.com), API keys |
 | `ELEVENLABS_API_KEY` | voice and Scribe transcription | [elevenlabs.io](https://elevenlabs.io), API keys |
-| `DEEPGRAM_API_KEY` | Deepgram transcription, for comparison in the spike | [console.deepgram.com](https://console.deepgram.com), API keys |
+| `DEEPGRAM_API_KEY` | Deepgram transcription, the reserve behind `--transcriber deepgram` | [console.deepgram.com](https://console.deepgram.com), API keys |
 | `AWS_REGION` | AWS region, `us-east-1` by default | no change needed |
 | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | AWS Rekognition (faces in frames) | access key of the IAM user below |
 | `REMOTION_AWS_ACCESS_KEY_ID`, `REMOTION_AWS_SECRET_ACCESS_KEY` | Remotion Lambda | access key of the same IAM user |
