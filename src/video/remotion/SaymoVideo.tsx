@@ -53,10 +53,10 @@ function SceneView({ scene, doc, theme }: { scene: Scene; doc: VideoDoc; theme: 
         {scene.footage && footageAsset ? (
           <Footage footage={scene.footage} asset={footageAsset} durationMs={scene.durationMs} />
         ) : null}
-        {scene.elements.map((element) => (
-          <ElementView key={element.id} element={element} theme={theme} frame={frame} />
-        ))}
       </Camera>
+      {scene.elements.map((element) => (
+        <ElementView key={element.id} element={element} theme={theme} frame={frame} />
+      ))}
     </AbsoluteFill>
   );
 }
