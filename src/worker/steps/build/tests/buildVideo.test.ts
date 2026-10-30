@@ -314,3 +314,30 @@ test("buildVideo turns a headline over a document card into a title strip above 
   expect(title.box.h).toBe(0.26);
   expect(scene.footage.transform.y).toBeGreaterThanOrEqual(0.26 * 1920);
 });
+
+test("buildVideo leaves out an overlay that could only sit on another element", () => {
+  const first = textPlan.beats[0];
+  if (!first) throw new Error("fixture has no beats");
+  const wide = (id: string) => ({
+    id,
+    kind: "headline" as const,
+    text: "A headline that takes the whole slot",
+    atMs: 0,
+    durationMs: 2000,
+  });
+  const plan = {
+    ...textPlan,
+    beats: [
+      { ...first, overlays: [wide("a"), wide("b"), wide("c"), wide("d"), wide("e"), wide("f")] },
+      ...textPlan.beats.slice(1),
+    ],
+  };
+
+  const elements = buildVideo(plan, null, {}, brand).scenes[0]?.elements ?? [];
+
+  for (const one of elements) {
+    for (const other of elements) {
+      if (one !== other) expect(intersectionArea(one.box, other.box)).toBe(0);
+    }
+  }
+});

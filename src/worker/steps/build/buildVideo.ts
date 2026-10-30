@@ -7,6 +7,7 @@ import { rebaseWords } from "../../../video/captions/timeline";
 import { type Destination, destinations, formatSize } from "../../../video/destinations";
 import { chipSize } from "../../../video/layout/chipSize";
 import { fitContain, fitCover } from "../../../video/layout/fitCover";
+import { intersectionArea } from "../../../video/layout/geometry";
 import { keepOutErrorShare, keepOutZones, overlapRatio } from "../../../video/layout/keepOut";
 import {
   cardArea,
@@ -364,6 +365,7 @@ function placeElement(
     measured,
   );
   if (overlapRatio(box, zones) > keepOutErrorShare) return undefined;
+  if (taken.some((other) => intersectionArea(box, other) > 0)) return undefined;
 
   return elementFrom(beat, overlay, box, durationMs);
 }
