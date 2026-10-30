@@ -82,6 +82,20 @@ The register of a video picks its tempo: `driving-launch` and `playful-sale` mov
 
 Cut-out figures need background removal, a service decision that is still open. `pnpm remotion:lab` also renders `runs/lab/media-lab.mp4`, seven demos over frames and a clip of `runs/face-v2`.
 
+## Transitions
+
+A scene enters by its `transition` and the scene before it leaves by the same one, each over half the transition, so scenes never overlap and the timing stays on the speech (`src/video/motion/transitions.ts`, `src/video/remotion/motion/SceneTransition.tsx`):
+
+- `cut`: nothing.
+- `flash`: a white flash, two frames on each side of the cut in `snap`, a quick dip to white in `glide`.
+- `wipe`: a dark panel grows from the left over the old scene and leaves past the right over the new one, an accent line on its moving edge (motionvid).
+- `whip`: the old scene flies left with a horizontal smear, the new one arrives from the right, so the cut frame is a blur and never empty.
+- `zoom`: the old scene zooms in and blurs, the new one settles from a closer zoom.
+- `pixelate`: the old scene breaks into growing blocks and the new one resolves from them, through an SVG filter that needs no GPU.
+- `dip`: a fade through the dark brand color.
+
+The build still writes `cut`; the director learns transitions in step 7. `pnpm remotion:lab` also renders `runs/lab/transition-lab.mp4`, a before and after shot of `runs/face-v2` through each transition.
+
 ## Captions
 
 A caption style is a preset of one caption look (`src/video/captions/looks.ts`), and one renderer draws every look (`src/video/remotion/captions`). The look sets:
@@ -156,7 +170,7 @@ Each step ends with a render the owner reviews.
 2. Kinetic type: letter type-on, word by word, rolling counters, split, color swap, a punch from giant size, outline numerals, captions with boxed keywords. Built on 2026-10-30: titles, counters, corner labels and `keyword-box` captions.
 3. Shapes and accents: chevrons, growing frames, flash squares, bursts and sparkles, drawn arrows, selection handles, grain, grid and halftone textures. Built on 2026-10-30, with scribbles, a cursor, viewfinder brackets and drifting color fields; the pixel mosaic is still to do.
 4. Media: photo collage, a thumbnail that becomes a player, a grid that lights the cell being named, UI cards with a camera into a detail, flipping states, cut-out figures (background removal). Built on 2026-10-30 with a burst of shots and a phone frame, except the cut-out figures.
-5. Transitions: cut, flash cut, panel wipe, perspective push, zoom into a detail, mosaic resolve, dissolve.
+5. Transitions: cut, flash cut, panel wipe, perspective push, zoom into a detail, mosaic resolve, dissolve. Built on 2026-10-30 as cut, flash, wipe, whip, zoom, pixelate and dip; a dissolve would need scenes to overlap and is left out.
 6. Styles: one like Higgsfield and one like motionvid first, each with its own cadence, curves and accent budget.
 7. The director and the build use them on `runs/face-v2` and on a text-mode ad, compared with the reference clips.
 8. The sound-effect layer, synced to the moves.

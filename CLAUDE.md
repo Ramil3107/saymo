@@ -78,7 +78,7 @@ docs/             documentation pages, built into a VitePress site
 - `pnpm docs:build`: builds the documentation site and fails on dead links.
 - `pnpm docs:preview`: serves the built site.
 - `pnpm remotion:studio`: Remotion Studio, composition preview.
-- `pnpm remotion:lab`: renders the motion, type, accent and media labs to `runs/lab/`, locally and without the API.
+- `pnpm remotion:lab`: renders the motion, type, accent, media and transition labs to `runs/lab/`, locally and without the API.
 - `pnpm remotion:captions`: renders every caption preset over a clip of `runs/face-v2` to `runs/lab/caption-lab.mp4`.
 - `pnpm check:still <video> --from <s> --to <s> [--crop w:h:x:y]`: fails if a stretch that should stand still twitches beyond compression noise.
 

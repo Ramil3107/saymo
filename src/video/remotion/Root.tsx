@@ -9,6 +9,7 @@ import { captionLabDefaults } from "./lab/captionLabProps";
 import { labFrames, labSize } from "./lab/LabReel";
 import { MediaLab, mediaDemos } from "./lab/MediaLab";
 import { MotionLab, motionDemos } from "./lab/MotionLab";
+import { TransitionLab, transitionDemos } from "./lab/TransitionLab";
 import { TypeLab, typeDemos } from "./lab/TypeLab";
 import { documentForRender } from "./renderDocument";
 import { SaymoVideo } from "./SaymoVideo";
@@ -41,6 +42,13 @@ export function Root() {
         component={MediaLab}
         fps={fps}
         durationInFrames={labFrames(mediaDemos)}
+        {...labSize}
+      />
+      <Composition
+        id="transition-lab"
+        component={TransitionLab}
+        fps={fps}
+        durationInFrames={labFrames(transitionDemos)}
         {...labSize}
       />
       <Composition

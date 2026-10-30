@@ -29,6 +29,10 @@ export const ElementSchema = z.discriminatedUnion("kind", [
 
 export type Element = z.infer<typeof ElementSchema>;
 
+export const TransitionSchema = z.enum(["cut", "flash", "wipe", "whip", "zoom", "pixelate", "dip"]);
+
+export type Transition = z.infer<typeof TransitionSchema>;
+
 export const SceneSchema = z.object({
   id: z.string(),
   startMs: z.number(),
@@ -47,7 +51,7 @@ export const SceneSchema = z.object({
     .optional(),
   camera: CameraSchema.optional(),
   elements: z.array(ElementSchema),
-  transition: z.enum(["cut", "fade", "slide"]),
+  transition: TransitionSchema,
 });
 
 export type Scene = z.infer<typeof SceneSchema>;

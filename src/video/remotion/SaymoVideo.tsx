@@ -6,6 +6,7 @@ import type { Element, Scene, VideoDoc } from "../schema/video";
 import { CaptionLayer } from "./captions/CaptionLayer";
 import { loadBrandFont } from "./fonts";
 import { sceneFrames } from "./frames";
+import { SceneTransition, type TransitionColors } from "./motion/SceneTransition";
 import { Background } from "./primitives/Background";
 import { BigNumber } from "./primitives/BigNumber";
 import { Camera } from "./primitives/Camera";
@@ -19,7 +20,7 @@ import { Quote } from "./primitives/Quote";
 import { Sticker } from "./primitives/Sticker";
 import { TitleCard } from "./primitives/TitleCard";
 import { VoiceTrack } from "./primitives/VoiceTrack";
-import type { Frame, Theme } from "./theme";
+import { accentColor, darken, type Frame, panelColor, type Theme, white } from "./theme";
 
 export function SaymoVideo(doc: VideoDoc) {
   const { fontFamily } = loadBrandFont(doc.brand.font);
@@ -30,9 +31,18 @@ export function SaymoVideo(doc: VideoDoc) {
 
   return (
     <AbsoluteFill style={{ backgroundColor: doc.brand.colors[0], fontFamily }}>
-      {doc.scenes.map((scene) => (
+      {doc.scenes.map((scene, index) => (
         <Sequence key={scene.id} {...sceneFrames(scene)}>
-          <SceneView scene={scene} doc={doc} theme={theme} />
+          <SceneTransition
+            into={scene.transition}
+            outof={doc.scenes[index + 1]?.transition ?? "cut"}
+            durationMs={scene.durationMs}
+            tempo={theme.tempo}
+            width={formatSize(doc.format).width}
+            colors={transitionColors(theme)}
+          >
+            <SceneView scene={scene} doc={doc} theme={theme} />
+          </SceneTransition>
         </Sequence>
       ))}
       {doc.captions ? (
@@ -91,6 +101,15 @@ function ElementView({ element, theme, frame }: { element: Element; theme: Theme
     case "list":
       return <ListPanel element={element} theme={theme} frame={frame} />;
   }
+}
+
+function transitionColors(theme: Theme): TransitionColors {
+  return {
+    flash: white,
+    dip: darken(theme.brand.colors[0] ?? "#0D1D42", 0.75),
+    panel: panelColor(theme),
+    edge: accentColor(theme),
+  };
 }
 
 function findAsset(doc: VideoDoc, id: string) {

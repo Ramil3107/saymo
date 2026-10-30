@@ -17,7 +17,7 @@
     "docs:preview": "vitepress preview docs",
     "remotion:studio": "remotion studio src/video/remotion/index.ts",
     "remotion:still": "remotion still src/video/remotion/index.ts saymo --props=fixtures/video.sample.json --frame=45 runs/still.png",
-    "remotion:lab": "tsx src/cli/labAssets.ts && remotion render src/video/remotion/index.ts motion-lab runs/lab/motion-lab.mp4 && remotion render src/video/remotion/index.ts type-lab runs/lab/type-lab.mp4 && remotion render src/video/remotion/index.ts accent-lab runs/lab/accent-lab.mp4 --public-dir=runs/lab/public && remotion render src/video/remotion/index.ts media-lab runs/lab/media-lab.mp4 --public-dir=runs/lab/public",
+    "remotion:lab": "tsx src/cli/labAssets.ts && remotion render src/video/remotion/index.ts motion-lab runs/lab/motion-lab.mp4 && remotion render src/video/remotion/index.ts type-lab runs/lab/type-lab.mp4 && remotion render src/video/remotion/index.ts accent-lab runs/lab/accent-lab.mp4 --public-dir=runs/lab/public && remotion render src/video/remotion/index.ts media-lab runs/lab/media-lab.mp4 --public-dir=runs/lab/public && remotion render src/video/remotion/index.ts transition-lab runs/lab/transition-lab.mp4 --public-dir=runs/lab/public",
     "remotion:captions": "tsx src/cli/labAssets.ts && remotion render src/video/remotion/index.ts caption-lab runs/lab/caption-lab.mp4 --public-dir=runs/lab/public --props=runs/lab/caption-lab.json",
     "check:still": "tsx src/cli/stillCheck.ts",
     "remotion:render": "remotion render src/video/remotion/index.ts saymo --props=fixtures/video.sample.json runs/sample.mp4",

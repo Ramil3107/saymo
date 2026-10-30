@@ -42,7 +42,7 @@ Fields of a scene:
 | `footage` | object, optional | `assetId`, `fromMs` in the source video and `transform` (`scale`, `x`, `y`) |
 | `camera` | object, optional | `kind` (`none`, `push`, `punch-in` or `pan`) and `intensity` from 0 to 1 |
 | `elements` | list | The elements of the scene |
-| `transition` | `cut`, `fade` or `slide` | Transition of the scene |
+| `transition` | `cut`, `flash`, `wipe`, `whip`, `zoom`, `pixelate` or `dip` | How the scene enters; the scene before it leaves by the same transition, see [Vocabulary](/vocabulary#transitions) |
 
 ## Elements
 

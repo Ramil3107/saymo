@@ -3,6 +3,7 @@ import { useCurrentFrame } from "remotion";
 import { type MoveSpec, type Pose, poseAt } from "../../motion/moves";
 import type { Tempo } from "../../motion/tempo";
 import { frameToMs } from "../frames";
+import { SmearFilter } from "./filters";
 import { restingTransform } from "./pixels";
 
 type Props = {
@@ -45,16 +46,6 @@ export function Move({ spec, tempo, unitPx, style, innerStyle, children }: Props
       {smearPx > visibleThreshold ? <SmearFilter id={filterId} px={smearPx} /> : null}
       <div style={{ ...centered, ...poseStyle(pose, unitPx, filterId), ...innerStyle }}>{children}</div>
     </div>
-  );
-}
-
-function SmearFilter({ id, px }: { id: string; px: number }) {
-  return (
-    <svg width={0} height={0} style={{ position: "absolute" }} aria-hidden>
-      <filter id={id} x="-50%" y="-10%" width="200%" height="120%">
-        <feGaussianBlur stdDeviation={`${px} 0`} />
-      </filter>
-    </svg>
   );
 }
 
