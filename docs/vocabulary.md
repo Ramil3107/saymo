@@ -28,6 +28,18 @@ The vocabulary is a set of React components on Remotion that take their paramete
 
 External assets come only with permissive licenses, and a license manifest lives in the repository: Lucide icons, open illustrations, Lottie under the Lottie Simple License. There is no stock footage in the first version, so backgrounds in text mode are built from the brand, gradients, shapes and images from the link.
 
+## Motion system
+
+`src/video/motion` holds the motion grammar the primitives move by, and the motion lab shows it.
+
+- **Tempos** (`tempo.ts`): `snap`, measured on Higgsfield (a move in 133 ms, a letter per frame, stepped counters, a two-frame flash), and `glide`, measured on motionvid (360 ms moves, 90 ms letters, smooth counts, no flash). A tempo sets the move length, the stagger, the word and letter steps, the blink period and four curves: enter, exit, move and pop with overshoot.
+- **Moves** (`moves.ts`): enters `cut`, `fade`, `pop`, `punch`, `rise`, `drop`, `smear`, `reveal`; exits `cut`, `fade`, `collapse`, `sink`, `smear`, `tilt`. A move turns eased progress into a pose: opacity, offset, scale, stretch, a turn in perspective, blur, a horizontal smear, a clip and a mask. `poseAt` combines an element's enter and exit.
+- **Timing** (`timeline.ts`): eased progress on cubic-bezier curves, stagger, letters typed, stepped or smooth counts, blink, chase and drift.
+- **Remotion side** (`remotion/motion`): `Move` wraps an element in its pose, with a mask for `rise` and `sink` and an SVG blur along x for `smear`; `TypeOn` types text with a caret.
+- **Motion lab**: `pnpm remotion:lab` renders `runs/lab/motion-lab.mp4`, ten demos with both tempos side by side: type on, rise, punch and count, pop with stagger and drift, smear with chevrons, reveal with a color swap and a tilt out, a box that morphs into a name with a burst, a split that frames the subject, flips one by one, and a collage tile that grows into the frame.
+
+The existing primitives still move by `primitives/motion.ts` and switch to this system in step 2 of the order of work.
+
 ## Catalog
 
 The catalog is an internal page where every primitive plays in every register and format. It is the map of the vocabulary, the base for visual tests and later a public showcase. A new primitive without a catalog card is not done. The catalog does not exist yet and arrives in stage 1.

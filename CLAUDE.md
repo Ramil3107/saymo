@@ -78,6 +78,7 @@ docs/             documentation pages, built into a VitePress site
 - `pnpm docs:build`: builds the documentation site and fails on dead links.
 - `pnpm docs:preview`: serves the built site.
 - `pnpm remotion:studio`: Remotion Studio, composition preview.
+- `pnpm remotion:lab`: renders the motion lab to `runs/lab/motion-lab.mp4`, locally and without the API.
 
 Environment:
 
