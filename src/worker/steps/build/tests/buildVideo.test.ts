@@ -186,3 +186,19 @@ test("buildVideo drops an overlay that would cover a face seen anywhere in its b
 
   expect(doc.scenes[0]?.elements).toEqual([]);
 });
+
+test("buildVideo sizes a chip from its text and keeps its badge", () => {
+  const first = textPlan.beats[0];
+  if (!first) throw new Error("fixture has no beats");
+  const overlays = [
+    { id: "a", kind: "chip" as const, text: "Fe", badge: "Fe", atMs: 0, durationMs: 1000 },
+    { id: "b", kind: "chip" as const, text: "порушення випорожнень", atMs: 1000, durationMs: 1000 },
+  ];
+  const plan = { ...textPlan, beats: [{ ...first, overlays }, ...textPlan.beats.slice(1)] };
+
+  const [small, wide] = buildVideo(plan, null, {}, brand).scenes[0]?.elements ?? [];
+  if (small?.kind !== "chip" || wide?.kind !== "chip") throw new Error("scene has no chips");
+
+  expect(small.badge).toBe("Fe");
+  expect(wide.box.w).toBeGreaterThan(small.box.w);
+});

@@ -16,6 +16,8 @@ export type PrimitiveProps<Kind extends Element["kind"]> = {
 };
 
 export const ink = "#08080B";
+export const navy = "#0D1D42";
+export const paper = "rgba(255, 255, 255, 0.95)";
 export const white = "#FFFFFF";
 
 export function textShadow(fontSize: number): string {

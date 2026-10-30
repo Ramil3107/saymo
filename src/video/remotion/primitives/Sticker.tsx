@@ -21,7 +21,13 @@ export function Sticker({ element, theme, frame }: PrimitiveProps<"sticker">) {
   });
 
   return (
-    <ElementBox element={element} theme={theme} frame={frame} style={{ justifyContent: "center" }}>
+    <ElementBox
+      element={element}
+      theme={theme}
+      frame={frame}
+      preset="pop"
+      style={{ justifyContent: "center" }}
+    >
       <div
         style={{
           backgroundColor: white,

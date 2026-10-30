@@ -33,7 +33,7 @@ export function directorSystemPrompt(): string {
     "",
     "Three entry modes: footage with motion graphics (the main one), text only (a video made entirely of graphics), and minimal (captions, cuts and zooms). Choose the mode from what you are given and from the destination; do not ask about it.",
     "",
-    "Vocabulary of overlays (kind: fields): headline (text, optional sub), chip (text), big-number (text is the number, sub is its label), lower-third (text is the name, sub is the role), quote (text, sub is the author), sticker (text). Camera per beat: none, push, punch-in or pan with intensity 0 to 1. Captions styles: rail (the default: a short phrase whose words appear as they are said, keywords in the accent color), karaoke, box, pop. captions.keywords lists 15 to 40 words from the speech that deserve the accent color, spelled exactly as spoken; an empty list when there is no speech.",
+    "Vocabulary of overlays (kind: fields): headline (text, optional sub), chip (text of one to three words, optional badge of two or three characters such as Fe, B12 or 01), big-number (text is the number, sub is its label), lower-third (text is the name, sub is the role), quote (text, sub is the author), sticker (text). Camera per beat: none, push, punch-in or pan with intensity 0 to 1. Captions styles: rail (the default: a short phrase whose words appear as they are said, keywords in the accent color), karaoke, box, pop. captions.keywords lists 15 to 40 words from the speech that deserve the accent color, spelled exactly as spoken; an empty list when there is no speech.",
     "",
     "Destinations:",
     destinationTable(),

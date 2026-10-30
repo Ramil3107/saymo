@@ -68,9 +68,15 @@ const scanEpsilon = 1e-9;
 const captionBottomGap = 0.02;
 const captionBandHeight = 0.1;
 
-export function placeOverlay(kind: OverlayKind, _format: Format, safeZone: SafeZone, avoid: Box[]): Box {
+export function placeOverlay(
+  kind: OverlayKind,
+  _format: Format,
+  safeZone: SafeZone,
+  avoid: Box[],
+  measured?: Size,
+): Box {
   const inner = innerArea(safeZone);
-  const size = overlaySize(kind, inner);
+  const size = measured ?? overlaySize(kind, inner);
   const candidates = [...preferredSlots(kind, inner, size), ...scannedSlots(kind, inner, size)];
 
   const free = candidates.find((box) => !avoid.some((zone) => boxesOverlap(box, zone)));

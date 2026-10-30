@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { Element } from "../../schema/video";
 import type { Frame, Theme } from "../theme";
-import { revealStyle, useEntrance } from "./entrance";
+import { type MotionPreset, motionStyle, useMotion } from "./motion";
 
 type Props = {
   element: Element;
@@ -9,11 +9,12 @@ type Props = {
   frame: Frame;
   children: ReactNode;
   style?: CSSProperties;
+  preset?: MotionPreset;
 };
 
-export function ElementBox({ element, theme, frame, children, style }: Props) {
-  const { visible, progress } = useEntrance(element, theme.register);
-  if (!visible) return null;
+export function ElementBox({ element, theme, frame, children, style, preset = "rise" }: Props) {
+  const motion = useMotion(element, theme.register, preset);
+  if (!motion.visible) return null;
 
   const box: CSSProperties = {
     position: "absolute",
@@ -26,7 +27,7 @@ export function ElementBox({ element, theme, frame, children, style }: Props) {
   };
 
   return (
-    <div data-element-id={element.id} style={{ ...box, ...revealStyle(progress), ...style }}>
+    <div data-element-id={element.id} style={{ ...box, ...motionStyle(motion, preset), ...style }}>
       {children}
     </div>
   );

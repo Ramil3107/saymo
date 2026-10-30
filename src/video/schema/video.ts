@@ -14,7 +14,7 @@ const ElementBaseSchema = z.object({
 
 export const ElementSchema = z.discriminatedUnion("kind", [
   ElementBaseSchema.extend({ kind: z.literal("headline"), text: z.string(), sub: z.string().optional() }),
-  ElementBaseSchema.extend({ kind: z.literal("chip"), text: z.string() }),
+  ElementBaseSchema.extend({ kind: z.literal("chip"), text: z.string(), badge: z.string().optional() }),
   ElementBaseSchema.extend({
     kind: z.literal("big-number"),
     value: z.string(),

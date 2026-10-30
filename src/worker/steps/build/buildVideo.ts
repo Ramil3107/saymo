@@ -5,6 +5,7 @@ import { captionPages } from "../../../video/captions/pages";
 import { railPages } from "../../../video/captions/rail";
 import { rebaseWords } from "../../../video/captions/timeline";
 import { type Destination, destinations, formatSize } from "../../../video/destinations";
+import { chipSize } from "../../../video/layout/chipSize";
 import { fitCover } from "../../../video/layout/fitCover";
 import { keepOutErrorShare, keepOutZones, overlapRatio } from "../../../video/layout/keepOut";
 import { captionBand, placeOverlay } from "../../../video/layout/safeZones";
@@ -290,11 +291,15 @@ function placeElement(
     window: beatWindow(beat),
   });
   const band = context.captionsOn ? [captionBand(destination.safeZone)] : [];
-  const box = placeOverlay(overlay.kind, destination.format, destination.safeZone, [
-    ...zones,
-    ...band,
-    ...taken,
-  ]);
+  const measured =
+    overlay.kind === "chip" ? chipSize(overlay.text, overlay.badge, destination.format) : undefined;
+  const box = placeOverlay(
+    overlay.kind,
+    destination.format,
+    destination.safeZone,
+    [...zones, ...band, ...taken],
+    measured,
+  );
   if (overlapRatio(box, zones) > keepOutErrorShare) return undefined;
 
   return elementFrom(beat, overlay, box, durationMs);
@@ -341,7 +346,7 @@ function elementFrom(beat: Beat, overlay: Overlay, box: Box, sceneDurationMs: nu
     case "headline":
       return { ...base, kind: "headline", text: overlay.text, sub: overlay.sub };
     case "chip":
-      return { ...base, kind: "chip", text: overlay.text };
+      return { ...base, kind: "chip", text: overlay.text, badge: overlay.badge };
     case "big-number":
       return { ...base, kind: "big-number", value: overlay.text, label: overlay.sub };
     case "lower-third":

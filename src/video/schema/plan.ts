@@ -35,6 +35,7 @@ export const OverlaySchema = z.object({
   kind: OverlayKindSchema,
   text: z.string(),
   sub: z.string().optional(),
+  badge: z.string().optional(),
   atMs: z.number(),
   durationMs: z.number(),
   emphasis: z.enum(["marker", "underline", "pulse"]).optional(),

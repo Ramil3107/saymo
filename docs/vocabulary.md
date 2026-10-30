@@ -10,7 +10,7 @@ The vocabulary is a set of React components on Remotion that take their paramete
 | --- | --- |
 | Footage | trimmed video clip, background footage, image, logo, shape, Lottie |
 | Camera | push, punch-in, pan, parallax over an image or screenshot |
-| Text | headline, subheading, big number with a counter, quote, lower third, chip, step list, sticker |
+| Text | headline, subheading, big number with a counter, quote, lower third, chip (paper pill sized to its text, optional badge such as Fe or 01, pops in with a blur and floats), step list, sticker |
 | Captions | rail (a short phrase whose words appear as they are said, keywords in the accent color, a scrim below), karaoke, box and pop styles |
 | Enters and exits | fade, slide, mask, by word, by letter, typewriter |
 | Accents | marker, underline, ring, pulse, shake, flash |
