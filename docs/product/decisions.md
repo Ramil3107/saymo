@@ -4,6 +4,12 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-10-30 · Graphics come from a large vocabulary, not per-video code
+
+- **Decided:** the director keeps choosing and configuring components; the model writes no code per video, as in the 2026-10-28 entry "The model writes data, the engine executes". The vocabulary grows large: from 17 primitives to about a hundred components in the base (the lead's estimate, refined in the design), each with variants, partly ported from HyperFrames, Remocn and Remotion's own packages, and it keeps growing after the base. Variety comes from the size of the library times a choice made per video and per beat from context, and coherence rules keep each video in one style. Loud creator styles (word-by-word captions, whoosh on cuts, punch zooms) and calm ones are equal options chosen by context; neither is the default everywhere. A hybrid, where the model writes code for one or two special moments of a video, may come after v1, once it is clear where the library falls short.
+- **Why:** since July 2026 HeyGen's Video Agent writes each graphic as code (HyperFrames), which gives unlimited variety, but every video then costs more and takes longer, its quality varies from run to run, an edit or a format change rewrites code, and the QA checks cannot vouch for arbitrary code. A small library makes videos predictable and boring (the owner); a large one without rules turns into a pile of effects.
+- **Rejected:** all graphics as per-video code, as in HeyGen; the hybrid in v1 (outside the v1 scope, kept as a possible step after it); a small vocabulary with one quiet house style.
+
 ### 2026-10-30 · Providers and models after the spike
 
 - **Decided:** transcription on ElevenLabs Scribe v2, with Deepgram Nova 3 kept in the code as the reserve (`--transcriber deepgram`); frame descriptions on Claude Sonnet 5.5; face detection on AWS Rekognition. The director stays on Claude Opus 5.5 for now: Opus and Sonnet 5.5 are compared on `runs/face-v2` once the vocabulary base is accepted.
