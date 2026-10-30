@@ -1,20 +1,40 @@
 type Size = { width: number; height: number };
 type Point = { x: number; y: number };
+type Margins = { top?: number; bottom?: number; left?: number; right?: number };
 
 export type CoverTransform = { scale: number; x: number; y: number };
 
-export function fitCover(source: Size, target: Size, focus?: Point): CoverTransform {
-  const scale = Math.max(target.width / source.width, target.height / source.height);
-  const scaled = { width: source.width * scale, height: source.height * scale };
-  const overflowX = scaled.width - target.width;
-  const overflowY = scaled.height - target.height;
+export type CoverOptions = {
+  anchor?: Point;
+  zoom?: number;
+  free?: Margins;
+};
 
-  if (!focus) return { scale, x: -overflowX / 2, y: -overflowY / 2 };
+const center: Point = { x: 0.5, y: 0.5 };
+
+// Scales the source to cover the target, then slides it so the focus lands on the anchor.
+// `free` names the frame edges a panel hides, so the footage may stop short of them.
+export function fitCover(
+  source: Size,
+  target: Size,
+  focus?: Point,
+  options: CoverOptions = {},
+): CoverTransform {
+  const scale = Math.max(target.width / source.width, target.height / source.height) * (options.zoom ?? 1);
+  const scaled = { width: source.width * scale, height: source.height * scale };
+  const free = { top: 0, bottom: 0, left: 0, right: 0, ...options.free };
+  const anchor = options.anchor ?? center;
+  const at = focus ?? center;
+
+  const minX = target.width * (1 - free.right) - scaled.width;
+  const maxX = target.width * free.left;
+  const minY = target.height * (1 - free.bottom) - scaled.height;
+  const maxY = target.height * free.top;
 
   return {
     scale,
-    x: clamp(target.width / 2 - focus.x * scaled.width, -overflowX, 0),
-    y: clamp(target.height / 2 - focus.y * scaled.height, -overflowY, 0),
+    x: clamp(target.width * anchor.x - at.x * scaled.width, minX, maxX),
+    y: clamp(target.height * anchor.y - at.y * scaled.height, minY, maxY),
   };
 }
 

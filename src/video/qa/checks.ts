@@ -2,6 +2,7 @@ import { z } from "zod";
 import { destinations, type SafeZone } from "../destinations";
 import { intersectionArea } from "../layout/geometry";
 import { keepOutErrorShare, overlapRatio } from "../layout/keepOut";
+import { isPanelKind } from "../layout/layouts";
 import { fitsInBox } from "../layout/textWidth";
 import { registers } from "../registers";
 import type { Box } from "../schema/content";
@@ -177,7 +178,7 @@ function elementIssues(doc: VideoDoc, scene: Scene, element: Element, avoid: Box
     report("text-overflow", "warning", `Text may not fit in ${maxLines} lines at ${fontPx}px`);
   }
 
-  if (!insideSafeZone(element.box, destinations[doc.destination].safeZone)) {
+  if (!isPanelKind(element.kind) && !insideSafeZone(element.box, destinations[doc.destination].safeZone)) {
     report("safe-zone", "error", "Element leaves the safe zone");
   }
 
@@ -214,7 +215,7 @@ function voiceIssues(doc: VideoDoc): QaIssue[] {
 }
 
 function maxConcurrentWords(elements: Element[]): number {
-  const counted = elements.filter((element) => element.kind !== "quote");
+  const counted = elements.filter((element) => element.kind !== "quote" && element.kind !== "list");
   const moments = counted.flatMap((element) => [element.enterMs, element.exitMs]);
 
   const wordsAt = (ms: number) =>

@@ -42,6 +42,8 @@ const slotsByKind: Record<OverlayKind, Slot[]> = {
     ["right", "top"],
     ["left", "top"],
   ],
+  "title-card": [["center", "top"]],
+  list: [["left", "top"]],
 };
 
 const widthShare: Record<OverlayKind, number> = {
@@ -51,6 +53,8 @@ const widthShare: Record<OverlayKind, number> = {
   "lower-third": 0.6,
   chip: 0.36,
   sticker: 0.36,
+  "title-card": 1,
+  list: 0.46,
 };
 
 const heightShare: Record<OverlayKind, number> = {
@@ -60,6 +64,8 @@ const heightShare: Record<OverlayKind, number> = {
   chip: 0.08,
   "lower-third": 0.08,
   sticker: 0.08,
+  "title-card": 0.46,
+  list: 1,
 };
 
 const gutter = 0.04;

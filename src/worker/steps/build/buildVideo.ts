@@ -8,6 +8,14 @@ import { type Destination, destinations, formatSize } from "../../../video/desti
 import { chipSize } from "../../../video/layout/chipSize";
 import { fitCover } from "../../../video/layout/fitCover";
 import { keepOutErrorShare, keepOutZones, overlapRatio } from "../../../video/layout/keepOut";
+import {
+  coverOptionsFor,
+  isPanelKind,
+  type Layout,
+  panelBox,
+  panelSide,
+  type Side,
+} from "../../../video/layout/layouts";
 import { captionBand, placeOverlay } from "../../../video/layout/safeZones";
 import type { Box, ContentMap } from "../../../video/schema/content";
 import type { MediaInfo } from "../../../video/schema/media";
@@ -57,6 +65,7 @@ type Point = { x: number; y: number };
 type Transform = { scale: number; x: number; y: number };
 type Interval = { startMs: number; endMs: number };
 type Slot = { beat: Beat; startMs: number; durationMs: number };
+type Framing = { layout: Layout; side: Side };
 type Timing = { enterMs: number; exitMs: number };
 
 type SceneContext = {
@@ -219,8 +228,9 @@ function stretched(durations: number[], index: number, byMs: number): number[] {
 
 function buildScene(slot: Slot, context: SceneContext): BuiltScene {
   const { beat, startMs, durationMs } = slot;
-  const transform = footageTransform(beat, context);
-  const elements = placeElements(slot, transform, context);
+  const framing = framingFor(beat, context);
+  const transform = footageTransform(beat, context, framing);
+  const elements = placeElements(slot, transform, context, framing);
   const words = sceneWords(slot, context);
 
   const scene: Scene = {
@@ -245,10 +255,19 @@ function buildScene(slot: Slot, context: SceneContext): BuiltScene {
   };
 }
 
-function footageTransform(beat: Beat, context: SceneContext): Transform | undefined {
+function framingFor(beat: Beat, context: SceneContext): Framing {
+  const hasPanel = beat.overlays.some((overlay) => isPanelKind(overlay.kind));
+  const layout = beat.layout ?? (hasPanel ? "panel-top" : "free");
+  const focus = beat.footage ? faceFocus(context.content, beat.footage) : undefined;
+
+  return { layout, side: panelSide(focus) };
+}
+
+function footageTransform(beat: Beat, context: SceneContext, framing: Framing): Transform | undefined {
   if (!beat.footage || !context.source) return undefined;
 
-  return fitCover(context.source, context.target, faceFocus(context.content, beat.footage));
+  const focus = faceFocus(context.content, beat.footage);
+  return fitCover(context.source, context.target, focus, coverOptionsFor(framing.layout, framing.side));
 }
 
 function faceFocus(content: ContentMap | null, range: { fromMs: number; toMs: number }): Point | undefined {
@@ -260,13 +279,23 @@ function faceFocus(content: ContentMap | null, range: { fromMs: number; toMs: nu
   return { x: average(centers.map((center) => center.x)), y: average(centers.map((center) => center.y)) };
 }
 
-function placeElements(slot: Slot, transform: Transform | undefined, context: SceneContext): Element[] {
+function placeElements(
+  slot: Slot,
+  transform: Transform | undefined,
+  context: SceneContext,
+  framing: Framing,
+): Element[] {
   const placed: Element[] = [];
+  const panel = framing.layout === "free" ? [] : [panelBox(framing.layout, framing.side)];
 
   for (const overlay of slot.beat.overlays) {
+    if (isPanelKind(overlay.kind) && framing.layout !== "free") {
+      placed.push(elementFrom(slot.beat, overlay, panelBox(framing.layout, framing.side), slot.durationMs));
+      continue;
+    }
     const timing = elementTiming(overlay, slot.durationMs);
     const taken = placed.filter((element) => sharesTime(element, timing)).map((element) => element.box);
-    const element = placeElement(overlay, slot, transform, context, taken);
+    const element = placeElement(overlay, slot, transform, context, [...panel, ...taken]);
     if (element) placed.push(element);
   }
 
@@ -355,6 +384,10 @@ function elementFrom(beat: Beat, overlay: Overlay, box: Box, sceneDurationMs: nu
       return { ...base, kind: "quote", text: overlay.text, author: overlay.sub };
     case "sticker":
       return { ...base, kind: "sticker", text: overlay.text };
+    case "title-card":
+      return { ...base, kind: "title-card", text: overlay.text, sub: overlay.sub };
+    case "list":
+      return { ...base, kind: "list", text: overlay.text, items: overlay.items ?? [] };
   }
 }
 

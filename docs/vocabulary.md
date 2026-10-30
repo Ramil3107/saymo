@@ -10,14 +10,14 @@ The vocabulary is a set of React components on Remotion that take their paramete
 | --- | --- |
 | Footage | trimmed video clip, background footage, image, logo, shape, Lottie |
 | Camera | push, punch-in, pan, parallax over an image or screenshot |
-| Text | headline, subheading, big number with a counter, quote, lower third, chip (paper pill sized to its text, optional badge such as Fe or 01, pops in with a blur and floats), step list, sticker |
+| Text | headline, subheading, big number with a counter, quote, lower third, chip (paper pill sized to its text, optional badge such as Fe or 01, pops in with a blur and floats), sticker, title-card (section label and a big title on a dark panel), list (title and numbered items on a dark side panel) |
 | Captions | rail (a short phrase whose words appear as they are said, keywords in the accent color, a scrim below), karaoke, box and pop styles |
 | Enters and exits | fade, slide, mask, by word, by letter, typewriter |
 | Accents | marker, underline, ring, pulse, shake, flash |
 | Transitions | cut, fade, slide, wipe, push |
 | Backgrounds | color, gradient, brand, blurred footage |
 | Audio | music ducked under the voice, voice, loudness normalization |
-| Layout | slots around the person with keep-out zones, grids, safe zones per destination |
+| Layout | per beat: free (chips float beside the subject in slots with keep-out zones), panel-top (a title card over the top 46%, the footage zooms and slides so the face sits below), panel-side (a list over one side, the face moves to the other); safe zones per destination with a 4% gutter |
 
 ## Where primitives come from
 

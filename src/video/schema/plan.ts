@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { DestinationIdSchema } from "../destinations";
+import { LayoutSchema } from "../layout/layouts";
 import { RegisterIdSchema } from "../registers";
 
 const lengthToleranceMs = 200;
@@ -18,6 +19,8 @@ export const OverlayKindSchema = z.enum([
   "lower-third",
   "quote",
   "sticker",
+  "title-card",
+  "list",
 ]);
 
 export type OverlayKind = z.infer<typeof OverlayKindSchema>;
@@ -36,6 +39,7 @@ export const OverlaySchema = z.object({
   text: z.string(),
   sub: z.string().optional(),
   badge: z.string().optional(),
+  items: z.array(z.string()).optional(),
   atMs: z.number(),
   durationMs: z.number(),
   emphasis: z.enum(["marker", "underline", "pulse"]).optional(),
@@ -50,6 +54,7 @@ export const BeatSchema = z.object({
   durationMs: z.number(),
   footage: z.object({ fromMs: z.number(), toMs: z.number() }).optional(),
   camera: CameraSchema.optional(),
+  layout: LayoutSchema.optional(),
   copy: z.object({ headline: z.string().optional(), sub: z.string().optional() }).optional(),
   overlays: z.array(OverlaySchema),
   voiceText: z.string().optional(),

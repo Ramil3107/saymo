@@ -202,3 +202,66 @@ test("buildVideo sizes a chip from its text and keeps its badge", () => {
   expect(small.badge).toBe("Fe");
   expect(wide.box.w).toBeGreaterThan(small.box.w);
 });
+
+test("buildVideo puts a title card in a top panel and moves the face below it", () => {
+  const beat = footagePlan.beats[0];
+  if (!beat?.footage) throw new Error("fixture beat has no footage");
+  const overlays = [
+    {
+      id: "t",
+      kind: "title-card" as const,
+      text: "Первинний скринінг",
+      sub: "02 · Як перевіритись",
+      atMs: 0,
+      durationMs: 3000,
+    },
+  ];
+  const plan = {
+    ...footagePlan,
+    beats: [{ ...beat, layout: "panel-top" as const, overlays }, ...footagePlan.beats.slice(1)],
+  };
+
+  const doc = buildVideo(
+    plan,
+    sampleContent,
+    { sourceVideo: { path: "in.mp4", info: sampleContent.source } },
+    brand,
+  );
+  const scene = doc.scenes[0];
+  const card = scene?.elements[0];
+  if (!scene?.footage || card?.kind !== "title-card") throw new Error("scene has no title card");
+
+  expect(card.box).toEqual({ x: 0, y: 0, w: 1, h: 0.46 });
+  expect(scene.footage.transform.y).toBeGreaterThan(0);
+});
+
+test("buildVideo puts a list in a side panel away from the face", () => {
+  const beat = footagePlan.beats[0];
+  if (!beat?.footage) throw new Error("fixture beat has no footage");
+  const overlays = [
+    {
+      id: "l",
+      kind: "list" as const,
+      text: "Класичні симптоми",
+      items: ["нудота", "блювота"],
+      atMs: 0,
+      durationMs: 3000,
+    },
+  ];
+  const plan = {
+    ...footagePlan,
+    beats: [{ ...beat, layout: "panel-side" as const, overlays }, ...footagePlan.beats.slice(1)],
+  };
+
+  const doc = buildVideo(
+    plan,
+    sampleContent,
+    { sourceVideo: { path: "in.mp4", info: sampleContent.source } },
+    brand,
+  );
+  const list = doc.scenes[0]?.elements[0];
+  if (list?.kind !== "list") throw new Error("scene has no list");
+
+  expect(list.items).toEqual(["нудота", "блювота"]);
+  expect(list.box.x).toBeGreaterThan(0.5);
+});

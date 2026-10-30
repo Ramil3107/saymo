@@ -23,6 +23,8 @@ export const ElementSchema = z.discriminatedUnion("kind", [
   ElementBaseSchema.extend({ kind: z.literal("lower-third"), name: z.string(), role: z.string().optional() }),
   ElementBaseSchema.extend({ kind: z.literal("quote"), text: z.string(), author: z.string().optional() }),
   ElementBaseSchema.extend({ kind: z.literal("sticker"), text: z.string() }),
+  ElementBaseSchema.extend({ kind: z.literal("title-card"), text: z.string(), sub: z.string().optional() }),
+  ElementBaseSchema.extend({ kind: z.literal("list"), text: z.string(), items: z.array(z.string()) }),
 ]);
 
 export type Element = z.infer<typeof ElementSchema>;

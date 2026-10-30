@@ -12,17 +12,19 @@ import { Captions } from "./primitives/Captions";
 import { Chip } from "./primitives/Chip";
 import { Footage } from "./primitives/Footage";
 import { Headline } from "./primitives/Headline";
+import { ListPanel } from "./primitives/ListPanel";
 import { LowerThird } from "./primitives/LowerThird";
 import { MusicTrack } from "./primitives/MusicTrack";
 import { Quote } from "./primitives/Quote";
 import { Sticker } from "./primitives/Sticker";
+import { TitleCard } from "./primitives/TitleCard";
 import { VoiceTrack } from "./primitives/VoiceTrack";
 import type { Frame, Theme } from "./theme";
 
 export function SaymoVideo(doc: VideoDoc) {
   const { fontFamily } = loadBrandFont(doc.brand.font);
-  const theme: Theme = { brand: doc.brand, register: registers[doc.register], fontFamily };
   const safeZone = destinations[doc.destination].safeZone;
+  const theme: Theme = { brand: doc.brand, register: registers[doc.register], fontFamily, safeZone };
   const musicSrc = doc.music ? assetSrc(doc, doc.music.assetId) : undefined;
 
   return (
@@ -76,6 +78,10 @@ function ElementView({ element, theme, frame }: { element: Element; theme: Theme
       return <Quote element={element} theme={theme} frame={frame} />;
     case "sticker":
       return <Sticker element={element} theme={theme} frame={frame} />;
+    case "title-card":
+      return <TitleCard element={element} theme={theme} frame={frame} />;
+    case "list":
+      return <ListPanel element={element} theme={theme} frame={frame} />;
   }
 }
 

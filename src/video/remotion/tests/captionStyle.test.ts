@@ -6,6 +6,7 @@ const theme = {
   brand: { colors: ["#2D4BFF", "#FFD23F"], font: "Onest" },
   register: undefined as never,
   fontFamily: "Onest",
+  safeZone: { top: 0.14, bottom: 0.22, left: 0.04, right: 0.14 },
 };
 
 test("the pop gap leaves room for a long word to grow without touching its neighbours", () => {

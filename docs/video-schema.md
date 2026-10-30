@@ -54,6 +54,8 @@ An element is one of six kinds, picked by `kind`. Every element has an `id`, `en
 - `lower-third`: `name` and an optional `role`;
 - `quote`: `text` and an optional `author`;
 - `sticker`: `text`.
+- `title-card`: `text` and an optional `sub` used as the section label; it fills the top panel of a `panel-top` beat.
+- `list`: `text` as the title and `items`; it fills the side panel of a `panel-side` beat.
 
 ## Schema rules
 
