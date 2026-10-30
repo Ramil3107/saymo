@@ -22,3 +22,4 @@ The `spike` skill adds a row from `runs/<id>/metrics.json`. The owner sets the e
 
 | Run | Input | Destination | Transcription (provider, s, $) | Vision (frames, s, $) | Director (model, tokens, s, $) | Build (s) | Render (where, s, $) | Total (s, $) | Eyeball score 1–5 | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 4 | text: a product launch, `runs/20261030-1310-saymo-turns-your-raw-phone-foota` | reels | — | — | claude-opus-5-5, 128 in / 2 682 out, 29.1 s, $0.071 | 0.0 | local, 6.4 s, $0 | 35.5 s, $0.071 | [owner] | [owner] |

@@ -28,7 +28,7 @@ Copy `.env.example` to `.env` and fill it in. `.env` is git-ignored.
 
 ## AWS IAM user
 
-One IAM user covers all of AWS. In the IAM console create the user, then create an access key on its Security credentials tab. The user needs:
+The account itself must be created with Sign up for AWS (advanced); the reasons and the quota caveats are in [Remotion Lambda](/runbooks/lambda). One IAM user covers all of AWS. In the IAM console create the user, then create an access key on its Security credentials tab. The user needs:
 
 - `rekognition:DetectFaces` for face detection;
 - the Remotion Lambda policies, see [Remotion Lambda](/runbooks/lambda).
