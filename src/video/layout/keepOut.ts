@@ -16,6 +16,9 @@ type KeepOutInput = {
 
 const defaultPadding = 0.02;
 
+// An element that covers more of a keep-out zone than this is not placed at all.
+export const keepOutErrorShare = 0.5;
+
 export function keepOutZones(input: KeepOutInput): Box[] {
   const padding = input.padding ?? defaultPadding;
 

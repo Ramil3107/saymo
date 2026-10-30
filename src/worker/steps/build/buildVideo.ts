@@ -5,7 +5,7 @@ import { captionPages } from "../../../video/captions/pages";
 import { rebaseWords } from "../../../video/captions/timeline";
 import { type Destination, destinations, formatSize } from "../../../video/destinations";
 import { fitCover } from "../../../video/layout/fitCover";
-import { keepOutZones } from "../../../video/layout/keepOut";
+import { keepOutErrorShare, keepOutZones, overlapRatio } from "../../../video/layout/keepOut";
 import { captionBand, placeOverlay } from "../../../video/layout/safeZones";
 import type { Box, ContentMap } from "../../../video/schema/content";
 import type { MediaInfo } from "../../../video/schema/media";
@@ -260,7 +260,8 @@ function placeElements(slot: Slot, transform: Transform | undefined, context: Sc
   for (const overlay of slot.beat.overlays) {
     const timing = elementTiming(overlay, slot.durationMs);
     const taken = placed.filter((element) => sharesTime(element, timing)).map((element) => element.box);
-    placed.push(placeElement(overlay, slot, transform, context, taken));
+    const element = placeElement(overlay, slot, transform, context, taken);
+    if (element) placed.push(element);
   }
 
   return placed;
@@ -272,7 +273,7 @@ function placeElement(
   transform: Transform | undefined,
   context: SceneContext,
   taken: Box[],
-): Element {
+): Element | undefined {
   const { beat, durationMs } = slot;
   const { destination } = context;
 
@@ -281,7 +282,7 @@ function placeElement(
     source: context.source,
     transform,
     target: context.target,
-    window: overlayWindow(beat, overlay),
+    window: beatWindow(beat),
   });
   const band = context.captionsOn ? [captionBand(destination.safeZone)] : [];
   const box = placeOverlay(overlay.kind, destination.format, destination.safeZone, [
@@ -289,6 +290,7 @@ function placeElement(
     ...band,
     ...taken,
   ]);
+  if (overlapRatio(box, zones) > keepOutErrorShare) return undefined;
 
   return elementFrom(beat, overlay, box, durationMs);
 }
@@ -304,11 +306,10 @@ function sharesTime(a: Timing, b: Timing): boolean {
   return a.enterMs < b.exitMs && b.enterMs < a.exitMs;
 }
 
-function overlayWindow(beat: Beat, overlay: Overlay): Interval {
+// Keyframes are two seconds apart, so faces are looked up over the whole beat, as QA does.
+function beatWindow(beat: Beat): Interval {
   if (!beat.footage) return { startMs: 0, endMs: 0 };
-
-  const startMs = beat.footage.fromMs + overlay.atMs;
-  return { startMs, endMs: startMs + overlay.durationMs };
+  return { startMs: beat.footage.fromMs, endMs: beat.footage.toMs };
 }
 
 function faceZones(input: FaceZoneInput): Box[] {

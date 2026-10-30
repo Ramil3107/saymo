@@ -170,3 +170,19 @@ test("buildVideo keeps elements that share time in a scene apart", () => {
 
   expect(intersectionArea(headline.box, sticker.box)).toBe(0);
 });
+
+test("buildVideo drops an overlay that would cover a face seen anywhere in its beat", () => {
+  const beat = footagePlan.beats[0];
+  const overlay = beat?.overlays[0];
+  if (!beat?.footage || !overlay) throw new Error("fixture beat has no footage or overlays");
+  const faceEverywhere = { x: 0, y: 0, w: 1, h: 1, tMs: beat.footage.fromMs + 100 };
+  const content = { ...sampleContent, faces: [faceEverywhere] };
+  const plan = {
+    ...footagePlan,
+    beats: [{ ...beat, overlays: beat.overlays.slice(0, 1) }, ...footagePlan.beats.slice(1)],
+  };
+
+  const doc = buildVideo(plan, content, { sourceVideo: { path: "in.mp4", info: content.source } }, brand);
+
+  expect(doc.scenes[0]?.elements).toEqual([]);
+});

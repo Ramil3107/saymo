@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { destinations, type SafeZone } from "../destinations";
 import { intersectionArea } from "../layout/geometry";
-import { overlapRatio } from "../layout/keepOut";
+import { keepOutErrorShare, overlapRatio } from "../layout/keepOut";
 import { fitsInBox } from "../layout/textWidth";
 import { registers } from "../registers";
 import type { Box } from "../schema/content";
@@ -44,7 +44,6 @@ const maxWordsInQuote = 12;
 const headlineFontPx = 72;
 const bodyFontPx = 40;
 const maxLines = 2;
-const keepOutErrorShare = 0.5;
 const safeZoneEpsilon = 1e-6;
 
 export function planWithinLimits(plan: Plan, sourceDurationMs: number | null): QaIssue[] {
