@@ -4,6 +4,12 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-10-30 · Providers and models after the spike
+
+- **Decided:** transcription on ElevenLabs Scribe v2, with Deepgram Nova 3 kept in the code as the reserve (`--transcriber deepgram`); frame descriptions on Claude Sonnet 5.5; face detection on AWS Rekognition. The director stays on Claude Opus 5.5 for now: Opus and Sonnet 5.5 are compared on `runs/face-v2` once the vocabulary base is accepted.
+- **Why:** in the spike Scribe read Ukrainian medical speech cleanly where Deepgram misspelled terms, at the same price; Sonnet wrote the same frame notes as Opus at half the cost and goes back to Opus with one env value; Rekognition found the face in 47 of 55 frames and already runs in us-east-1. The two director runs were rendered with different vocabularies and cannot be compared fairly; the owner's own work with Opus went well, Sonnet is untested.
+- **Rejected:** Deepgram as the main provider (three times faster, but misspells terms); Opus for frame descriptions (twice the cost for the same notes); an ONNX face model in Node (not needed while Rekognition is enough); choosing the director model now.
+
 ### 2026-10-30 · The vocabulary comes before the infrastructure
 
 - **Decided:** the next iteration builds the vocabulary to a solid base, locally, with the Synevo reel from `video-editing/synevo` as the reference; the application, database, queue, storage and deployment (the spec's stage 2) come after it. Stages 1 and 2 of the spec swap places.
