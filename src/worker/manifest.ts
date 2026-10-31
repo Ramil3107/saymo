@@ -11,6 +11,8 @@ export const RunOptionsSchema = z.object({
   destination: DestinationIdSchema,
   runDir: z.string(),
   transcriber: z.enum(["elevenlabs", "deepgram"]),
+  // Runs recorded before the local director existed asked the API.
+  director: z.enum(["api", "local"]).default("api"),
   directorModel: z.string(),
   visionModel: z.string(),
   voice: z.boolean(),
@@ -26,7 +28,7 @@ export const stepNames = ["ingest", "transcribe", "see", "direct", "voice", "bui
 export type StepName = (typeof stepNames)[number];
 
 const StepStateSchema = z.object({
-  status: z.enum(["pending", "done", "failed", "skipped"]),
+  status: z.enum(["pending", "done", "failed", "skipped", "waiting"]),
   ms: z.number().optional(),
   error: z.string().optional(),
 });

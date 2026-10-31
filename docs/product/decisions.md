@@ -4,6 +4,12 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-10-31 · The spike's director runs locally by default
+
+- **Decided:** `pnpm spike` has a local director mode, and it is the default. The run writes the system prompt, the user message and the plan's JSON schema to `runs/<id>/director/`, marks the step `waiting` and stops; the plan is written in a Claude Code session on the owner's subscription, checked against the schema on resume, and the run continues to build, QA and render. `--director api` calls the API as the service will. The owner agreed to the order of work on 2026-10-30 and asked why the director needed the API at all.
+- **Why:** vocabulary and plan iterations should not spend API money; the brief is exactly what the API would receive, so a plan written from it tests the same contract, and the schema check is the same one the API path uses.
+- **Rejected:** the API as the default with a cheap model for checks (still paid, and a weaker director than the one in the session); a separate script that skips the pipeline (`render:plan` already exists for hand-written plans, and the run would miss the voice, music, QA and poster steps).
+
 ### 2026-10-31 · An accent is an intent, and the style draws it
 
 - **Decided:** an overlay, and its element, carries an optional `accent` from four intents: `celebrate`, `frame`, `focus` and `stress`. The director picks the intent; the style decides the mark (`bold-pop`: burst, growing frame, brackets, flash blocks; `clean-paper`: sparkles, selection box, circle, underline). The mark is drawn around the text the element shows, measured on the page each frame. It replaces `emphasis` (`marker`, `underline`, `pulse`), which nothing drew. This is the lead's call.

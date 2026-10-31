@@ -36,6 +36,7 @@ import {
   SpokenBeatSchema,
 } from "./steps/build/buildVideo";
 import { direct } from "./steps/direct/director";
+import { directLocally, WaitingForPlanError } from "./steps/direct/localDirector";
 import type { DirectorInput } from "./steps/direct/prompts";
 import { type IngestResult, IngestResultSchema, ingest } from "./steps/ingest";
 import { buildContentMap } from "./steps/see/contentMap";
@@ -108,8 +109,9 @@ export async function runPipeline(options: RunOptions, env: Env): Promise<RunRes
 }
 
 function requireCredentials(options: RunOptions, env: Env): void {
-  if (!process.env.ANTHROPIC_AUTH_TOKEN) requireEnv(env, "ANTHROPIC_API_KEY");
-  assertPricedModel(options.directorModel);
+  const callsClaude = options.director === "api" || options.source !== undefined;
+  if (callsClaude && !process.env.ANTHROPIC_AUTH_TOKEN) requireEnv(env, "ANTHROPIC_API_KEY");
+  if (options.director === "api") assertPricedModel(options.directorModel);
   assertPricedModel(options.visionModel);
 
   if (options.source) {
@@ -226,6 +228,8 @@ function directStep(run: Run, content: ContentMap | null): Promise<Plan> {
     schema: PlanSchema,
     work: async () => {
       const input = await directorInput(run, content);
+      if (run.options.director === "local") return directLocally(input, artifact(run, "director"));
+
       return direct(input, { client: run.client, model: run.options.directorModel, metrics: run.metrics });
     },
   });
@@ -402,7 +406,8 @@ async function step<T>(run: Run, spec: Step<T>): Promise<T> {
     save(run);
     return value;
   } catch (error) {
-    run.manifest.steps[spec.name] = { status: "failed", error: errorMessage(error) };
+    const status = error instanceof WaitingForPlanError ? "waiting" : "failed";
+    run.manifest.steps[spec.name] = { status, error: errorMessage(error) };
     save(run);
     throw error;
   }

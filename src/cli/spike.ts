@@ -6,11 +6,14 @@ import { errorMessage } from "../lib/errors";
 import { Metrics } from "../lib/metrics";
 import { type RunOptions, RunOptionsSchema } from "../worker/manifest";
 import { QaFailedError, type RunResult, runPipeline } from "../worker/run";
+import { WaitingForPlanError } from "../worker/steps/direct/localDirector";
 
 const usage =
-  'Usage: pnpm spike <video> | --text "..." [--url ...] [--to reels] [--transcriber elevenlabs|deepgram] [--voice] [--render local|lambda|none] [--resume --run <id>]';
+  'Usage: pnpm spike <video> | --text "..." [--url ...] [--to reels] [--director local|api] [--transcriber elevenlabs|deepgram] [--voice] [--render local|lambda|none] [--resume --run <id>]';
 const defaultVoiceId = "21m00Tcm4TlvDq8ikWAM";
 const maxSlugLength = 32;
+const qaFailedExitCode = 2;
+const waitingExitCode = 3;
 
 await main();
 
@@ -23,7 +26,7 @@ async function main(): Promise<void> {
     printSummary(await runPipeline(options, env));
   } catch (error) {
     console.error(errorMessage(error));
-    process.exit(error instanceof QaFailedError ? 2 : 1);
+    process.exit(exitCode(error));
   }
 }
 
@@ -35,6 +38,7 @@ function parseOptions(env: Env): RunOptions {
       url: { type: "string" },
       to: { type: "string", default: "reels" },
       transcriber: { type: "string", default: "elevenlabs" },
+      director: { type: "string", default: "local" },
       "director-model": { type: "string", default: env.SAYMO_DIRECTOR_MODEL },
       "vision-model": { type: "string", default: env.SAYMO_VISION_MODEL },
       voice: { type: "boolean", default: false },
@@ -56,6 +60,7 @@ function parseOptions(env: Env): RunOptions {
     destination: values.to,
     runDir: join("runs", runId),
     transcriber: values.transcriber,
+    director: values.director,
     directorModel: values["director-model"],
     visionModel: values["vision-model"],
     voice: values.voice,
@@ -63,6 +68,11 @@ function parseOptions(env: Env): RunOptions {
     render: values.render,
     resume: values.resume,
   });
+}
+
+function exitCode(error: unknown): number {
+  if (error instanceof WaitingForPlanError) return waitingExitCode;
+  return error instanceof QaFailedError ? qaFailedExitCode : 1;
 }
 
 function exitWithUsage(): never {

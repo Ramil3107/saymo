@@ -9,6 +9,7 @@ const options: RunOptions = {
   destination: "reels",
   runDir: "runs/test",
   transcriber: "elevenlabs",
+  director: "local",
   directorModel: "claude-opus-5-5",
   visionModel: "claude-opus-5-5",
   voice: false,

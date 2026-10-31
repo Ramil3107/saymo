@@ -4,5 +4,5 @@ description: Run the spike on a video or text and record the measurements in the
 ---
 
 1. If not stated, ask for the input (a path to a video, or text) and the destination.
-2. Run `pnpm spike <path or --text> --to <destination> [--transcriber elevenlabs|deepgram] [--render local|lambda|none]`.
+2. Run `pnpm spike <path or --text> --to <destination> [--director local|api] [--transcriber elevenlabs|deepgram] [--render local|lambda|none]`. The director is local by default: the run stops with a brief in `runs/<id>/director/`; write `plan.json` there from `prompt.md` and `schema.json`, then rerun with the same arguments and `--resume --run <id>`. Use `--director api` only when the service itself is measured, and tell the owner the cost before the run.
 3. After the run, append a row to the table in `docs/spike-results.md` from `runs/<id>/metrics.json`. Ask the owner for the eyeball score and the notes, do not fill them in yourself.

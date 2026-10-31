@@ -57,7 +57,9 @@ flowchart TD
 
 ## Spike run
 
-`pnpm spike <video.mp4> --to reels` or `pnpm spike --text "..." --to reels` runs the pipeline from the terminal and writes everything to `runs/<id>/`:
+`pnpm spike <video.mp4> --to reels` or `pnpm spike --text "..." --to reels` runs the pipeline from the terminal and writes everything to `runs/<id>/`.
+
+The director runs locally by default (`--director local`): the run writes the brief to `runs/<id>/director/`, marks the step `waiting` and stops with exit code 3. A plan written to `director/plan.json`, by hand or by Claude in a session, is checked against the plan schema on `--resume --run <id>` (with the same arguments), and the run goes on to build, check and render; a plan that fails the schema keeps the step waiting and the error names each problem. A text-mode run with the local director and a local render calls no paid API. `--director api` asks Claude through the API, as the service will; footage mode still describes frames through the API either way.
 
 | File | Written by | What it holds |
 | --- | --- | --- |
@@ -65,6 +67,7 @@ flowchart TD
 | `ingest.json`, `audio.wav`, `frames/` | ingest | probe info, extracted audio, keyframes every 2 s |
 | `transcript.json` | transcribe | words with timestamps and speakers |
 | `see.json`, `content.json` | see | face boxes, frame notes, the assembled content map |
+| `director/prompt.md`, `director/schema.json`, `director/plan.json` | direct, local director | the system prompt and user message the API would receive, the plan's JSON schema, and the plan written for them |
 | `plan.json` | direct | the director's plan; questions are printed and answered with defaults |
 | `voice/*.mp3`, `voice.json` | voice | voiceover per beat with word timings (text mode with `--voice`) |
 | `video.json` | build | the video document |
