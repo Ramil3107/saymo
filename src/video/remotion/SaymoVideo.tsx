@@ -5,6 +5,7 @@ import type { Element, Scene, VideoDoc } from "../schema/video";
 import { defaultStyle } from "../styles";
 import { Accented } from "./accents/ElementAccent";
 import { CaptionLayer } from "./captions/CaptionLayer";
+import { FontsLoaded } from "./FontsLoaded";
 import { loadBrandFont } from "./fonts";
 import { sceneFrames } from "./frames";
 import { SceneTransition } from "./motion/SceneTransition";
@@ -36,22 +37,24 @@ export function SaymoVideo(doc: VideoDoc) {
   const musicSrc = doc.music ? assetSrc(doc, doc.music.assetId) : undefined;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: doc.brand.colors[0], fontFamily }}>
-      <Scenes doc={doc} theme={theme} />
-      {doc.captions ? (
-        <CaptionLayer
-          captions={doc.captions}
-          theme={theme}
-          safeZone={safeZone}
-          frame={formatSize(doc.format)}
-        />
-      ) : null}
-      {doc.music && musicSrc ? <MusicTrack music={doc.music} src={musicSrc} /> : null}
-      {doc.voice.map((voice) => {
-        const src = assetSrc(doc, voice.assetId);
-        return src ? <VoiceTrack key={voice.assetId} voice={voice} src={src} /> : null;
-      })}
-    </AbsoluteFill>
+    <FontsLoaded>
+      <AbsoluteFill style={{ backgroundColor: doc.brand.colors[0], fontFamily }}>
+        <Scenes doc={doc} theme={theme} />
+        {doc.captions ? (
+          <CaptionLayer
+            captions={doc.captions}
+            theme={theme}
+            safeZone={safeZone}
+            frame={formatSize(doc.format)}
+          />
+        ) : null}
+        {doc.music && musicSrc ? <MusicTrack music={doc.music} src={musicSrc} /> : null}
+        {doc.voice.map((voice) => {
+          const src = assetSrc(doc, voice.assetId);
+          return src ? <VoiceTrack key={voice.assetId} voice={voice} src={src} /> : null;
+        })}
+      </AbsoluteFill>
+    </FontsLoaded>
   );
 }
 

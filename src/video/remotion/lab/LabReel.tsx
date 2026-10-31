@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import { AbsoluteFill, Sequence } from "remotion";
+import { FontsLoaded } from "../FontsLoaded";
 import { msToFrame } from "../frames";
 import { type DemoProps, glideLook, type Look, snapLook } from "./looks";
 
@@ -18,19 +19,21 @@ export function labFrames(demos: Demo[]): number {
 
 export function LabReel({ demos }: { demos: Demo[] }) {
   return (
-    <AbsoluteFill style={{ backgroundColor: labBackground }}>
-      {demos.map((demo, index) => (
-        <Sequence
-          key={demo.title}
-          from={msToFrame(startOf(demos, index))}
-          durationInFrames={msToFrame(demo.durationMs)}
-        >
-          <Header title={`${index + 1} · ${demo.title}`} />
-          <Panel look={snapLook} left={labWidth / 2 - panel.gap / 2 - panel.width} demo={demo} />
-          <Panel look={glideLook} left={labWidth / 2 + panel.gap / 2} demo={demo} />
-        </Sequence>
-      ))}
-    </AbsoluteFill>
+    <FontsLoaded>
+      <AbsoluteFill style={{ backgroundColor: labBackground }}>
+        {demos.map((demo, index) => (
+          <Sequence
+            key={demo.title}
+            from={msToFrame(startOf(demos, index))}
+            durationInFrames={msToFrame(demo.durationMs)}
+          >
+            <Header title={`${index + 1} · ${demo.title}`} />
+            <Panel look={snapLook} left={labWidth / 2 - panel.gap / 2 - panel.width} demo={demo} />
+            <Panel look={glideLook} left={labWidth / 2 + panel.gap / 2} demo={demo} />
+          </Sequence>
+        ))}
+      </AbsoluteFill>
+    </FontsLoaded>
   );
 }
 

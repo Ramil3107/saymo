@@ -10,11 +10,11 @@ const onest = loadFont("normal", {
 });
 
 const playfair = loadPlayfair("normal", { weights: ["500", "700"], subsets: ["latin", "cyrillic"] });
-
-loadPlayfair("italic", { weights: ["500", "700"], subsets: ["latin", "cyrillic"] });
+const playfairItalic = loadPlayfair("italic", { weights: ["500", "700"], subsets: ["latin", "cyrillic"] });
 
 const unbounded = loadUnbounded("normal", { weights: ["500", "700", "900"], subsets: ["latin", "cyrillic"] });
 const inter = loadInter("normal", { weights: ["500", "700", "800", "900"], subsets: ["latin", "cyrillic"] });
+const faces = [onest, playfair, playfairItalic, unbounded, inter];
 
 const displayFamilies: Record<DisplayFont, string> = {
   unbounded: unbounded.fontFamily,
@@ -22,6 +22,10 @@ const displayFamilies: Record<DisplayFont, string> = {
 };
 
 export const serifFamily = playfair.fontFamily;
+
+export async function fontsLoaded(): Promise<void> {
+  await Promise.all(faces.map((face) => face.waitUntilDone()));
+}
 
 export function displayFamily(font: DisplayFont): string {
   return displayFamilies[font];

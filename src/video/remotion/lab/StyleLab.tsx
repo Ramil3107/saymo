@@ -1,6 +1,7 @@
 import type { CalculateMetadataFunction } from "remotion";
 import { AbsoluteFill } from "remotion";
 import { type StyleId, styles } from "../../styles";
+import { FontsLoaded } from "../FontsLoaded";
 import { msToFrame } from "../frames";
 import { styleKit } from "../style/kit";
 import { AdSpot, spotMs } from "./adSpot";
@@ -24,16 +25,18 @@ export const styleLabMetadata: CalculateMetadataFunction<CaptionLabProps> = ({ p
 
 export function StyleLab(lab: CaptionLabProps) {
   return (
-    <AbsoluteFill style={{ backgroundColor: "#101014" }}>
-      {shown.map((id, index) => (
-        <StylePanel
-          key={id}
-          id={id}
-          lab={lab}
-          left={labWidth / 2 + (index === 0 ? -panel.gap / 2 - panel.width : panel.gap / 2)}
-        />
-      ))}
-    </AbsoluteFill>
+    <FontsLoaded>
+      <AbsoluteFill style={{ backgroundColor: "#101014" }}>
+        {shown.map((id, index) => (
+          <StylePanel
+            key={id}
+            id={id}
+            lab={lab}
+            left={labWidth / 2 + (index === 0 ? -panel.gap / 2 - panel.width : panel.gap / 2)}
+          />
+        ))}
+      </AbsoluteFill>
+    </FontsLoaded>
   );
 }
 

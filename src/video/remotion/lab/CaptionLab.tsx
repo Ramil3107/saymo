@@ -7,6 +7,7 @@ import { registers } from "../../registers";
 import type { CaptionStyle } from "../../schema/plan";
 import { defaultStyle } from "../../styles";
 import { CaptionLayer } from "../captions/CaptionLayer";
+import { FontsLoaded } from "../FontsLoaded";
 import { loadBrandFont } from "../fonts";
 import { msToFrame } from "../frames";
 import { styleKit } from "../style/kit";
@@ -49,26 +50,28 @@ export function CaptionLab(lab: CaptionLabProps) {
   const theme = labTheme(lab);
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "#101014" }}>
-      {groups.map((group, index) => (
-        <Sequence
-          key={group.join(" ")}
-          from={msToFrame(index * lab.durationMs)}
-          durationInFrames={msToFrame(lab.durationMs)}
-        >
-          {group.map((style, position) => (
-            <CaptionPanel
-              key={style}
-              style={style}
-              position={position}
-              count={group.length}
-              lab={lab}
-              theme={theme}
-            />
-          ))}
-        </Sequence>
-      ))}
-    </AbsoluteFill>
+    <FontsLoaded>
+      <AbsoluteFill style={{ backgroundColor: "#101014" }}>
+        {groups.map((group, index) => (
+          <Sequence
+            key={group.join(" ")}
+            from={msToFrame(index * lab.durationMs)}
+            durationInFrames={msToFrame(lab.durationMs)}
+          >
+            {group.map((style, position) => (
+              <CaptionPanel
+                key={style}
+                style={style}
+                position={position}
+                count={group.length}
+                lab={lab}
+                theme={theme}
+              />
+            ))}
+          </Sequence>
+        ))}
+      </AbsoluteFill>
+    </FontsLoaded>
   );
 }
 
