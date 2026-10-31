@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import type { TypeFill } from "../../layout/compositions";
 import { exitMs, type MoveSpec, poseAt } from "../../motion/moves";
 import type { Element } from "../../schema/video";
 import { fractionDigits } from "../../type/numbers";
@@ -9,8 +10,8 @@ import type { StyleKit } from "../style/kit";
 import type { Frame, PrimitiveProps } from "../theme";
 import { CornerLabel } from "../type/CornerLabel";
 import { Counter } from "../type/Counter";
-import { KineticTitle, type TypeColors } from "../type/KineticTitle";
-import { type Surface, typeScale } from "./surface";
+import { KineticTitle } from "../type/KineticTitle";
+import { type Surface, typeColors, typeScale } from "./surface";
 
 type KineticKind = "title" | "counter" | "corner-label" | "headline" | "big-number";
 
@@ -33,13 +34,18 @@ export function TitleElement({ element, theme, frame, surface }: KineticProps<"t
       <KineticTitle
         {...kit}
         sizeScale={typeScale(surface)}
-        colors={colorsOn(kit, surface)}
+        colors={typeColors(kit, surface, element.on)}
         font={kit.display}
         lines={element.lines.map((line) => cased(kit, line))}
         entrance={element.entrance}
         atMs={element.enterMs}
         exit={exitOf(element, kit)}
         width={width}
+        fill={
+          element.fill
+            ? { height: element.box.h * frame.height, spread: element.fill === "spread" }
+            : undefined
+        }
       />
     </KineticBox>
   );
@@ -66,7 +72,7 @@ export function CounterElement({ element, theme, frame, surface }: KineticProps<
       <Counter
         {...kit}
         sizeScale={typeScale(surface)}
-        colors={colorsOn(kit, surface)}
+        colors={typeColors(kit, surface, element.on)}
         font={kit.display}
         to={element.value}
         from={0}
@@ -74,10 +80,15 @@ export function CounterElement({ element, theme, frame, surface }: KineticProps<
         prefix={element.prefix}
         suffix={element.suffix ? casedText(kit, element.suffix) : undefined}
         label={element.label}
-        ghost={kit.style.flourishes.includes("ghost-numbers")}
+        ghost={!element.fill && kit.style.flourishes.includes("ghost-numbers")}
         atMs={element.enterMs}
         exit={exitOf(element, kit)}
         width={element.box.w * frame.width}
+        fill={
+          element.fill
+            ? { height: element.box.h * frame.height, edgePx: bleedEdge(element, frame) }
+            : undefined
+        }
       />
     </KineticBox>
   );
@@ -90,7 +101,7 @@ export function CornerElement({ element, theme, frame, surface }: KineticProps<"
     <KineticBox element={element} kit={kit} frame={frame} surface={surface}>
       <CornerLabel
         {...kit}
-        colors={colorsOn(kit, surface)}
+        colors={typeColors(kit, surface, element.on)}
         font={kit.display}
         text={element.text}
         corner={element.box.x + element.box.w / 2 < 0.5 ? "top-left" : "top-right"}
@@ -106,16 +117,16 @@ export function CornerElement({ element, theme, frame, surface }: KineticProps<"
 }
 
 // A headline is a title the director wrote as one sentence: the sentence is the main line and the sub an accent line.
+// A headline that fills its box keeps to the left, like titles in a composition.
 export function headlineAsTitle(element: ElementOf<"headline">, kit: StyleKit): ElementOf<"title"> {
+  const align = element.fill ? "left" : "center";
   const main: TitleLine = {
     text: element.text,
     size: wordCount(element.text) > shortLineWords ? "m" : "l",
     tone: "ink",
-    align: "center",
+    align,
   };
-  const sub: TitleLine[] = element.sub
-    ? [{ text: element.sub, size: "s", tone: "accent", align: "center" }]
-    : [];
+  const sub: TitleLine[] = element.sub ? [{ text: element.sub, size: "s", tone: "accent", align }] : [];
 
   return {
     ...element,
@@ -153,7 +164,12 @@ export function parseNumber(
 // Over footage a soft shade sits behind the text, so it reads on a bright or busy shot.
 function KineticBox({ element, kit, frame, surface, children }: BoxProps) {
   return (
-    <div style={boxStyle(element.box, frame)}>
+    <div
+      style={{
+        ...boxStyle(element.box, frame),
+        justifyContent: fillJustify(element.fill),
+      }}
+    >
       {surface === "footage" ? <Scrim element={element} kit={kit} /> : null}
       {children}
     </div>
@@ -187,8 +203,14 @@ function boxStyle(box: { x: number; y: number; w: number; h: number }, frame: Fr
   };
 }
 
-function colorsOn(kit: StyleKit, surface: Surface): TypeColors {
-  return surface === "footage" ? kit.onFootage : kit.colors;
+function bleedEdge(element: ElementOf<"counter">, frame: Frame): number | undefined {
+  return element.fill === "bleed" ? element.box.x * frame.width : undefined;
+}
+
+// Filled text keeps to the left like the composition around it; bleeding text keeps to the right and runs past the left.
+function fillJustify(fill: TypeFill | undefined): CSSProperties["justifyContent"] {
+  if (fill === "bleed") return "flex-end";
+  return fill ? "flex-start" : "center";
 }
 
 function exitOf(element: { enterMs: number; exitMs: number }, kit: StyleKit): MoveSpec["exit"] {

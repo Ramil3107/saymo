@@ -6,6 +6,7 @@ import { destinations } from "../../../../video/destinations";
 import { intersectionArea } from "../../../../video/layout/geometry";
 import { isKineticKind } from "../../../../video/layout/layouts";
 import { captionBand } from "../../../../video/layout/safeZones";
+import { runQa } from "../../../../video/qa/checks";
 import { ContentMapSchema } from "../../../../video/schema/content";
 import { PlanSchema } from "../../../../video/schema/plan";
 import { buildVideo, keepOutForScenes, pickMusic } from "../buildVideo";
@@ -502,4 +503,41 @@ test("buildVideo shows a subject too wide for a vertical crop whole, as a card",
     buildVideo(footagePlan, content, assets, brand).scenes.find((scene) => scene.id === "b1")?.footage?.fit;
   expect(fitOf(withProduct)).toBe("card");
   expect(fitOf(noFaces)).not.toBe("card");
+});
+
+test("buildVideo lays out backdrop beats by their composition", () => {
+  const compositions = ["fill", "split", "grid"] as const;
+  const beats = textPlan.beats.map((beat, index) => ({ ...beat, composition: compositions[index] }));
+  const doc = buildVideo({ ...textPlan, beats }, null, {}, brand);
+  const [fill, split, grid] = doc.scenes;
+
+  expect(doc.scenes.map((scene) => scene.composition)).toEqual([...compositions]);
+  expect(fill?.elements[0]?.fill).toBe("spread");
+  expect(split?.fields?.[0]?.tone).toBe("accent");
+  expect(split?.elements.find((element) => element.kind === "big-number")).toMatchObject({
+    fill: "fit",
+    on: "accent",
+  });
+  expect(split?.elements.find((element) => element.kind === "chip")?.on).toBeUndefined();
+  expect(grid?.fields?.[0]?.box).toEqual(grid?.elements[0]?.box);
+  expect(grid?.elements[0]?.on).toBeDefined();
+  expect(
+    runQa(doc, { ...textPlan, beats }, {}, null).issues.filter((issue) => issue.severity === "error"),
+  ).toEqual([]);
+});
+
+test("buildVideo gives a repeated composition its other form and ignores compositions over footage", () => {
+  const compositions = ["split", "grid", "split"] as const;
+  const beats = textPlan.beats.map((beat, index) => ({ ...beat, composition: compositions[index] }));
+  const text = buildVideo({ ...textPlan, beats }, null, {}, brand);
+  const footage = buildVideo(
+    { ...footagePlan, beats: footagePlan.beats.map((beat) => ({ ...beat, composition: "split" as const })) },
+    sampleContent,
+    { sourceVideo: { path: "in.mp4", info: sampleContent.source } },
+    brand,
+  );
+
+  expect(text.scenes[0]?.fields?.[0]?.box.y).toBe(0);
+  expect(text.scenes[2]?.fields?.[0]?.box.y).toBe(0.5);
+  expect(footage.scenes.every((scene) => !scene.composition && !scene.fields)).toBe(true);
 });

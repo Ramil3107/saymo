@@ -23,6 +23,9 @@ export type TypeColors = { ink: string; accent: string; alt: string; marker: str
 
 export type TypeFont = { family: string; weight: number };
 
+// A title that fills its box: every line as wide as the box, the stack shrunk to its height, spread over it or not.
+export type TitleFill = { height: number; spread: boolean };
+
 export type TitleProps = {
   lines: TitleLine[];
   entrance: TitleEntrance;
@@ -34,9 +37,16 @@ export type TitleProps = {
   tempo: Tempo;
   width: number;
   sizeScale?: number;
+  fill?: TitleFill;
 };
 
-type RowProps = TitleProps & { line: TitleLine; cue: LineCue; isLast: boolean; markAtMs: number };
+type RowProps = TitleProps & {
+  line: TitleLine;
+  cue: LineCue;
+  isLast: boolean;
+  markAtMs: number;
+  fontSize: number;
+};
 
 const fitShare = 0.92;
 const spreadFromEm = 0.7;
@@ -49,24 +59,39 @@ const justify: Record<Align, CSSProperties["justifyContent"]> = {
 const swappedTone: Record<Tone, Tone> = { ink: "accent", accent: "ink", alt: "ink" };
 
 export function KineticTitle(props: TitleProps) {
-  const { lines, entrance, atMs, exit, tempo, width } = props;
+  const { lines, entrance, atMs, exit, tempo, width, fill } = props;
   const cues = lineCues(lines, entrance, atMs, tempo);
   const markAtMs = entranceEndMs(lines, entrance, atMs, tempo) + tempo.quickMs;
+  const sizes = lineSizes(props);
+  const spread = fill?.spread && lines.length > 1;
 
   return (
     <Move
       spec={{ enter: "cut", atMs, exit }}
       tempo={tempo}
       unitPx={width}
-      style={{ width }}
-      innerStyle={{ flexDirection: "column", alignItems: "stretch", fontFamily: props.font.family }}
+      style={{ width, height: spread ? fill?.height : undefined }}
+      innerStyle={{
+        flexDirection: "column",
+        alignItems: "stretch",
+        justifyContent: spread ? "space-between" : "center",
+        fontFamily: props.font.family,
+      }}
     >
       {lines.map((line, index) => {
         const cue = cues[index];
         if (!cue) return null;
         const isLast = index === lines.length - 1;
         return (
-          <TitleRow key={line.text} {...props} line={line} cue={cue} isLast={isLast} markAtMs={markAtMs} />
+          <TitleRow
+            key={line.text}
+            {...props}
+            line={line}
+            cue={cue}
+            isLast={isLast}
+            markAtMs={markAtMs}
+            fontSize={sizes[index] ?? 0}
+          />
         );
       })}
     </Move>
@@ -74,9 +99,8 @@ export function KineticTitle(props: TitleProps) {
 }
 
 function TitleRow(props: RowProps) {
-  const { line, font, width, colors, tempo, swapAtMs, markAtMs } = props;
+  const { line, font, colors, tempo, swapAtMs, markAtMs, fontSize } = props;
   const ms = useMs();
-  const fontSize = lineFontSize(line, font, width, props.sizeScale ?? 1);
   const marked = line.marked ? eased(ms, markAtMs, tempo.moveMs * 2, tempo.enterCurve) : 0;
 
   return (
@@ -175,15 +199,22 @@ function Spread({ text, atMs, tempo }: { text: string; atMs: number; tempo: Temp
   );
 }
 
-function lineFontSize(line: TitleLine, font: TypeFont, width: number, sizeScale: number): number {
-  const fitted = fitText({
-    text: line.text,
-    withinWidth: width * fitShare,
-    fontFamily: font.family,
-    fontWeight: font.weight,
+// A filled title sets every line as wide as the box, then shrinks the stack together until it fits the height.
+function lineSizes({ lines, font, width, sizeScale = 1, fill }: TitleProps): number[] {
+  const sizes = lines.map((line) => {
+    const fitted = fittedSize(line.text, font, width);
+    return fill ? fitted : Math.min(width * titleSizeShare[line.size] * sizeScale, fitted);
   });
+  if (!fill) return sizes;
 
-  return Math.min(width * titleSizeShare[line.size] * sizeScale, fitted.fontSize);
+  const stacked = sizes.reduce((sum, size) => sum + size * titleLineHeight, 0);
+  const shrink = Math.min(1, fill.height / Math.max(stacked, 1));
+  return sizes.map((size) => size * shrink);
+}
+
+function fittedSize(text: string, font: TypeFont, width: number): number {
+  return fitText({ text, withinWidth: width * fitShare, fontFamily: font.family, fontWeight: font.weight })
+    .fontSize;
 }
 
 function toneColor(

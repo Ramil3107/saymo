@@ -1,0 +1,339 @@
+{
+  "title": "Composition lab",
+  "summary": "Every composition family on the backdrop, each twice, to check how they fill the frame.",
+  "cast": [],
+  "destination": "reels",
+  "lengthMs": 19200,
+  "register": "playful-sale",
+  "style": "bold-pop",
+  "musicMood": "upbeat",
+  "captions": {
+    "enabled": false,
+    "style": "bold-center",
+    "keywords": []
+  },
+  "voiceover": false,
+  "beats": [
+    {
+      "id": "b1",
+      "role": "hook",
+      "startMs": 0,
+      "durationMs": 2400,
+      "transition": "cut",
+      "composition": "fill",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "Black Friday Sale",
+          "lines": [
+            {
+              "text": "Black",
+              "size": "xl",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "Friday",
+              "size": "xl",
+              "tone": "accent",
+              "align": "center"
+            },
+            {
+              "text": "Sale",
+              "size": "l",
+              "tone": "ink",
+              "align": "center"
+            }
+          ],
+          "entrance": "type",
+          "atMs": 0,
+          "durationMs": 2400
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "role": "message",
+      "startMs": 2400,
+      "durationMs": 2400,
+      "transition": "flash",
+      "composition": "split",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "Every sweater",
+          "lines": [
+            {
+              "text": "Every",
+              "size": "l",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "sweater",
+              "size": "xl",
+              "tone": "accent",
+              "align": "center"
+            }
+          ],
+          "entrance": "punch",
+          "atMs": 0,
+          "durationMs": 2400
+        },
+        {
+          "id": "c1",
+          "kind": "chip",
+          "text": "Free shipping",
+          "atMs": 500,
+          "durationMs": 1900,
+          "badge": "01"
+        },
+        {
+          "id": "c2",
+          "kind": "chip",
+          "text": "Over $50",
+          "atMs": 900,
+          "durationMs": 1500,
+          "badge": "02"
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "role": "proof",
+      "startMs": 4800,
+      "durationMs": 2400,
+      "transition": "whip",
+      "composition": "edge-number",
+      "overlays": [
+        {
+          "id": "n",
+          "kind": "counter",
+          "text": "40",
+          "value": 40,
+          "atMs": 0,
+          "durationMs": 2400,
+          "suffix": "%",
+          "sub": "off everything",
+          "accent": "stress"
+        },
+        {
+          "id": "c1",
+          "kind": "chip",
+          "text": "Nov 28 to 30",
+          "atMs": 1200,
+          "durationMs": 1200
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "role": "how",
+      "startMs": 7200,
+      "durationMs": 2400,
+      "transition": "cut",
+      "composition": "column",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "Open 7 AM",
+          "lines": [
+            {
+              "text": "Open",
+              "size": "l",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "7 AM",
+              "size": "xl",
+              "tone": "accent",
+              "align": "center"
+            }
+          ],
+          "entrance": "rise",
+          "atMs": 0,
+          "durationMs": 2400
+        },
+        {
+          "id": "c1",
+          "kind": "chip",
+          "text": "Sourdough",
+          "atMs": 500,
+          "durationMs": 1900,
+          "badge": "01"
+        },
+        {
+          "id": "c2",
+          "kind": "chip",
+          "text": "Baked daily",
+          "atMs": 900,
+          "durationMs": 1500,
+          "badge": "02"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "role": "how",
+      "startMs": 9600,
+      "durationMs": 2400,
+      "transition": "zoom",
+      "composition": "grid",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "You get",
+          "lines": [
+            {
+              "text": "You get",
+              "size": "m",
+              "tone": "ink",
+              "align": "center"
+            }
+          ],
+          "entrance": "rise",
+          "atMs": 0,
+          "durationMs": 2400
+        },
+        {
+          "id": "c1",
+          "kind": "chip",
+          "text": "Shipping",
+          "atMs": 300,
+          "durationMs": 2100,
+          "badge": "01"
+        },
+        {
+          "id": "c2",
+          "kind": "chip",
+          "text": "Returns",
+          "atMs": 600,
+          "durationMs": 1800,
+          "badge": "02"
+        },
+        {
+          "id": "c3",
+          "kind": "chip",
+          "text": "Wrapping",
+          "atMs": 900,
+          "durationMs": 1500,
+          "badge": "03"
+        },
+        {
+          "id": "c4",
+          "kind": "chip",
+          "text": "Repairs",
+          "atMs": 1200,
+          "durationMs": 1200,
+          "badge": "04"
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "role": "setup",
+      "startMs": 12000,
+      "durationMs": 2400,
+      "transition": "pixelate",
+      "composition": "fill",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "See you Nov 15",
+          "lines": [
+            {
+              "text": "See you",
+              "size": "l",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "Nov 15",
+              "size": "xl",
+              "tone": "accent",
+              "align": "center"
+            }
+          ],
+          "entrance": "spread",
+          "atMs": 0,
+          "durationMs": 2400
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "role": "proof",
+      "startMs": 14400,
+      "durationMs": 2400,
+      "transition": "cut",
+      "composition": "split",
+      "overlays": [
+        {
+          "id": "n",
+          "kind": "counter",
+          "text": "$149",
+          "value": 149,
+          "atMs": 0,
+          "durationMs": 2400,
+          "prefix": "$",
+          "sub": "per visit"
+        },
+        {
+          "id": "c1",
+          "kind": "chip",
+          "text": "Whiter in one visit",
+          "atMs": 1000,
+          "durationMs": 1400
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "role": "cta",
+      "startMs": 16800,
+      "durationMs": 2400,
+      "transition": "flash",
+      "composition": "column",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "Book online",
+          "lines": [
+            {
+              "text": "Book",
+              "size": "l",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "online",
+              "size": "l",
+              "tone": "accent",
+              "align": "center"
+            }
+          ],
+          "entrance": "type",
+          "atMs": 0,
+          "durationMs": 2400,
+          "accent": "celebrate"
+        },
+        {
+          "id": "c1",
+          "kind": "chip",
+          "text": "citydental.com",
+          "atMs": 900,
+          "durationMs": 1500
+        }
+      ]
+    }
+  ],
+  "assumptions": [],
+  "questions": []
+}

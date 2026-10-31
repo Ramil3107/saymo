@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { styles } from "../../styles";
 import { contrastRatio } from "../color";
-import { brandPalette } from "../palette";
+import { brandPalette, fieldColors } from "../palette";
 
 const synevo = ["#2D4BFF", "#FFD23F", "#FFFFFF"];
 
@@ -27,5 +27,17 @@ describe("brandPalette", () => {
     const palette = brandPalette(styles["bold-pop"].tones, []);
     expect(palette.highlight).toBe(styles["bold-pop"].tones.highlight);
     expect(palette.accent).toBe(styles["bold-pop"].tones.ink);
+  });
+});
+
+describe("fieldColors", () => {
+  it.each(Object.entries(styles))("keeps text readable on every %s field", (_, style) => {
+    const palette = brandPalette(style.tones, synevo);
+
+    for (const tone of ["accent", "ink", "highlight", "alt"] as const) {
+      const colors = fieldColors(palette, tone);
+      expect(contrastRatio(colors.ink, colors.background)).toBeGreaterThanOrEqual(3);
+      expect(contrastRatio(colors.accent, colors.background)).toBeGreaterThanOrEqual(3);
+    }
   });
 });

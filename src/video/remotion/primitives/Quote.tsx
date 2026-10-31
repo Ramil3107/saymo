@@ -4,7 +4,7 @@ import type { StyleKit } from "../style/kit";
 import type { PrimitiveProps } from "../theme";
 import type { TypeColors } from "../type/KineticTitle";
 import { ElementBox } from "./ElementBox";
-import type { Surface } from "./surface";
+import { type Surface, typeColors } from "./surface";
 
 const maxLines = 3;
 const barShare = 0.08;
@@ -15,7 +15,7 @@ type QuoteElement = PrimitiveProps<"quote">["element"];
 
 export function Quote({ element, theme, frame, surface }: PrimitiveProps<"quote"> & { surface: Surface }) {
   const { kit } = theme;
-  const colors = surface === "footage" ? kit.onFootage : kit.colors;
+  const colors = typeColors(kit, surface, element.on);
   const width = element.box.w * frame.width;
   const height = element.box.h * frame.height;
   const bar = height * barShare;

@@ -6,6 +6,14 @@ import { stepAside, type Window } from "../../../video/captions/stepAside";
 import { rebaseWords } from "../../../video/captions/timeline";
 import { type Destination, destinations, type Format, formatSize } from "../../../video/destinations";
 import { chipSize, type LabelFace } from "../../../video/layout/chipSize";
+import {
+  type Composition,
+  compose,
+  type Field,
+  type FieldTone,
+  type Pieces,
+  type Placement,
+} from "../../../video/layout/compositions";
 import { fitContain, fitCover } from "../../../video/layout/fitCover";
 import { intersectionArea } from "../../../video/layout/geometry";
 import { keepOutErrorShare, keepOutZones, overlapRatio, zoomedZones } from "../../../video/layout/keepOut";
@@ -30,7 +38,7 @@ import { stickerSize } from "../../../video/layout/stickerSize";
 import { cameraZoom } from "../../../video/motion/camera";
 import type { Box, ContentMap, FaceBox, FrameNote } from "../../../video/schema/content";
 import type { MediaInfo } from "../../../video/schema/media";
-import type { Beat, Overlay, Plan } from "../../../video/schema/plan";
+import type { Beat, Overlay, OverlayKind, Plan } from "../../../video/schema/plan";
 import { TranscriptSchema, type TranscriptWord } from "../../../video/schema/transcript";
 import {
   type CaptionPage,
@@ -82,6 +90,7 @@ type Interval = { startMs: number; endMs: number };
 type Slot = { beat: Beat; startMs: number; durationMs: number };
 type Framing = { layout: Layout; side: Side; fit: Fit };
 type Timing = { enterMs: number; exitMs: number };
+type Placed = { elements: Element[]; fields: Field[] };
 
 type SceneContext = {
   destination: Destination;
@@ -92,6 +101,7 @@ type SceneContext = {
   captionStyle: Plan["captions"]["style"];
   spoken: SpokenBeat | undefined;
   style: StyleId;
+  variant: number;
 };
 
 type BuiltScene = {
@@ -116,6 +126,8 @@ const sourceAssetId = "source";
 const musicAssetId = "music";
 const musicVolume = 0.9;
 const musicDuckTo = 0.25;
+const leadKinds: OverlayKind[] = ["title", "headline", "counter", "big-number"];
+const tileKinds: OverlayKind[] = ["chip", "sticker"];
 
 export function buildVideo(
   plan: Plan,
@@ -130,7 +142,7 @@ export function buildVideo(
   const style = plan.style ?? defaultStyle[plan.register];
 
   const slots = timeline(plan, assets.voice);
-  const built = slots.map((slot) =>
+  const built = slots.map((slot, index) =>
     buildScene(slot, {
       destination,
       content,
@@ -140,6 +152,7 @@ export function buildVideo(
       captionStyle: plan.captions.style,
       spoken: spokenByBeat.get(slot.beat.id),
       style,
+      variant: compositionVariant(plan.beats, index),
     }),
   );
 
@@ -246,11 +259,18 @@ function stretched(durations: number[], index: number, byMs: number): number[] {
   return durations.map((ms, i) => (i === index ? ms + byMs : ms));
 }
 
+// How many beats before this one on the backdrop used the same composition, so a repeat takes another form.
+function compositionVariant(beats: Beat[], index: number): number {
+  const composition = beats[index]?.composition;
+  if (!composition) return 0;
+  return beats.slice(0, index).filter((beat) => !beat.footage && beat.composition === composition).length;
+}
+
 function buildScene(slot: Slot, context: SceneContext): BuiltScene {
   const { beat, startMs, durationMs } = slot;
   const framing = framingFor(beat, context);
   const transform = footageTransform(beat, context, framing);
-  const elements = placeElements(slot, transform, context, framing);
+  const { elements, fields } = placeElements(slot, transform, context, framing);
   const words = sceneWords(slot, context);
 
   const scene: Scene = {
@@ -263,6 +283,8 @@ function buildScene(slot: Slot, context: SceneContext): BuiltScene {
         ? { assetId: sourceAssetId, fromMs: beat.footage.fromMs, fit: framing.fit, transform }
         : undefined,
     camera: beat.camera,
+    composition: beat.footage ? undefined : beat.composition,
+    fields: fields.length > 0 ? fields : undefined,
     elements,
     transition: beat.transition ?? "cut",
   };
@@ -340,6 +362,101 @@ function framingFocus(
 }
 
 function placeElements(
+  slot: Slot,
+  transform: Transform | undefined,
+  context: SceneContext,
+  framing: Framing,
+): Placed {
+  const composition = backdropComposition(slot.beat);
+  if (composition) return composedElements(slot, composition, context);
+
+  return { elements: framedElements(slot, transform, context, framing), fields: [] };
+}
+
+function backdropComposition(beat: Beat): Exclude<Composition, "center"> | undefined {
+  if (beat.footage || !beat.composition || beat.composition === "center") return undefined;
+  return beat.composition;
+}
+
+// The composition places the lead text and the labels; anything else finds a free spot around them, off the fields.
+function composedElements(
+  slot: Slot,
+  composition: Exclude<Composition, "center">,
+  context: SceneContext,
+): Placed {
+  const { beat, durationMs } = slot;
+  const { placements, fields } = compose(composition, compositionPieces(beat, context, durationMs), {
+    format: context.destination.format,
+    safeZone: context.destination.safeZone,
+    variant: context.variant,
+    durationMs,
+  });
+  const composedBoxes = [...placements.values()].map((placement) => placement.box);
+  const fieldBoxes = fields.map((field) => field.box).filter((box) => box.w < 1 || box.h < 1);
+  const elements: Element[] = [];
+
+  for (const overlay of beat.overlays) {
+    const placement = placements.get(overlay.id);
+    const timing = elementTiming(overlay, durationMs);
+    const taken = elements.filter((element) => sharesTime(element, timing)).map((element) => element.box);
+    const element = placement
+      ? composedElement(elementFrom(beat, overlay, placement.box, durationMs), placement)
+      : placeElement(overlay, slot, undefined, context, [...composedBoxes, ...fieldBoxes, ...taken]);
+    if (element) elements.push({ ...element, on: fieldUnder(element, fields) });
+  }
+
+  return { elements, fields };
+}
+
+function compositionPieces(beat: Beat, context: SceneContext, sceneDurationMs: number): Pieces {
+  const lead = beat.overlays.find((overlay) => leadKinds.includes(overlay.kind));
+  const corner = beat.overlays.find((overlay) => overlay.kind === "corner-label");
+  const face = labelFace(styles[context.style].display, true);
+  const supports = beat.overlays.flatMap((overlay) => {
+    const size = tileKinds.includes(overlay.kind)
+      ? measuredSize(overlay, context.destination.format, face)
+      : undefined;
+    return size ? [{ id: overlay.id, size, ...elementTiming(overlay, sceneDurationMs) }] : [];
+  });
+
+  return { leadId: lead?.id, cornerId: corner?.id, supports };
+}
+
+// Text that fills its box is aligned by the composition: spread lines alternate edges, the rest keep left.
+function composedElement(element: Element, placement: Placement): Element {
+  const filled = { ...element, fill: placement.fill };
+  if (filled.kind !== "title" || !placement.fill) return filled;
+
+  const lines = filled.lines.map((line, index) => ({ ...line, align: lineAlign(placement, index) }));
+  return { ...filled, lines };
+}
+
+function lineAlign(placement: Placement, index: number): TitleLine["align"] {
+  if (placement.fill !== "spread") return "left";
+  return index % 2 === 0 ? "left" : "right";
+}
+
+// Text takes the colors of the field under it; a label does only on its own tile, elsewhere it keeps its own background.
+function fieldUnder(element: Element, fields: Field[]): FieldTone | undefined {
+  const isLabel = tileKinds.includes(element.kind);
+  const center = { x: element.box.x + element.box.w / 2, y: element.box.y + element.box.h / 2 };
+  const under = fields.filter((field) => {
+    if (!sharesTime(field, element)) return false;
+    return isLabel ? sameBox(field.box, element.box) : containsPoint(field.box, center);
+  });
+
+  return under.at(-1)?.tone;
+}
+
+function sameBox(a: Box, b: Box): boolean {
+  return a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h;
+}
+
+function containsPoint(box: Box, point: Point): boolean {
+  return point.x >= box.x && point.x <= box.x + box.w && point.y >= box.y && point.y <= box.y + box.h;
+}
+
+function framedElements(
   slot: Slot,
   transform: Transform | undefined,
   context: SceneContext,

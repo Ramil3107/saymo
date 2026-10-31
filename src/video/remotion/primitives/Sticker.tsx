@@ -5,6 +5,7 @@ import type { PrimitiveProps } from "../theme";
 import { ElementBox } from "./ElementBox";
 import { fittedSize, labelBox, labelText } from "./labelStyle";
 import { type Surface, typeScale } from "./surface";
+import { TileLabel } from "./TileLabel";
 
 const pillShare = 0.9;
 const tiltDegrees = -4;
@@ -16,6 +17,10 @@ export function Sticker({
   surface,
 }: PrimitiveProps<"sticker"> & { surface: Surface }) {
   const { kit } = theme;
+  if (element.on) {
+    return <TileLabel element={element} on={element.on} text={element.text} theme={theme} frame={frame} />;
+  }
+
   const height = element.box.h * frame.height;
   const padding = height * stickerPaddingShare;
   const text = labelText(kit, element.text);

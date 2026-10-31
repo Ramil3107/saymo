@@ -1,4 +1,5 @@
 import { type ReactNode, type RefObject, useLayoutEffect, useRef, useState } from "react";
+import type { FieldTone } from "../../layout/compositions";
 import { enterMs, exitMs } from "../../motion/moves";
 import { linear, smoothstep } from "../../motion/timeline";
 import type { Accent } from "../../schema/plan";
@@ -52,7 +53,7 @@ export function Accented({ accent, element, theme, frame, surface, children }: P
   const timing = accentTiming(element, kit);
   const rect = useAnchorRect(container, ms >= timing.atMs && ms < timing.untilMs + kit.tempo.quickMs);
   const mark = kit.style.accents[accent];
-  const color = surface === "footage" ? kit.palette.highlight : kit.palette.accent;
+  const color = accentColor(kit, surface, element.on);
   const faded = smoothstep(linear(ms, timing.untilMs, kit.tempo.quickMs));
 
   const drawn = rect ? (
@@ -140,6 +141,12 @@ function anchorRect(container: HTMLDivElement): Rect | null {
 function sameRect(a: Rect | null, b: Rect | null): boolean {
   if (!a || !b) return a === b;
   return a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h;
+}
+
+// On a color field the mark takes the color that reads on it; over footage the highlight; on the backdrop the accent.
+function accentColor(kit: StyleKit, surface: Surface, on: FieldTone | undefined): string {
+  if (on) return kit.fields[on].accent;
+  return surface === "footage" ? kit.palette.highlight : kit.palette.accent;
 }
 
 function Mark(props: MarkProps) {

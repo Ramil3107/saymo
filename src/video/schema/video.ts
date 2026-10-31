@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { DestinationIdSchema, FormatSchema } from "../destinations";
+import { CompositionSchema, FieldSchema, FieldToneSchema, TypeFillSchema } from "../layout/compositions";
 import { RegisterIdSchema } from "../registers";
 import { StyleIdSchema } from "../styles";
 import { TitleEntranceSchema, TitleLineSchema } from "../type/schedule";
@@ -12,6 +13,8 @@ const ElementBaseSchema = z.object({
   exitMs: z.number(),
   box: BoxSchema,
   accent: AccentSchema.optional(),
+  on: FieldToneSchema.optional(),
+  fill: TypeFillSchema.optional(),
 });
 
 export const ElementSchema = z.discriminatedUnion("kind", [
@@ -64,6 +67,8 @@ export const SceneSchema = z.object({
     })
     .optional(),
   camera: CameraSchema.optional(),
+  composition: CompositionSchema.optional(),
+  fields: z.array(FieldSchema).optional(),
   elements: z.array(ElementSchema),
   transition: TransitionSchema,
 });

@@ -4,6 +4,12 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-10-31 · A backdrop beat names its composition, and the build lays it out as data
+
+- **Decided:** a beat without footage carries an optional `composition` (`center`, `fill`, `split`, `edge-number`, `column`, `grid`). The director picks it; the build turns it into element boxes and color fields, and the document carries the fields (`fields` on a scene) and, per element, the field under it (`on`) and how its text fills the box (`fill`). The renderer draws what the document says and knows nothing about compositions. Two beats in a row without footage never share one: the plan check rejects it, so the API director gets its one retry. A repeat takes the family's other form, counted per video. Every render also waits for its fonts before it draws. This is the lead's call, the first step of the variety plan.
+- **Why:** the director knows what a beat says (one number, a list of perks, a slogan) and so which frame fits it; placement and color stay deterministic, testable and the same in every format. Fields as data keep the document the single description of the frame. The font wait fixes a measurement cached in the fallback face, which made `bold-pop` titles up to a fifth wider than their box.
+- **Rejected:** the build picking a composition from the overlays (the same beat would always get the same frame, which is the sameness being fixed); compositions drawn by the renderer from the composition's name (a second copy of the layout in the renderer); a QA warning instead of a plan check for repeats (the director would never see it).
+
 ### 2026-10-31 · Variety across videos starts with compositions and color
 
 - **Decided:** the next work on the vocabulary is variety across videos, and it starts with compositions and color: about ten composition families (type filling the frame, half-frame color blocks, a giant number cropped by the edge, a grid of tiles, a column at the edge, bands), palettes for videos without a brand, six to eight new backgrounds, a camera that moves over the backdrop, and a guard so neighbouring scenes and one user's videos do not repeat a composition. It is checked on a contact sheet of twelve videos that must not read as one template; new blocks (a price tag, a checklist, a rating, before and after, steps) follow. More complete styles come after it, and the owner's references are built alongside as they arrive. The owner's choice on 2026-10-31, from the three options under "Variety across videos" in `docs/vocabulary.md`.

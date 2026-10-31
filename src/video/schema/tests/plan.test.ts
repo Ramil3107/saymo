@@ -101,3 +101,14 @@ test("an overlay's accent is one of the four intents", () => {
   expect(PlanSchema.safeParse(accented("focus")).success).toBe(true);
   expect(PlanSchema.safeParse(accented("marker")).success).toBe(false);
 });
+
+test("two backdrop beats in a row never share a composition", () => {
+  const beats = textPlan.beats.map((beat) => ({ ...beat, composition: "split" }));
+  const alternating = textPlan.beats.map((beat, index) => ({
+    ...beat,
+    composition: index % 2 === 0 ? "split" : "grid",
+  }));
+
+  expect(PlanSchema.safeParse({ ...textPlan, beats }).success).toBe(false);
+  expect(PlanSchema.safeParse({ ...textPlan, beats: alternating }).success).toBe(true);
+});

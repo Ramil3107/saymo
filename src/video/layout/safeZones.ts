@@ -14,10 +14,10 @@ export const backdropTypeScale = 1.35;
 // measured: the label's own size; onBackdrop: no footage, so labels gather in the middle instead of
 // keeping to the edges around a subject; titleSizes: a title's lines, so it holds only the height they need.
 export type PlaceOptions = { measured?: Size; onBackdrop?: boolean; titleSizes?: TitleSize[] };
+export type Inner = { left: number; right: number; top: number; bottom: number };
 type Horizontal = "left" | "center" | "right";
 type Vertical = "top" | "middle" | "bottom";
 type Slot = [Horizontal, Vertical];
-type Inner = { left: number; right: number; top: number; bottom: number };
 type Size = { w: number; h: number };
 
 const slotsByKind: Record<OverlayKind, Slot[]> = {
@@ -158,7 +158,7 @@ export function captionBand(safeZone: SafeZone): Box {
 }
 
 // Elements keep a gutter from the safe zone, so nothing sits flush against the edge of the usable area.
-function innerArea(safeZone: SafeZone): Inner {
+export function innerArea(safeZone: SafeZone): Inner {
   return {
     left: safeZone.left + gutter,
     right: 1 - safeZone.right - gutter,

@@ -1,6 +1,7 @@
+import type { FieldTone } from "../../layout/compositions";
 import { type Tempo, tempos } from "../../motion/tempo";
 import type { VideoDoc } from "../../schema/video";
-import { brandPalette, type Palette } from "../../style/palette";
+import { brandPalette, type FieldColors, fieldColors, type Palette } from "../../style/palette";
 import { type Style, type StyleId, styles } from "../../styles";
 import { displayFamily, loadBrandFont } from "../fonts";
 import type { TransitionColors } from "../motion/SceneTransition";
@@ -17,6 +18,7 @@ export type StyleKit = {
   onFootage: TypeColors;
   panel: PanelTones;
   label: LabelTones;
+  fields: Record<FieldTone, FieldColors>;
   transition: TransitionColors;
   scrim: string;
 };
@@ -59,6 +61,7 @@ export function styleKit(id: StyleId, brand: VideoDoc["brand"]): StyleKit {
     },
     panel: panelTones(style, palette),
     label: labelTones(style, palette),
+    fields: fieldTones(palette),
     transition: transitionColors(style, palette),
     scrim: footageScrim,
   };
@@ -91,6 +94,15 @@ function labelTones(style: Style, palette: Palette): LabelTones {
     badgeText: white,
     shadow: "0 12px 30px rgba(10, 10, 20, 0.22)",
     shape: "pill",
+  };
+}
+
+function fieldTones(palette: Palette): Record<FieldTone, FieldColors> {
+  return {
+    accent: fieldColors(palette, "accent"),
+    ink: fieldColors(palette, "ink"),
+    highlight: fieldColors(palette, "highlight"),
+    alt: fieldColors(palette, "alt"),
   };
 }
 

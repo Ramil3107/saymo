@@ -17,7 +17,7 @@ The vocabulary is a set of React components on Remotion that take their paramete
 | Transitions | cut, fade, slide, wipe, push |
 | Backgrounds | color, gradient, brand, blurred footage |
 | Audio | music ducked under the voice, voice, loudness normalization |
-| Layout | per beat: free (chips float beside the subject in slots with keep-out zones), panel-top (a title card over the top 46%, the footage zooms and slides so the face sits below), panel-side (a list over one side, the face moves to the other); over a document or screen card the top panel is a short title strip and a headline becomes that strip; safe zones per destination with a 4% gutter |
+| Layout | per beat: free (chips float beside the subject in slots with keep-out zones), panel-top (a title card over the top 46%, the footage zooms and slides so the face sits below), panel-side (a list over one side, the face moves to the other); over a document or screen card the top panel is a short title strip and a headline becomes that strip; safe zones per destination with a 4% gutter; a beat without footage names a composition, see [Compositions](#compositions) |
 
 ## Where primitives come from
 
@@ -121,6 +121,23 @@ The brand gives the colors (`src/video/style/palette.ts`): the first brand color
 Every document element draws in the style. A style's surfaces decide the rest: `bold-pop` has dark panels and block labels (flat highlight slabs in the display face, capitals, a hard offset shadow), `clean-paper` has light panels and soft labels (white pills with a soft shadow and an accent badge). Chips, stickers and lower thirds are labels; title cards and lists sit on panels; quotes and kinetic text are white with a shadow over footage and ink on the backdrop; a headline is drawn as a kinetic title and a big number as a counter when it starts with a number; a document shown in a card sits on the style's backdrop; wipes and dips take their colors from the style. The layout sizes a chip for the style's face: `display.labelScale` sets its text size and `display.widthScale` how much wider the face runs than the layout's estimate, measured in the renderer (Unbounded capitals up to 1.55 times, drawn at 0.85 of the size since capitals read larger; Inter about 1). A chip wraps onto two lines at word boundaries and never breaks a word; a sticker is as wide as its text. A label still shrinks to fit its box if a line runs long. On a backdrop labels are set larger, like kinetic text, and gather around the middle of the frame in the order they arrive; a lower third there centers its lines.
 
 `pnpm render:plan fixtures/plan.vocabulary.json --out runs/vocab-bold --style bold-pop` builds a text-mode plan that holds every element kind, checks it and renders it locally; `--style` moves any plan to another style. `pnpm remotion:styles` renders a 14-second spot in both styles side by side with the brand colors of `runs/face-v2`: a hook, a counter, a collage with a tag, the footage with the style's captions, a call to action, joined by the style's transitions. Since step 7 the plan and the document carry a `style`; the director picks it from the summaries above, and every beat names the transition it enters by.
+
+## Compositions
+
+A composition is how a beat without footage fills the frame. The director names one per beat (`composition` in the plan); `src/video/layout/compositions.ts` turns it into boxes for the lead text and the labels and into color fields that the scene draws under them (`fields` in the document).
+
+| Composition | The frame | A second one in the same video |
+| --- | --- | --- |
+| `center` | the title in the middle, labels gathered around it; the default, so older plans render as before | the same |
+| `fill` | the title's lines as wide as the text area and spread over its height, alternating edges | the frame turns dark |
+| `split` | an accent field over the top half holds the title, the labels stack on the other half | the field moves to the bottom |
+| `edge-number` | a counter so large that the frame's left edge crops a third of its first figure, the label under it starting at the text area's edge | it sits on an accent field |
+| `column` | a dark band down the left edge, the title flush against it, labels under the title | the band takes the accent |
+| `grid` | up to four chips or stickers become tiles in the palette's colors, each coming and going with its label, under a short title | the tile colors shift by one |
+
+The lead is the beat's first title, headline, counter or big number; chips and stickers are its labels, stacked flush left in the order they arrive, and the ones that do not fit are left for a free spot; a corner label takes the top line of the text area. Anything else finds a free spot off the fields. Text that fills its box ignores the line sizes the director wrote and is set left; text on a field takes the colors that read on it, ink or white and the first palette color with a 3:1 contrast, and so do the accents drawn around it. A label on its own tile drops its background. A field sweeps in from an edge over two moves of the style's tempo; a tile that leaves before its scene ends sweeps on. Two beats in a row without footage never share a composition: the plan check rejects it, and the director's prompt asks for at least three in a video and `center` for at most one beat in three.
+
+`pnpm render:plan fixtures/plan.compositions.json --out runs/composition-lab/bold-pop --style bold-pop` renders every family twice, the second time in its other form; `--style clean-paper` renders the same plan in the other style.
 
 ## Captions
 
@@ -235,7 +252,7 @@ The owner chose on 2026-10-31 to start with compositions and color; more complet
 
 A composition is how a beat on the backdrop fills the frame: where the type sits and how large it is, and which color fields cut the frame. The director names one per beat, and the build turns it into element boxes and fields. The plan:
 
-1. The first five families: `fill` (the title fills the frame), `split` (a color field over half the frame, the title on it), `edge-number` (a giant counter cropped by the frame edge), `column` (a color band at the edge, the type flush against it) and `grid` (chips as colored tiles). `center` stays as today's layout and the default, so older plans render unchanged. Text on a field takes colors that read on it, and neighbouring beats never repeat a composition. Checked on a composition lab in both styles and on the four text-only ads planned again, as a contact sheet beside the old one.
+1. The first five families: `fill` (the title fills the frame), `split` (a color field over half the frame, the title on it), `edge-number` (a giant counter cropped by the frame edge), `column` (a color band at the edge, the type flush against it) and `grid` (chips as colored tiles). `center` stays as today's layout and the default, so older plans render unchanged. Text on a field takes colors that read on it, and neighbouring beats never repeat a composition. Checked on a composition lab in both styles and on the four text-only ads planned again, as a contact sheet beside the old one. Built on 2026-10-31, see [Compositions](#compositions); the owner has not reviewed it yet. Building it turned up that every render measured text before its fonts had loaded, so `bold-pop` titles ran wider than their box; renders now wait for the fonts.
 2. Five more families (bands, a diagonal cut, an inset card, a corner stack, a word repeated in outline) and palettes for videos without a brand.
 3. Six to eight new backgrounds and a camera that moves over the backdrop.
 4. No repeats across one user's videos: the director's brief lists the compositions and palettes of the user's recent videos. Checked on a contact sheet of twelve videos that must not read as one template.

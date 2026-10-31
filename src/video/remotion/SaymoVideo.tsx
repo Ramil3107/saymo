@@ -12,6 +12,7 @@ import { SceneTransition } from "./motion/SceneTransition";
 import { Background } from "./primitives/Background";
 import { Camera } from "./primitives/Camera";
 import { Chip } from "./primitives/Chip";
+import { Fields } from "./primitives/Fields";
 import { Footage } from "./primitives/Footage";
 import {
   BigNumberElement,
@@ -100,6 +101,9 @@ function SceneView({ scene, doc, theme }: { scene: Scene; doc: VideoDoc; theme: 
   return (
     <AbsoluteFill>
       <Background background={scene.background} theme={theme} frame={frame} />
+      {scene.fields ? (
+        <Fields fields={scene.fields} kit={theme.kit} frame={frame} sceneMs={scene.durationMs} />
+      ) : null}
       <Camera camera={scene.camera} durationMs={scene.durationMs}>
         {scene.footage && footageAsset ? (
           <Footage footage={scene.footage} asset={footageAsset} durationMs={scene.durationMs} theme={theme} />

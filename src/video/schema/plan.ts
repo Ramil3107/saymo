@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { DestinationIdSchema } from "../destinations";
+import { CompositionSchema } from "../layout/compositions";
 import { LayoutSchema } from "../layout/layouts";
 import { RegisterIdSchema } from "../registers";
 import { StyleIdSchema } from "../styles";
@@ -74,6 +75,7 @@ export const BeatSchema = z.object({
   footage: z.object({ fromMs: z.number(), toMs: z.number() }).optional(),
   camera: CameraSchema.optional(),
   layout: LayoutSchema.optional(),
+  composition: CompositionSchema.optional(),
   transition: TransitionSchema.optional(),
   copy: z.object({ headline: z.string().optional(), sub: z.string().optional() }).optional(),
   overlays: z.array(OverlaySchema),
@@ -140,7 +142,13 @@ export type Plan = z.infer<typeof PlanSchema>;
 type Issue = { message: string; path: (string | number)[] };
 
 function planIssues(plan: PlanFields): Issue[] {
-  return [...shapeIssues(plan), ...lengthIssues(plan), ...beatIdIssues(plan), ...questionIssues(plan)];
+  return [
+    ...shapeIssues(plan),
+    ...lengthIssues(plan),
+    ...beatIdIssues(plan),
+    ...compositionIssues(plan),
+    ...questionIssues(plan),
+  ];
 }
 
 function shapeIssues(plan: PlanFields): Issue[] {
@@ -171,6 +179,23 @@ function beatIdIssues(plan: PlanFields): Issue[] {
     if (seen.has(beat.id))
       issues.push({ message: `Duplicate beat id "${beat.id}"`, path: ["beats", index, "id"] });
     seen.add(beat.id);
+  });
+
+  return issues;
+}
+
+// Two beats in a row on the backdrop never share a composition, so the frame changes with every beat.
+function compositionIssues(plan: PlanFields): Issue[] {
+  const issues: Issue[] = [];
+
+  plan.beats.forEach((beat, index) => {
+    const previous = plan.beats[index - 1];
+    if (!previous || beat.footage || previous.footage || !beat.composition) return;
+    if (beat.composition !== previous.composition) return;
+    issues.push({
+      message: `Beat "${beat.id}" repeats the ${beat.composition} composition of the beat before it`,
+      path: ["beats", index, "composition"],
+    });
   });
 
   return issues;

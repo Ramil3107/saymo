@@ -42,12 +42,14 @@ Fields of a scene:
 | `background` | object | `kind` (`brand`, `solid`, `gradient` or `style`, the style's backdrop with its textures) and an optional `color` |
 | `footage` | object, optional | `assetId`, `fromMs` in the source video and `transform` (`scale`, `x`, `y`) |
 | `camera` | object, optional | `kind` (`none`, `push`, `punch-in` or `pan`) and `intensity` from 0 to 1 |
+| `composition` | composition, optional | How a scene without footage fills the frame: `center`, `fill`, `split`, `edge-number`, `column` or `grid`, see [Vocabulary](/vocabulary#compositions) |
+| `fields` | list, optional | The color fields of the composition, drawn over the backdrop and under the elements: a `box`, a `tone` (`accent`, `ink`, `highlight` or `alt`, colors of the palette), the edge it sweeps in `from` (`left`, `right`, `top` or `bottom`), `enterMs` and `exitMs` |
 | `elements` | list | The elements of the scene |
 | `transition` | `cut`, `flash`, `wipe`, `whip`, `zoom`, `pixelate` or `dip` | How the scene enters; the scene before it leaves by the same transition, see [Vocabulary](/vocabulary#transitions) |
 
 ## Elements
 
-An element is one of eleven kinds, picked by `kind`. Every element has an `id`, `enterMs` and `exitMs` (counted from the start of its scene), a `box` and an optional `accent`: what the mark around the element says, `celebrate`, `frame`, `focus` or `stress`, drawn by the style (see [Vocabulary](/vocabulary#accents-in-the-document)). The `box` is a rectangle `x`, `y`, `w`, `h` in fractions of the frame, from 0 to 1. On top of that:
+An element is one of eleven kinds, picked by `kind`. Every element has an `id`, `enterMs` and `exitMs` (counted from the start of its scene), a `box` and an optional `accent`: what the mark around the element says, `celebrate`, `frame`, `focus` or `stress`, drawn by the style (see [Vocabulary](/vocabulary#accents-in-the-document)). The `box` is a rectangle `x`, `y`, `w`, `h` in fractions of the frame, from 0 to 1. An element placed by a composition may also have `on`, the tone of the field under it, so its text takes colors that read there (a chip or sticker gets it only on its own grid tile, where it drops its background), and `fill`: `fit` (the text as large as its box allows), `spread` (also spread over the box's height) or `bleed` (a counter larger than its box, cropped by the frame's left edge). On top of that:
 
 - `headline`: `text` and an optional `sub`;
 - `chip`: `text`;
