@@ -2,6 +2,12 @@
 
 Entries are added by the `learn` skill, newest on top.
 
+### 2026-10-31 · A set of videos was checked for bugs, not for sameness
+
+- **What happened:** The eight final runs were reviewed frame by frame, every bug was fixed and they were shown as finished. The owner found them all alike: shown to users, the template would show after about eleven videos. A contact sheet of the four text-only ads shows why: in 22 frames, small centered type sits on one of two backgrounds, with the same blue accent in every video (no brand, so the default palette) and about two thirds of each frame empty. Titles and chips make up 42 of the 58 overlays, and plain cuts 29 of the 47 beats.
+- **Lesson:** A user sees many videos, not one. Sameness is a defect of the set and does not show frame by frame. It comes from composition, color and background more than from entrances.
+- **Rule:** `.claude/skills/spike/SKILL.md`: when a run makes several videos, put one frame per beat of every video on a contact sheet and list what repeats (composition, palette, background, element kinds, transitions) before they are shown.
+
 ### 2026-10-30 · A still element jumped a pixel between renderer tabs
 
 - **What happened:** In the media lab the photos of a finished collage twitched. Frames rendered as stills were identical, and a render with one browser tab was clean. The default render splits frames across several tabs, and tabs placed an element with a fractional position and a 2D transform a pixel apart, so neighbouring frames from different tabs jumped by up to 254 levels of brightness. Lambda splits a video across many browsers in the same way, so every product render was exposed.
