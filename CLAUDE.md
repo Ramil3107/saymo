@@ -80,6 +80,7 @@ docs/             documentation pages, built into a VitePress site
 - `pnpm remotion:studio`: Remotion Studio, composition preview.
 - `pnpm remotion:lab`: renders the motion, type, accent, media and transition labs to `runs/lab/`, locally and without the API.
 - `pnpm remotion:captions`: renders every caption preset over a clip of `runs/face-v2` to `runs/lab/caption-lab.mp4`.
+- `pnpm render:plan <plan.json> --out <dir> [--style <id>]`: builds, checks and renders a text-mode plan locally, the plan written by hand or by the local director.
 - `pnpm remotion:styles`: renders the same ad spot in every style to `runs/lab/style-lab.mp4`.
 - `pnpm check:still <video> --from <s> --to <s> [--crop w:h:x:y]`: fails if a stretch that should stand still twitches beyond compression noise.
 

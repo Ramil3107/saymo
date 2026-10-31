@@ -1,24 +1,20 @@
-import { fitText } from "@remotion/layout-utils";
-import { ink, type PrimitiveProps, white } from "../theme";
+import type { CSSProperties } from "react";
+import type { StyleKit } from "../style/kit";
+import type { PrimitiveProps } from "../theme";
 import { ElementBox } from "./ElementBox";
+import { fittedSize, labelBox, labelText } from "./labelStyle";
 
-const fontWeight = 800;
 const paddingShare = 0.4;
 const pillShare = 0.9;
 const maxFontShare = 0.42;
 const tiltDegrees = -4;
 
 export function Sticker({ element, theme, frame }: PrimitiveProps<"sticker">) {
+  const { kit } = theme;
   const height = element.box.h * frame.height;
   const padding = height * paddingShare;
-  const text = element.text.toUpperCase();
-
-  const { fontSize } = fitText({
-    text,
-    withinWidth: element.box.w * frame.width - padding * 2,
-    fontFamily: theme.fontFamily,
-    fontWeight,
-  });
+  const text = labelText(kit, element.text);
+  const fontSize = fittedSize(kit, text, height * maxFontShare, element.box.w * frame.width - padding * 2);
 
   return (
     <ElementBox
@@ -28,25 +24,25 @@ export function Sticker({ element, theme, frame }: PrimitiveProps<"sticker">) {
       preset="pop"
       style={{ justifyContent: "center" }}
     >
-      <div
-        style={{
-          backgroundColor: white,
-          color: ink,
-          borderRadius: 999,
-          padding: `0 ${padding}px`,
-          height: height * pillShare,
-          display: "flex",
-          alignItems: "center",
-          fontSize: Math.min(fontSize, height * maxFontShare),
-          fontWeight,
-          letterSpacing: "0.04em",
-          whiteSpace: "nowrap",
-          boxShadow: `0 0 0 ${height * 0.06}px ${ink}, 0 0 0 ${height * 0.12}px ${white}`,
-          transform: `rotate(${tiltDegrees}deg)`,
-        }}
-      >
-        {text}
-      </div>
+      <div style={stickerStyle(kit, fontSize, padding, height)}>{text}</div>
     </ElementBox>
   );
+}
+
+function stickerStyle(kit: StyleKit, fontSize: number, padding: number, height: number): CSSProperties {
+  const pill = kit.label.shape === "pill";
+
+  return {
+    ...labelBox(kit, fontSize, false),
+    backgroundColor: pill ? kit.palette.accent : kit.label.background,
+    color: pill ? kit.palette.surface : kit.label.text,
+    padding: `0 ${padding}px`,
+    height: height * pillShare,
+    display: "flex",
+    alignItems: "center",
+    fontSize,
+    letterSpacing: "0.02em",
+    whiteSpace: "nowrap",
+    transform: `rotate(${tiltDegrees}deg)`,
+  };
 }

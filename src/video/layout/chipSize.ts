@@ -4,7 +4,7 @@ import { estimateTextWidth } from "./textWidth";
 
 type Size = { w: number; h: number };
 
-export const chipFontShare = 0.016;
+export const chipFontShare = 0.021;
 export const chipLineHeight = 1.12;
 export const chipMaxLines = 2;
 
@@ -28,4 +28,8 @@ export function chipSize(text: string, badge: string | undefined, format: Format
   const heightPx = fontPx * chipLineHeight * lines + fontPx * verticalPaddingShare * 2;
 
   return { w: round6(widthPx / width), h: round6(heightPx / height) };
+}
+
+export function chipLines(heightPx: number, fontPx: number): number {
+  return Math.max(1, Math.round((heightPx - fontPx * verticalPaddingShare * 2) / (fontPx * chipLineHeight)));
 }

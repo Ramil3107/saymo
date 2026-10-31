@@ -18,13 +18,27 @@ type Props = {
   font: TypeFont;
   tempo: Tempo;
   width: number;
+  fontPx?: number;
+  marginPx?: number;
 };
 
 const marginShare = 0.06;
 const fontShare = 0.048;
 
-export function CornerLabel({ text, corner, chevrons, atMs, exit, colors, font, tempo, width }: Props) {
-  const fontSize = width * fontShare;
+export function CornerLabel({
+  text,
+  corner,
+  chevrons,
+  atMs,
+  exit,
+  colors,
+  font,
+  tempo,
+  width,
+  fontPx,
+  marginPx,
+}: Props) {
+  const fontSize = fontPx ?? width * fontShare;
   const pointing = corner.endsWith("left") ? "left" : "right";
 
   return (
@@ -32,7 +46,7 @@ export function CornerLabel({ text, corner, chevrons, atMs, exit, colors, font, 
       spec={{ enter: "cut", atMs, exit }}
       tempo={tempo}
       unitPx={width}
-      style={{ position: "absolute", ...placement(corner, width * marginShare) }}
+      style={{ position: "absolute", ...placement(corner, marginPx ?? width * marginShare) }}
       innerStyle={{ gap: fontSize * 0.5, flexDirection: pointing === "left" ? "row" : "row-reverse" }}
     >
       <span

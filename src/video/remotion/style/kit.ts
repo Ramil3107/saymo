@@ -3,6 +3,7 @@ import type { VideoDoc } from "../../schema/video";
 import { brandPalette, type Palette } from "../../style/palette";
 import { type Style, type StyleId, styles } from "../../styles";
 import { displayFamily, loadBrandFont } from "../fonts";
+import type { TransitionColors } from "../motion/SceneTransition";
 import type { TypeColors, TypeFont } from "../type/KineticTitle";
 
 export type StyleKit = {
@@ -14,9 +15,24 @@ export type StyleKit = {
   textFamily: string;
   colors: TypeColors;
   onFootage: TypeColors;
+  panel: PanelTones;
+  label: LabelTones;
+  transition: TransitionColors;
+};
+
+export type PanelTones = { background: string; text: string; accent: string };
+
+export type LabelTones = {
+  background: string;
+  text: string;
+  badge: string;
+  badgeText: string;
+  shadow: string;
+  shape: "pill" | "slab";
 };
 
 const footageShadow = "0 2px 18px rgba(0, 0, 0, 0.55)";
+const white = "#FFFFFF";
 
 // Everything a scene needs to draw in a style: the style's own choices with the brand's colors and font folded in.
 export function styleKit(id: StyleId, brand: VideoDoc["brand"]): StyleKit {
@@ -32,11 +48,50 @@ export function styleKit(id: StyleId, brand: VideoDoc["brand"]): StyleKit {
     textFamily: loadBrandFont(brand.font).fontFamily,
     colors: { ink: palette.ink, accent: palette.accent, alt: palette.alt, marker: palette.highlight },
     onFootage: {
-      ink: "#FFFFFF",
+      ink: white,
       accent: palette.highlight,
       alt: palette.accent,
       marker: palette.accent,
       shadow: footageShadow,
     },
+    panel: panelTones(style, palette),
+    label: labelTones(style, palette),
+    transition: transitionColors(style, palette),
   };
+}
+
+function panelTones(style: Style, palette: Palette): PanelTones {
+  if (style.surfaces.panel === "dark")
+    return { background: palette.ink, text: white, accent: palette.highlight };
+
+  return { background: palette.surface, text: palette.ink, accent: palette.accent };
+}
+
+// Soft labels are white pills with a soft shadow; block labels are flat highlight slabs with a hard offset shadow.
+function labelTones(style: Style, palette: Palette): LabelTones {
+  if (style.surfaces.labels === "block") {
+    return {
+      background: palette.highlight,
+      text: palette.ink,
+      badge: palette.ink,
+      badgeText: palette.highlight,
+      shadow: `6px 6px 0 ${palette.ink}`,
+      shape: "slab",
+    };
+  }
+
+  return {
+    background: palette.surface,
+    text: palette.ink,
+    badge: palette.accent,
+    badgeText: white,
+    shadow: "0 12px 30px rgba(10, 10, 20, 0.22)",
+    shape: "pill",
+  };
+}
+
+function transitionColors(style: Style, palette: Palette): TransitionColors {
+  const dip = style.surfaces.panel === "dark" ? palette.ink : palette.background;
+
+  return { flash: white, dip, panel: palette.accent, edge: palette.highlight };
 }

@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { OverlaySchema } from "../../schema/plan";
-import { chipSize } from "../chipSize";
+import { chipLines, chipSize } from "../chipSize";
 
 test("chipSize grows with the text and wraps long text onto a second line", () => {
   const short = chipSize("нудота", undefined, "9:16");
@@ -25,4 +25,10 @@ test("an overlay may carry a badge", () => {
     durationMs: 1000,
   });
   expect(overlay.badge).toBe("Fe");
+});
+
+test("chipLines reads one line from a one-line chip and two from a wrapped one", () => {
+  const fontPx = 40;
+  expect(chipLines(fontPx * (1.12 + 0.7), fontPx)).toBe(1);
+  expect(chipLines(fontPx * (2.24 + 0.7), fontPx)).toBe(2);
 });

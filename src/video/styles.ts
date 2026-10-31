@@ -33,6 +33,7 @@ export type Style = {
   summary: string;
   tempo: TempoId;
   display: { font: DisplayFont; weight: number; upper: boolean };
+  surfaces: { panel: "light" | "dark"; labels: "soft" | "block" };
   tones: Tones;
   textures: Texture[];
   captions: CaptionStyle[];
@@ -49,6 +50,7 @@ export const styles: Record<StyleId, Style> = {
       "Loud and fast, after Higgsfield: a squared display face in capitals on off-white with pastel color fields, the brand color as a hot accent and a bright highlight, flashes, whips and pixel breaks, chevrons and growing frames. Launches, sales, creators.",
     tempo: "snap",
     display: { font: "unbounded", weight: 900, upper: true },
+    surfaces: { panel: "dark", labels: "block" },
     tones: {
       background: "#F6F4EF",
       ink: "#0B0B0F",
@@ -69,6 +71,7 @@ export const styles: Record<StyleId, Style> = {
       "Calm and clear, after motionvid: a neutral sans in sentence case on warm paper with a faint grid, the brand color for keywords and buttons, typing with a caret, panel wipes and dips, sparkles, selection boxes and drawn arrows. Explainers, clinics, SaaS, local business.",
     tempo: "glide",
     display: { font: "inter", weight: 800, upper: false },
+    surfaces: { panel: "light", labels: "soft" },
     tones: {
       background: "#F3F1EC",
       ink: "#16161B",

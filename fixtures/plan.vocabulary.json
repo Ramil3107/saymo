@@ -1,0 +1,162 @@
+{
+  "title": "Saymo launch",
+  "summary": "A 22-second text-only launch ad that shows every kind of element.",
+  "cast": [],
+  "destination": "reels",
+  "lengthMs": 22000,
+  "register": "driving-launch",
+  "musicMood": "upbeat, modern",
+  "captions": { "enabled": false, "style": "rail", "keywords": [] },
+  "voiceover": false,
+  "beats": [
+    {
+      "id": "b1",
+      "role": "hook",
+      "startMs": 0,
+      "durationMs": 2800,
+      "overlays": [
+        {
+          "id": "o1",
+          "kind": "title",
+          "text": "Your footage edits itself",
+          "lines": [
+            { "text": "Your footage", "size": "l", "tone": "ink", "align": "left" },
+            { "text": "edits itself", "size": "xl", "tone": "accent", "align": "left", "marked": true }
+          ],
+          "entrance": "type",
+          "atMs": 0,
+          "durationMs": 2800
+        },
+        { "id": "o2", "kind": "corner-label", "text": "saymo 01", "atMs": 200, "durationMs": 2600 }
+      ]
+    },
+    {
+      "id": "b2",
+      "role": "setup",
+      "startMs": 2800,
+      "durationMs": 2600,
+      "transition": "flash",
+      "overlays": [
+        {
+          "id": "o1",
+          "kind": "headline",
+          "text": "Raw clips in",
+          "sub": "a finished reel out",
+          "atMs": 0,
+          "durationMs": 2600
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "role": "message",
+      "startMs": 5400,
+      "durationMs": 3000,
+      "transition": "whip",
+      "overlays": [
+        { "id": "o1", "kind": "chip", "text": "Captions", "badge": "01", "atMs": 0, "durationMs": 3000 },
+        { "id": "o2", "kind": "chip", "text": "Motion", "badge": "02", "atMs": 250, "durationMs": 2750 },
+        { "id": "o3", "kind": "chip", "text": "Music", "badge": "03", "atMs": 500, "durationMs": 2500 },
+        { "id": "o4", "kind": "sticker", "text": "New", "atMs": 900, "durationMs": 2100 }
+      ]
+    },
+    {
+      "id": "b4",
+      "role": "proof",
+      "startMs": 8400,
+      "durationMs": 2600,
+      "transition": "zoom",
+      "overlays": [
+        {
+          "id": "o1",
+          "kind": "big-number",
+          "text": "2 min",
+          "sub": "from upload to reel",
+          "atMs": 0,
+          "durationMs": 2600
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "role": "message",
+      "startMs": 11000,
+      "durationMs": 3000,
+      "layout": "panel-side",
+      "overlays": [
+        {
+          "id": "o1",
+          "kind": "list",
+          "text": "What you get",
+          "items": ["Captions", "Titles", "Transitions", "Music"],
+          "atMs": 0,
+          "durationMs": 3000
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "role": "setup",
+      "startMs": 14000,
+      "durationMs": 2600,
+      "layout": "panel-top",
+      "transition": "pixelate",
+      "overlays": [
+        {
+          "id": "o1",
+          "kind": "title-card",
+          "text": "Pick a look",
+          "sub": "02 · Styles",
+          "atMs": 0,
+          "durationMs": 2600
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "role": "proof",
+      "startMs": 16600,
+      "durationMs": 2800,
+      "transition": "dip",
+      "overlays": [
+        {
+          "id": "o1",
+          "kind": "quote",
+          "text": "It feels like I hired an editor.",
+          "sub": "Early user",
+          "atMs": 0,
+          "durationMs": 2800
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "role": "cta",
+      "startMs": 19400,
+      "durationMs": 2600,
+      "transition": "flash",
+      "overlays": [
+        {
+          "id": "o1",
+          "kind": "counter",
+          "text": "0",
+          "value": 0,
+          "prefix": "$",
+          "sub": "to start",
+          "atMs": 0,
+          "durationMs": 1300
+        },
+        {
+          "id": "o2",
+          "kind": "lower-third",
+          "text": "saymo.app",
+          "sub": "Try it free",
+          "atMs": 1300,
+          "durationMs": 1300
+        }
+      ]
+    }
+  ],
+  "assumptions": [],
+  "questions": []
+}

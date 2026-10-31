@@ -1,39 +1,28 @@
-import { chipFontShare, chipLineHeight, chipMaxLines } from "../../layout/chipSize";
-import { navy, type PrimitiveProps, paper, white } from "../theme";
+import type { CSSProperties } from "react";
+import { chipFontShare, chipLineHeight, chipLines, chipMaxLines } from "../../layout/chipSize";
+import type { StyleKit } from "../style/kit";
+import type { PrimitiveProps } from "../theme";
 import { ElementBox } from "./ElementBox";
+import { fittedSize, labelBox, labelText } from "./labelStyle";
 
-const fontWeight = 700;
 const badgeShare = 1.5;
 const badgeGapShare = 0.4;
 const paddingShare = 0.7;
 
 export function Chip({ element, theme, frame }: PrimitiveProps<"chip">) {
-  const fontSize = frame.height * chipFontShare;
-  const multiline = element.box.h * frame.height > fontSize * chipLineHeight * 1.5;
+  const { kit } = theme;
+  const baseSize = frame.height * chipFontShare;
+  const multiline = chipLines(element.box.h * frame.height, baseSize) > 1;
+  const text = labelText(kit, element.text);
+  const badgeRoom = element.badge ? baseSize * (badgeShare + badgeGapShare) : 0;
+  const fontSize = multiline
+    ? baseSize
+    : fittedSize(kit, text, baseSize, element.box.w * frame.width - badgeRoom - baseSize * paddingShare * 2);
 
   return (
     <ElementBox element={element} theme={theme} frame={frame} preset="pop">
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: fontSize * badgeGapShare,
-          width: "100%",
-          height: "100%",
-          padding: `0 ${fontSize * paddingShare}px 0 ${element.badge ? fontSize * 0.35 : fontSize * paddingShare}px`,
-          backgroundColor: paper,
-          color: navy,
-          borderRadius: multiline ? fontSize * 0.9 : 999,
-          boxShadow: "0 14px 34px rgba(8, 24, 70, 0.28), 0 0 0 1px rgba(18, 48, 110, 0.06)",
-          fontSize,
-          fontWeight,
-          lineHeight: chipLineHeight,
-          whiteSpace: multiline ? "normal" : "nowrap",
-        }}
-      >
-        {element.badge ? (
-          <Badge text={element.badge} fontSize={fontSize} color={theme.brand.colors[0] ?? navy} />
-        ) : null}
+      <div style={chipStyle(kit, fontSize, multiline, Boolean(element.badge))}>
+        {element.badge ? <Badge text={element.badge} fontSize={fontSize} kit={kit} /> : null}
         <div
           style={{
             display: "-webkit-box",
@@ -42,14 +31,29 @@ export function Chip({ element, theme, frame }: PrimitiveProps<"chip">) {
             overflow: "hidden",
           }}
         >
-          {element.text}
+          {text}
         </div>
       </div>
     </ElementBox>
   );
 }
 
-function Badge({ text, fontSize, color }: { text: string; fontSize: number; color: string }) {
+function chipStyle(kit: StyleKit, fontSize: number, multiline: boolean, badged: boolean): CSSProperties {
+  return {
+    ...labelBox(kit, fontSize, multiline),
+    display: "flex",
+    alignItems: "center",
+    gap: fontSize * badgeGapShare,
+    width: "100%",
+    height: "100%",
+    padding: `0 ${fontSize * paddingShare}px 0 ${badged ? fontSize * 0.35 : fontSize * paddingShare}px`,
+    fontSize,
+    lineHeight: chipLineHeight,
+    whiteSpace: multiline ? "normal" : "nowrap",
+  };
+}
+
+function Badge({ text, fontSize, kit }: { text: string; fontSize: number; kit: StyleKit }) {
   const size = fontSize * badgeShare;
 
   return (
@@ -58,9 +62,9 @@ function Badge({ text, fontSize, color }: { text: string; fontSize: number; colo
         flex: "none",
         width: size,
         height: size,
-        borderRadius: "50%",
-        backgroundColor: color,
-        color: white,
+        borderRadius: kit.label.shape === "pill" ? "50%" : size * 0.18,
+        backgroundColor: kit.label.badge,
+        color: kit.label.badgeText,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

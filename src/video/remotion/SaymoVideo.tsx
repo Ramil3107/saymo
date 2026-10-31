@@ -6,14 +6,19 @@ import { defaultStyle } from "../styles";
 import { CaptionLayer } from "./captions/CaptionLayer";
 import { loadBrandFont } from "./fonts";
 import { sceneFrames } from "./frames";
-import { SceneTransition, type TransitionColors } from "./motion/SceneTransition";
+import { SceneTransition } from "./motion/SceneTransition";
 import { Background } from "./primitives/Background";
-import { BigNumber } from "./primitives/BigNumber";
 import { Camera } from "./primitives/Camera";
 import { Chip } from "./primitives/Chip";
 import { Footage } from "./primitives/Footage";
-import { Headline } from "./primitives/Headline";
-import { CornerElement, CounterElement, type Surface, TitleElement } from "./primitives/Kinetic";
+import {
+  BigNumberElement,
+  CornerElement,
+  CounterElement,
+  HeadlineElement,
+  type Surface,
+  TitleElement,
+} from "./primitives/Kinetic";
 import { ListPanel } from "./primitives/ListPanel";
 import { LowerThird } from "./primitives/LowerThird";
 import { MusicTrack } from "./primitives/MusicTrack";
@@ -22,7 +27,7 @@ import { Sticker } from "./primitives/Sticker";
 import { TitleCard } from "./primitives/TitleCard";
 import { VoiceTrack } from "./primitives/VoiceTrack";
 import { styleKit } from "./style/kit";
-import { accentColor, darken, type Frame, panelColor, type Theme, white } from "./theme";
+import type { Frame, Theme } from "./theme";
 
 export function SaymoVideo(doc: VideoDoc) {
   const theme = themeFor(doc);
@@ -73,7 +78,7 @@ function Scenes({ doc, theme }: { doc: VideoDoc; theme: Theme }) {
             durationMs={scene.durationMs}
             tempo={theme.tempo}
             width={formatSize(doc.format).width}
-            colors={transitionColors(theme)}
+            colors={theme.kit.transition}
           >
             <SceneView scene={scene} doc={doc} theme={theme} />
           </SceneTransition>
@@ -114,15 +119,15 @@ function ElementView(props: { element: Element; theme: Theme; frame: Frame; surf
 
   switch (element.kind) {
     case "headline":
-      return <Headline element={element} theme={theme} frame={frame} />;
+      return <HeadlineElement element={element} theme={theme} frame={frame} surface={surface} />;
     case "chip":
       return <Chip element={element} theme={theme} frame={frame} />;
     case "big-number":
-      return <BigNumber element={element} theme={theme} frame={frame} />;
+      return <BigNumberElement element={element} theme={theme} frame={frame} surface={surface} />;
     case "lower-third":
       return <LowerThird element={element} theme={theme} frame={frame} />;
     case "quote":
-      return <Quote element={element} theme={theme} frame={frame} />;
+      return <Quote element={element} theme={theme} frame={frame} surface={surface} />;
     case "sticker":
       return <Sticker element={element} theme={theme} frame={frame} />;
     case "title-card":
@@ -136,15 +141,6 @@ function ElementView(props: { element: Element; theme: Theme; frame: Frame; surf
     case "corner-label":
       return <CornerElement element={element} theme={theme} frame={frame} surface={surface} />;
   }
-}
-
-function transitionColors(theme: Theme): TransitionColors {
-  return {
-    flash: white,
-    dip: darken(theme.brand.colors[0] ?? "#0D1D42", 0.75),
-    panel: panelColor(theme),
-    edge: accentColor(theme),
-  };
 }
 
 function findAsset(doc: VideoDoc, id: string) {
