@@ -200,6 +200,7 @@ Each step ends with a render the owner reviews.
 6. Styles: one like Higgsfield and one like motionvid first, each with its own cadence, curves and accent budget. Built on 2026-10-30 as `bold-pop` and `clean-paper`, with the palette taken from the brand.
 7. The director and the build use them on `runs/face-v2` and on a text-mode ad, compared with the reference clips. Built on 2026-10-30 for styles, transitions, titles, counters and corner labels, checked on `runs/face-v2` with a hand-written plan; accents in the document built on 2026-10-31; media in the document and a text-mode ad are next.
 8. The sound-effect layer, synced to the moves.
+9. The library keeps growing, with no fixed ceiling: more accents, marks, title entrances, transitions, media pieces, textures and styles. The owner brings references (a link or a screen recording); each one is kept in `runs/references/`, broken down frame by frame and built through the `vocab` skill, ending with a render the owner reviews. This track starts after the final runs on stock clips and text-only videos and runs alongside the later stages.
 
 ### Gaps noted after the design spike
 
