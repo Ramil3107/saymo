@@ -231,10 +231,12 @@ A contact sheet of one frame per beat of the four text-only ads (`runs/final/tex
 - Elements: titles and chips make 42 of the 58 overlays.
 - Motion: plain cuts join 29 of the 47 beats, and the camera never moves on the backdrop.
 
-Three ways to start, the choice is the owner's and is still open:
+The owner chose on 2026-10-31 to start with compositions and color; more complete styles come after them, and the owner's references are built alongside as they arrive (see the [decision log](/product/decisions)). Styles first was turned down because the centered type would stay inside each video and every new element would have to be drawn in every style; one reference at a time, because the sameness would stay for a long time.
 
-1. Compositions and color (recommended): about ten composition families (type filling the frame, half-frame color blocks, a giant number cropped by the edge, a grid of tiles, a column at the edge, bands), palettes for videos without a brand, six to eight new backgrounds, a camera that moves over the backdrop, and a guard against repeats: neighbouring scenes and one user's videos do not repeat a composition. Checked on a contact sheet of twelve videos that must not read as one template. New blocks follow: a price tag, a checklist, a rating, before and after, steps.
-2. Styles first: six to eight more complete styles (face, palette, background, motion). Videos differ from each other, but inside each one the centered type stays, and every new element has to be drawn in every style.
-3. One reference at a time (step 9 as it is): closest to the owner's taste, but slow, and the sameness stays for a long time.
+A composition is how a beat on the backdrop fills the frame: where the type sits and how large it is, and which color fields cut the frame. The director names one per beat, and the build turns it into element boxes and fields. The plan:
 
-The recommendation is 1, then 2, with references built alongside as they arrive.
+1. The first five families: `fill` (the title fills the frame), `split` (a color field over half the frame, the title on it), `edge-number` (a giant counter cropped by the frame edge), `column` (a color band at the edge, the type flush against it) and `grid` (chips as colored tiles). `center` stays as today's layout and the default, so older plans render unchanged. Text on a field takes colors that read on it, and neighbouring beats never repeat a composition. Checked on a composition lab in both styles and on the four text-only ads planned again, as a contact sheet beside the old one.
+2. Five more families (bands, a diagonal cut, an inset card, a corner stack, a word repeated in outline) and palettes for videos without a brand.
+3. Six to eight new backgrounds and a camera that moves over the backdrop.
+4. No repeats across one user's videos: the director's brief lists the compositions and palettes of the user's recent videos. Checked on a contact sheet of twelve videos that must not read as one template.
+5. New blocks: a price tag, a checklist, a rating, before and after, steps.

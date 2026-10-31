@@ -10,11 +10,11 @@ Where the work stands on 2026-10-31 and how to pick it up in a new session.
 - The director and the frame notes are written in the session: `pnpm spike` stops with exit code 3 and a brief, the plan goes in `director/plan.json` or the notes in `see/frames.json`, then the same command with `--resume`. `--redo <step>` reruns from a step. See [Pipeline](./pipeline.md).
 - Biome, the type check and 295 tests are green.
 
-## Open decision
+## Next
 
-Where variety across videos starts: compositions and color (recommended), styles first, or one reference at a time. The findings and the three options are under "Variety across videos" in [Vocabulary](./vocabulary.md). The owner has not chosen yet; this is the first question of the next session.
+Variety across videos, starting with compositions and color: the owner chose it on 2026-10-31. The plan is under "Variety across videos" in [Vocabulary](./vocabulary.md); step 1, the first five composition families, is in progress.
 
-The rule proposed by the learning of 2026-10-31 in [Learnings](./learnings.md) (a contact sheet of a set of videos before they are shown, in the `spike` skill) waits for the owner's yes and goes in with the variety plan.
+The rule proposed by the learning of 2026-10-31 in [Learnings](./learnings.md) (a contact sheet of a set of videos before they are shown, in the `spike` skill) still waits for the owner's yes.
 
 ## Backlog
 
@@ -29,7 +29,6 @@ The rule proposed by the learning of 2026-10-31 in [Learnings](./learnings.md) (
 
 ```
 Read CLAUDE.md, docs/handoff.md and the "Variety across videos" section of docs/vocabulary.md.
-We continue the vocabulary iteration with variety across videos. Look at runs/final/text-contact-sheet.jpg,
-then ask me the open decision from the handoff with your recommendation, one question, in Russian.
-After I answer, record the decision, write a short plan for the first step and start it.
+We continue variety across videos with the step in progress from the handoff. Check git log and the
+working tree for where it stopped, tell me in Russian in two or three lines, then carry on.
 ```
