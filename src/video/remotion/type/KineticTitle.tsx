@@ -12,8 +12,9 @@ import {
   lineCues,
   type TitleEntrance,
   type TitleLine,
-  type TitleSize,
   type Tone,
+  titleLineHeight,
+  titleSizeShare,
 } from "../../type/schedule";
 import { Move, useMs } from "../motion/Move";
 import { TypeOn } from "../motion/TypeOn";
@@ -32,13 +33,12 @@ export type TitleProps = {
   font: TypeFont;
   tempo: Tempo;
   width: number;
+  sizeScale?: number;
 };
 
 type RowProps = TitleProps & { line: TitleLine; cue: LineCue; isLast: boolean; markAtMs: number };
 
-const sizeShare: Record<TitleSize, number> = { xl: 0.22, l: 0.15, m: 0.095, s: 0.06 };
 const fitShare = 0.92;
-const lineHeight = 1.04;
 const spreadFromEm = 0.7;
 const markerHeight = "42%";
 const justify: Record<Align, CSSProperties["justifyContent"]> = {
@@ -76,7 +76,7 @@ export function KineticTitle(props: TitleProps) {
 function TitleRow(props: RowProps) {
   const { line, font, width, colors, tempo, swapAtMs, markAtMs } = props;
   const ms = useMs();
-  const fontSize = lineFontSize(line, font, width);
+  const fontSize = lineFontSize(line, font, width, props.sizeScale ?? 1);
   const marked = line.marked ? eased(ms, markAtMs, tempo.moveMs * 2, tempo.enterCurve) : 0;
 
   return (
@@ -86,7 +86,7 @@ function TitleRow(props: RowProps) {
         justifyContent: justify[line.align],
         fontSize,
         fontWeight: font.weight,
-        lineHeight,
+        lineHeight: titleLineHeight,
         color: toneColor(line.tone, colors, tempo, ms, swapAtMs),
         textShadow: colors.shadow,
       }}
@@ -175,7 +175,7 @@ function Spread({ text, atMs, tempo }: { text: string; atMs: number; tempo: Temp
   );
 }
 
-function lineFontSize(line: TitleLine, font: TypeFont, width: number): number {
+function lineFontSize(line: TitleLine, font: TypeFont, width: number, sizeScale: number): number {
   const fitted = fitText({
     text: line.text,
     withinWidth: width * fitShare,
@@ -183,7 +183,7 @@ function lineFontSize(line: TitleLine, font: TypeFont, width: number): number {
     fontWeight: font.weight,
   });
 
-  return Math.min(width * sizeShare[line.size], fitted.fontSize);
+  return Math.min(width * titleSizeShare[line.size] * sizeScale, fitted.fontSize);
 }
 
 function toneColor(

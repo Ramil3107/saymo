@@ -1,10 +1,19 @@
-import type { Format, SafeZone } from "../destinations";
+import { type Format, formatSize, type SafeZone } from "../destinations";
 import type { Box } from "../schema/content";
 import type { OverlayKind } from "../schema/plan";
+import { type TitleSize, titleLineHeight, titleSizeShare } from "../type/schedule";
 import { boxesOverlap, round6 } from "./geometry";
 import { overlapRatio } from "./keepOut";
+import { isKineticKind } from "./layouts";
 
 export type Avoid = { soft: Box[]; hard: Box[] };
+
+// With nothing filmed behind it, kinetic text is the picture, so it is set larger.
+export const backdropTypeScale = 1.35;
+
+// measured: the label's own size; onBackdrop: no footage, so labels gather in the middle instead of
+// keeping to the edges around a subject; titleSizes: a title's lines, so it holds only the height they need.
+export type PlaceOptions = { measured?: Size; onBackdrop?: boolean; titleSizes?: TitleSize[] };
 type Horizontal = "left" | "center" | "right";
 type Vertical = "top" | "middle" | "bottom";
 type Slot = [Horizontal, Vertical];
@@ -63,6 +72,18 @@ const slotsByKind: Record<OverlayKind, Slot[]> = {
   ],
 };
 
+const centeredStack: Slot[] = [
+  ["center", "middle"],
+  ["center", "top"],
+  ["center", "bottom"],
+];
+
+const backdropSlots: Partial<Record<OverlayKind, Slot[]>> = {
+  chip: centeredStack,
+  sticker: centeredStack,
+  "lower-third": centeredStack,
+};
+
 const widthShare: Record<OverlayKind, number> = {
   headline: 0.84,
   quote: 0.84,
@@ -94,6 +115,8 @@ const heightShare: Record<OverlayKind, number> = {
 const gutter = 0.04;
 const scanStep = 0.02;
 const scanEpsilon = 1e-9;
+const aboveMiddleCost = 0.05;
+const titleMargin = 1.15;
 const captionBottomGap = 0.02;
 const captionBandHeight = 0.1;
 
@@ -101,14 +124,17 @@ const captionBandHeight = 0.1;
 // when every spot covers them.
 export function placeOverlay(
   kind: OverlayKind,
-  _format: Format,
+  format: Format,
   safeZone: SafeZone,
   avoid: Avoid,
-  measured?: Size,
+  options: PlaceOptions = {},
 ): Box {
   const inner = innerArea(safeZone);
-  const size = measured ?? overlaySize(kind, inner);
-  const slots = [...preferredSlots(kind, inner, size), ...scannedSlots(kind, inner, size)];
+  const onBackdrop = options.onBackdrop ?? false;
+  const size = options.measured ?? overlaySize(kind, inner, onBackdrop, titleHeight(format, inner, options));
+  const order = slotsFor(kind, onBackdrop);
+  const found = [...preferredSlots(order, inner, size), ...scannedSlots(order, inner, size)];
+  const slots = onBackdrop && backdropSlots[kind] ? nearestTheMiddle(found) : found;
   const clear = slots.filter((box) => !avoid.hard.some((zone) => boxesOverlap(box, zone)));
   const candidates = clear.length > 0 ? clear : slots;
   const zones = [...avoid.soft, ...avoid.hard];
@@ -141,18 +167,50 @@ function innerArea(safeZone: SafeZone): Inner {
   };
 }
 
-function overlaySize(kind: OverlayKind, inner: Inner): Size {
-  return { w: round6((inner.right - inner.left) * widthShare[kind]), h: heightShare[kind] };
+function overlaySize(
+  kind: OverlayKind,
+  inner: Inner,
+  onBackdrop: boolean,
+  titleShare: number | undefined,
+): Size {
+  const scale = onBackdrop && isKineticKind(kind) ? backdropTypeScale : 1;
+  const h = kind === "title" && titleShare !== undefined ? titleShare : heightShare[kind];
+  return { w: round6((inner.right - inner.left) * widthShare[kind]), h: round6(h * scale) };
 }
 
-function preferredSlots(kind: OverlayKind, inner: Inner, size: Size): Box[] {
-  return slotsByKind[kind].map(([horizontal, vertical]) =>
+// The lines' largest sizes stacked at their line height, with a margin; the slot height when lines are unknown.
+function titleHeight(format: Format, inner: Inner, options: PlaceOptions): number | undefined {
+  if (!options.titleSizes) return undefined;
+  const { width, height } = formatSize(format);
+  const titleWidthPx = (inner.right - inner.left) * widthShare.title * width;
+  const stacked = options.titleSizes.reduce((sum, size) => sum + titleSizeShare[size], 0);
+
+  return Math.min(heightShare.title, (stacked * titleWidthPx * titleLineHeight * titleMargin) / height);
+}
+
+// Things on a backdrop gather around the middle: the free spot closest to it comes first, and below wins
+// over above, so labels read in the order they arrive.
+function nearestTheMiddle(boxes: Box[]): Box[] {
+  const distance = (box: Box) => {
+    const offset = box.y + box.h / 2 - 0.5;
+    return Math.abs(offset) + (offset < 0 ? aboveMiddleCost : 0);
+  };
+  return [...boxes].sort((a, b) => distance(a) - distance(b));
+}
+
+function slotsFor(kind: OverlayKind, onBackdrop: boolean): Slot[] {
+  const centered = backdropSlots[kind];
+  return onBackdrop && centered ? centered : slotsByKind[kind];
+}
+
+function preferredSlots(order: Slot[], inner: Inner, size: Size): Box[] {
+  return order.map(([horizontal, vertical]) =>
     boxAt(xAt(horizontal, inner, size), yAt(vertical, inner, size), size),
   );
 }
 
-function scannedSlots(kind: OverlayKind, inner: Inner, size: Size): Box[] {
-  const horizontals = [...new Set(slotsByKind[kind].map(([horizontal]) => horizontal))];
+function scannedSlots(order: Slot[], inner: Inner, size: Size): Box[] {
+  const horizontals = [...new Set(order.map(([horizontal]) => horizontal))];
   const boxes: Box[] = [];
 
   for (let y = inner.top; y <= inner.bottom - size.h + scanEpsilon; y += scanStep) {

@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { expect, test } from "vitest";
 import { makeTestVideo } from "../../../lib/ffmpeg";
-import { IngestResultSchema, ingest, parseSceneTimestamps, shotsFromCuts } from "../ingest";
+import { IngestResultSchema, ingest, keyframeTimes, parseSceneTimestamps, shotsFromCuts } from "../ingest";
 
 test("parseSceneTimestamps reads pts_time from showinfo", () => {
   const stderr =
@@ -25,7 +25,8 @@ test("ingest extracts audio, keyframes and shots from a synthetic video", async 
   await makeTestVideo(src, 6);
   const result = await ingest({ source: src, runDir: join(dir, "run") });
   expect(result.info.durationMs).toBeGreaterThanOrEqual(5900);
-  expect(result.keyframes.map((k) => k.tMs)).toEqual([0, 2000, 4000]);
+  expect(result.keyframes.map((k) => k.tMs)).toEqual(keyframeTimes(result.shots, result.info.durationMs));
+  expect(result.keyframes.map((k) => k.tMs).slice(0, 2)).toEqual([0, 2000]);
   expect(result.shots.at(-1)?.endMs).toBe(result.info.durationMs);
 }, 60_000);
 
@@ -40,3 +41,18 @@ test("ingest copies the source into the run and skips audio when the source is s
   expect(result.sourcePath).toBe(join(runDir, "source.mp4"));
   expect(IngestResultSchema.parse(JSON.parse(JSON.stringify(result)))).toEqual(result);
 }, 60_000);
+
+test("keyframeTimes samples every two seconds and inside every shot, without near duplicates", () => {
+  const shots = [
+    { index: 0, startMs: 0, endMs: 5200 },
+    { index: 1, startMs: 5200, endMs: 7100 },
+    { index: 2, startMs: 7100, endMs: 7300 },
+    { index: 3, startMs: 7300, endMs: 9000 },
+  ];
+
+  expect(keyframeTimes(shots, 9000)).toEqual([0, 2000, 2600, 4000, 6000, 8000]);
+});
+
+test("keyframeTimes keeps clear of the last frame", () => {
+  expect(keyframeTimes([{ index: 0, startMs: 0, endMs: 8008 }], 8008)).toEqual([0, 2000, 4000, 6000]);
+});

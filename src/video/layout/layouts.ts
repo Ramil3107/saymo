@@ -57,3 +57,8 @@ export function cardArea(layout: Layout, side: Side, safeZone: SafeZone, caption
 export function isPanelKind(kind: string): boolean {
   return kind === "title-card" || kind === "list";
 }
+
+// Big kinetic text speaks alone: captions step aside while it is on screen, so it may use the caption band.
+export function isKineticKind(kind: string): boolean {
+  return kind === "title" || kind === "headline" || kind === "counter" || kind === "big-number";
+}

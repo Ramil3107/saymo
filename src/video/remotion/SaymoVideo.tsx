@@ -17,7 +17,6 @@ import {
   CornerElement,
   CounterElement,
   HeadlineElement,
-  type Surface,
   TitleElement,
 } from "./primitives/Kinetic";
 import { ListPanel } from "./primitives/ListPanel";
@@ -25,6 +24,7 @@ import { LowerThird } from "./primitives/LowerThird";
 import { MusicTrack } from "./primitives/MusicTrack";
 import { Quote } from "./primitives/Quote";
 import { Sticker } from "./primitives/Sticker";
+import type { Surface } from "./primitives/surface";
 import { TitleCard } from "./primitives/TitleCard";
 import { VoiceTrack } from "./primitives/VoiceTrack";
 import { styleKit } from "./style/kit";
@@ -108,7 +108,7 @@ function SceneView({ scene, doc, theme }: { scene: Scene; doc: VideoDoc; theme: 
           element={element}
           theme={theme}
           frame={frame}
-          surface={scene.background.kind === "style" ? "backdrop" : "footage"}
+          surface={surfaceOf(scene)}
         />
       ))}
     </AbsoluteFill>
@@ -135,7 +135,7 @@ function ElementBody(props: ElementProps) {
     case "headline":
       return <HeadlineElement element={element} theme={theme} frame={frame} surface={surface} />;
     case "chip":
-      return <Chip element={element} theme={theme} frame={frame} />;
+      return <Chip element={element} theme={theme} frame={frame} surface={surface} />;
     case "big-number":
       return <BigNumberElement element={element} theme={theme} frame={frame} surface={surface} />;
     case "lower-third":
@@ -143,7 +143,7 @@ function ElementBody(props: ElementProps) {
     case "quote":
       return <Quote element={element} theme={theme} frame={frame} surface={surface} />;
     case "sticker":
-      return <Sticker element={element} theme={theme} frame={frame} />;
+      return <Sticker element={element} theme={theme} frame={frame} surface={surface} />;
     case "title-card":
       return <TitleCard element={element} theme={theme} frame={frame} />;
     case "list":
@@ -155,6 +155,11 @@ function ElementBody(props: ElementProps) {
     case "corner-label":
       return <CornerElement element={element} theme={theme} frame={frame} surface={surface} />;
   }
+}
+
+// Elements sit on footage only when it fills the frame; around a card they sit on the backdrop.
+function surfaceOf(scene: Scene): Surface {
+  return scene.footage && scene.footage.fit !== "card" ? "footage" : "backdrop";
 }
 
 function findAsset(doc: VideoDoc, id: string) {

@@ -4,6 +4,12 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-10-31 · Layout follows the subject the frame notes mark; frame notes are written locally by default
+
+- **Decided:** a frame note may mark the frame's subject with a box when it is not a person talking (a product, a phone, a screen). Footage is framed on faces, or on the subject when there is none; a subject up to 30% of the frame is kept clear like a face; a subject much wider than a 9:16 crop is shown whole as a card. Kinetic text over footage sits on a soft shade, may use the caption band (captions step aside for it) and is set larger on the backdrop. Frame descriptions have a local mode, the default in `pnpm spike`, like the director's. Keyframes are taken at exact times, every two seconds and inside every shot. This is the lead's call after the final runs; the owner asked on 2026-10-31 whether elements can be placed around anything in the frame.
+- **Why:** in the final runs a rotating donut was cropped into a sprinkle texture, a phone was cut in half, white titles disappeared on white footage, chips sat on a face in a close-up the two-second sampling missed (the keyframes were also labelled a second early), and the vision API was the remaining paid call in local checks.
+- **Rejected:** object detection with several labelled boxes per frame (more cost and layout rules than the first version needs; noted as an open question); a fixed dark band behind every title (heavier than a shade and hides the footage); keeping faces as the only thing layout knows about.
+
 ### 2026-10-31 · The spike's director runs locally by default
 
 - **Decided:** `pnpm spike` has a local director mode, and it is the default. The run writes the system prompt, the user message and the plan's JSON schema to `runs/<id>/director/`, marks the step `waiting` and stops; the plan is written in a Claude Code session on the owner's subscription, checked against the schema on resume, and the run continues to build, QA and render. `--director api` calls the API as the service will. The owner agreed to the order of work on 2026-10-30 and asked why the director needed the API at all.

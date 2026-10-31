@@ -46,3 +46,14 @@ test("chipLines reads one line from a one-line chip and two from a wrapped one",
   expect(chipLines(fontPx * (1.12 + 0.7), fontPx)).toBe(1);
   expect(chipLines(fontPx * (2.24 + 0.7), fontPx)).toBe(2);
 });
+
+test("chipSize never breaks a long word and keeps long text within two lines", () => {
+  const word = chipSize("Sourdough", undefined, "9:16", { labelScale: 1.15, widthScale: 1.55 });
+  const words = chipSize("Baked every morning", undefined, "9:16", { labelScale: 1.15, widthScale: 1.55 });
+  const fontPx = 1920 * 0.021 * 1.15;
+  const oneLine = fontPx * 1.12 + fontPx * 0.35 * 2;
+
+  expect(word.h).toBeCloseTo(oneLine / 1920, 4);
+  expect(word.w * 1080).toBeGreaterThan(9 * 0.58 * fontPx * 1.55);
+  expect(words.h).toBeLessThan((oneLine * 2) / 1920);
+});

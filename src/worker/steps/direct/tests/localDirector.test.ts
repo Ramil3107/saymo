@@ -3,7 +3,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { expect, test } from "vitest";
 import textPlan from "../../../../../fixtures/plan.text.json" with { type: "json" };
-import { directLocally, WaitingForPlanError } from "../localDirector";
+import { WaitingError } from "../../local";
+import { directLocally } from "../localDirector";
 import type { DirectorInput } from "../prompts";
 
 const input: DirectorInput = { mode: "text", destination: "reels", text: "Reports now export to PDF" };
@@ -15,7 +16,7 @@ function briefFolder(): string {
 test("directLocally writes the prompt and the schema, then waits for a plan", async () => {
   const folder = briefFolder();
 
-  await expect(directLocally(input, folder)).rejects.toBeInstanceOf(WaitingForPlanError);
+  await expect(directLocally(input, folder)).rejects.toBeInstanceOf(WaitingError);
   expect(readFileSync(join(folder, "prompt.md"), "utf8")).toContain("Reports now export to PDF");
   expect(JSON.parse(readFileSync(join(folder, "schema.json"), "utf8")).type).toBe("object");
 });
@@ -40,5 +41,5 @@ test("directLocally keeps waiting and names the problem when the plan is invalid
   await expect(directLocally(input, folder)).rejects.toThrow(/lengthMs/);
 
   writeFileSync(join(folder, "plan.json"), "{ not json");
-  await expect(directLocally(input, folder)).rejects.toBeInstanceOf(WaitingForPlanError);
+  await expect(directLocally(input, folder)).rejects.toBeInstanceOf(WaitingError);
 });

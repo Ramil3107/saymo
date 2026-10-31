@@ -4,10 +4,11 @@ import footagePlanJson from "../../../../../fixtures/plan.footage.json" with { t
 import textPlanJson from "../../../../../fixtures/plan.text.json" with { type: "json" };
 import { destinations } from "../../../../video/destinations";
 import { intersectionArea } from "../../../../video/layout/geometry";
+import { isKineticKind } from "../../../../video/layout/layouts";
 import { captionBand } from "../../../../video/layout/safeZones";
 import { ContentMapSchema } from "../../../../video/schema/content";
 import { PlanSchema } from "../../../../video/schema/plan";
-import { buildVideo, pickMusic } from "../buildVideo";
+import { buildVideo, keepOutForScenes, pickMusic } from "../buildVideo";
 
 const sampleContent = ContentMapSchema.parse(sampleContentJson);
 const footagePlan = PlanSchema.parse(footagePlanJson);
@@ -57,7 +58,12 @@ test("buildVideo stretches a scene to fit its voice and keeps the total", () => 
       ],
     },
   ];
-  const doc = buildVideo(textPlan, null, { voice }, brand);
+  const [first, ...rest] = textPlanJson.beats;
+  if (!first) throw new Error("The text plan has no beats");
+  const chip = { id: "o1", kind: "chip", text: "PDF", atMs: 0, durationMs: 2000 };
+  const plan = PlanSchema.parse({ ...textPlanJson, beats: [{ ...first, overlays: [chip] }, ...rest] });
+
+  const doc = buildVideo(plan, null, { voice }, brand);
   expect(doc.durationMs).toBe(15000);
   expect(doc.scenes.reduce((sum, s) => sum + s.durationMs, 0)).toBe(15000);
   expect(doc.scenes.find((s) => s.id === "b1")?.durationMs).toBeGreaterThanOrEqual(4300);
@@ -83,7 +89,7 @@ test("pickMusic matches a track by mood and returns nothing for an empty manifes
   expect(pickMusic({ tracks: [] }, "calm")).toBeUndefined();
 });
 
-test("buildVideo keeps overlays out of the caption band when captions are enabled", () => {
+test("buildVideo keeps all but kinetic text out of the caption band when captions are enabled", () => {
   const doc = buildVideo(
     footagePlan,
     sampleContent,
@@ -91,7 +97,9 @@ test("buildVideo keeps overlays out of the caption band when captions are enable
     brand,
   );
   const band = captionBand(destinations.reels.safeZone);
-  for (const element of doc.scenes.flatMap((s) => s.elements)) {
+  const elements = doc.scenes.flatMap((s) => s.elements).filter((element) => !isKineticKind(element.kind));
+  expect(elements.length).toBeGreaterThan(0);
+  for (const element of elements) {
     const below = element.box.y >= band.y + band.h;
     const above = element.box.y + element.box.h <= band.y;
     expect(below || above).toBe(true);
@@ -442,7 +450,7 @@ test("buildVideo carries an overlay's accent onto its element", () => {
 });
 
 test("buildVideo sizes chips for the style's display face", () => {
-  const chip = { id: "c", kind: "chip", text: "Free shipping", atMs: 0, durationMs: 2000 };
+  const chip = { id: "c", kind: "chip", text: "Motion", atMs: 0, durationMs: 2000 };
   const first = textPlanJson.beats[0];
   if (!first) throw new Error("The text plan has no beats");
   const beats = [{ ...first, overlays: [chip] }, ...textPlanJson.beats.slice(1)];
@@ -452,4 +460,46 @@ test("buildVideo sizes chips for the style's display face", () => {
   };
 
   expect(widthIn("bold-pop")).toBeGreaterThan(widthIn("clean-paper"));
+});
+
+test("buildVideo hides captions while kinetic text is on screen", () => {
+  const voice = [
+    {
+      beatId: "b1",
+      path: "voice/b1.mp3",
+      durationMs: 1800,
+      words: [{ text: "Reports", startMs: 100, endMs: 600 }],
+    },
+  ];
+  const doc = buildVideo(textPlan, null, { voice }, brand);
+
+  expect(doc.scenes[0]?.elements[0]?.kind).toBe("headline");
+  expect(doc.captions?.pages ?? []).toHaveLength(0);
+});
+
+test("buildVideo frames and keeps clear of the subject the frame notes point at when there is no face", () => {
+  const noFaces = { ...sampleContent, faces: [] };
+  const subject = { x: 0.7, y: 0.3, w: 0.2, h: 0.4 };
+  const withSubject = { ...noFaces, frames: noFaces.frames.map((frame) => ({ ...frame, subject })) };
+  const assets = { sourceVideo: { path: "in.mp4", info: sampleContent.source } };
+
+  const plain = buildVideo(footagePlan, noFaces, assets, brand);
+  const framed = buildVideo(footagePlan, withSubject, assets, brand);
+  const shiftOf = (doc: typeof plain) => doc.scenes[0]?.footage?.transform.x ?? 0;
+  expect(shiftOf(framed)).toBeLessThan(shiftOf(plain));
+
+  const zones = keepOutForScenes(framed, footagePlan, withSubject);
+  expect(Object.values(zones).some((boxes) => boxes.length > 0)).toBe(true);
+});
+
+test("buildVideo shows a subject too wide for a vertical crop whole, as a card", () => {
+  const noFaces = { ...sampleContent, faces: [] };
+  const wide = { x: 0.2, y: 0, w: 0.6, h: 1 };
+  const withProduct = { ...noFaces, frames: noFaces.frames.map((frame) => ({ ...frame, subject: wide })) };
+  const assets = { sourceVideo: { path: "in.mp4", info: sampleContent.source } };
+
+  const fitOf = (content: typeof sampleContent) =>
+    buildVideo(footagePlan, content, assets, brand).scenes.find((scene) => scene.id === "b1")?.footage?.fit;
+  expect(fitOf(withProduct)).toBe("card");
+  expect(fitOf(noFaces)).not.toBe("card");
 });

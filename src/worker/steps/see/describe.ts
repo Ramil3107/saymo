@@ -7,7 +7,7 @@ import { elapsedMs, type Metrics } from "../../../lib/metrics";
 import { claudeUsd } from "../../../lib/pricing";
 import { type FrameNote, FrameNoteSchema, type Shot } from "../../../video/schema/content";
 
-type Frame = { tMs: number; path: string };
+export type Frame = { tMs: number; path: string };
 
 type DescribeInput = {
   client: Anthropic;
@@ -23,7 +23,7 @@ const framesPerCall = 20;
 const defaultMaxFrames = 60;
 const maxTokens = 16000;
 
-const NotesSchema = z.object({ frames: z.array(FrameNoteSchema) });
+export const FrameNotesSchema = z.object({ frames: z.array(FrameNoteSchema) });
 
 export async function describeKeyframes(input: DescribeInput): Promise<FrameNote[]> {
   assertVisionBudget(input.frames.length, input.model, input.budgetUsd);
@@ -71,6 +71,15 @@ export function batch<T>(items: T[], size: number): T[][] {
   return batches;
 }
 
+export function describeInstructions(frames: Frame[]): string {
+  return [
+    "These are keyframes from one video, in order. For each image, in the same order, describe what is in the frame in one sentence,",
+    "classify it as face (a person talking to camera), screen (a screen recording or slides) or other, and list any readable on-screen text.",
+    "When the frame is not a person talking and one thing is its subject (a product, a phone or device, a screen, a dish), give that thing's box as x, y, w, h fractions of the frame.",
+    `Use these tMs values in order: ${frames.map((frame) => frame.tMs).join(", ")}.`,
+  ].join(" ");
+}
+
 async function describeBatch(frames: Frame[], input: DescribeInput): Promise<FrameNote[]> {
   const startedAt = performance.now();
   const images = await Promise.all(frames.map(imageBlock));
@@ -79,8 +88,8 @@ async function describeBatch(frames: Frame[], input: DescribeInput): Promise<Fra
     ...withFallback,
     model: input.model,
     max_tokens: maxTokens,
-    output_config: { effort: "low", format: zodOutputFormat(NotesSchema) },
-    messages: [{ role: "user", content: [...images, { type: "text", text: instructions(frames) }] }],
+    output_config: { effort: "low", format: zodOutputFormat(FrameNotesSchema) },
+    messages: [{ role: "user", content: [...images, { type: "text", text: describeInstructions(frames) }] }],
   });
   assertNotRefused(message);
 
@@ -92,15 +101,7 @@ async function describeBatch(frames: Frame[], input: DescribeInput): Promise<Fra
     detail: { frames: frames.length, model: input.model },
   });
 
-  return NotesSchema.parse(JSON.parse(textOf(message))).frames;
-}
-
-function instructions(frames: Frame[]): string {
-  return [
-    "These are keyframes from one video, in order. For each image, in the same order, describe what is in the frame in one sentence,",
-    "classify it as face (a person talking to camera), screen (a screen recording or slides) or other, and list any readable on-screen text.",
-    `Use these tMs values in order: ${frames.map((frame) => frame.tMs).join(", ")}.`,
-  ].join(" ");
+  return FrameNotesSchema.parse(JSON.parse(textOf(message))).frames;
 }
 
 async function imageBlock(frame: Frame): Promise<Anthropic.Beta.BetaImageBlockParam> {

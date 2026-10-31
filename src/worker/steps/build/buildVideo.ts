@@ -4,23 +4,31 @@ import { speechIntervals } from "../../../video/audio/ducking";
 import { pagesFor } from "../../../video/captions/looks";
 import { stepAside, type Window } from "../../../video/captions/stepAside";
 import { rebaseWords } from "../../../video/captions/timeline";
-import { type Destination, destinations, formatSize } from "../../../video/destinations";
-import { chipSize } from "../../../video/layout/chipSize";
+import { type Destination, destinations, type Format, formatSize } from "../../../video/destinations";
+import { chipSize, type LabelFace } from "../../../video/layout/chipSize";
 import { fitContain, fitCover } from "../../../video/layout/fitCover";
 import { intersectionArea } from "../../../video/layout/geometry";
-import { keepOutErrorShare, keepOutZones, overlapRatio } from "../../../video/layout/keepOut";
+import { keepOutErrorShare, keepOutZones, overlapRatio, zoomedZones } from "../../../video/layout/keepOut";
 import {
   cardArea,
   coverOptionsFor,
   type Fit,
+  isKineticKind,
   isPanelKind,
   type Layout,
   panelBox,
   panelSide,
   type Side,
 } from "../../../video/layout/layouts";
-import { captionBand, placeOverlay } from "../../../video/layout/safeZones";
-import type { Box, ContentMap } from "../../../video/schema/content";
+import {
+  backdropTypeScale,
+  captionBand,
+  type PlaceOptions,
+  placeOverlay,
+} from "../../../video/layout/safeZones";
+import { stickerSize } from "../../../video/layout/stickerSize";
+import { cameraZoom } from "../../../video/motion/camera";
+import type { Box, ContentMap, FaceBox, FrameNote } from "../../../video/schema/content";
 import type { MediaInfo } from "../../../video/schema/media";
 import type { Beat, Overlay, Plan } from "../../../video/schema/plan";
 import { TranscriptSchema, type TranscriptWord } from "../../../video/schema/transcript";
@@ -32,6 +40,7 @@ import {
   VideoDocSchema,
 } from "../../../video/schema/video";
 import { defaultStyle, type StyleId, styles } from "../../../video/styles";
+import { fractionDigits } from "../../../video/type/numbers";
 import type { TitleLine } from "../../../video/type/schedule";
 
 export const SpokenBeatSchema = z.object({
@@ -66,6 +75,7 @@ export type BuildAssets = {
 };
 
 type Size = { width: number; height: number };
+type LabelSize = { w: number; h: number };
 type Point = { x: number; y: number };
 type Transform = { scale: number; x: number; y: number };
 type Interval = { startMs: number; endMs: number };
@@ -100,6 +110,8 @@ type FaceZoneInput = {
 };
 
 const voicePaddingMs = 300;
+const maxSubjectShare = 0.3;
+const subjectOverflowShare = 1.3;
 const sourceAssetId = "source";
 const musicAssetId = "music";
 const musicVolume = 0.9;
@@ -166,7 +178,6 @@ export function keepOutForScenes(
   const destination = destinations[plan.destination];
   const target = formatSize(destination.format);
   const source = content ? sizeOf(content.source) : undefined;
-  const band = doc.captions ? [captionBand(destination.safeZone)] : [];
 
   const zonesByScene = plan.beats.map((beat) => {
     const scene = doc.scenes.find((candidate) => candidate.id === beat.id);
@@ -175,7 +186,7 @@ export function keepOutForScenes(
       ? faceZones({ content, source, transform: scene?.footage?.transform, target, window })
       : [];
 
-    return [beat.id, [...zones, ...band]];
+    return [beat.id, zoomedZones(zones, cameraZoom(beat.camera))];
   });
 
   return Object.fromEntries(zonesByScene);
@@ -261,30 +272,44 @@ function buildScene(slot: Slot, context: SceneContext): BuiltScene {
     words,
     pages:
       words.length > 0
-        ? stepAside(pagesWithin(words, slot, context.captionStyle), titleWindows(elements, startMs))
+        ? stepAside(pagesWithin(words, slot, context.captionStyle), kineticWindows(elements, startMs))
         : [],
     voice: context.spoken ? { assetId: voiceAssetId(beat.id), atMs: startMs } : undefined,
   };
 }
 
 function framingFor(beat: Beat, context: SceneContext): Framing {
-  const fit = fitFor(beat, context.content);
+  const fit = fitFor(beat, context);
   const hasPanel = beat.overlays.some((overlay) => isPanelKind(overlay.kind));
   const hasTitle = fit === "card" && beat.overlays.some((overlay) => overlay.kind === "headline");
   const layout = beat.layout ?? (hasPanel || hasTitle ? "panel-top" : "free");
-  const focus = beat.footage ? faceFocus(context.content, beat.footage) : undefined;
+  const focus = beat.footage ? framingFocus(context.content, beat.footage) : undefined;
 
   return { layout, side: panelSide(focus), fit };
 }
 
 // A shot whose frames are mostly a screen or a document is shown inside a card, not stretched over the frame.
-function fitFor(beat: Beat, content: ContentMap | null): Fit {
+// Screens and subjects too wide for a cover crop are shown whole, as a card.
+function fitFor(beat: Beat, context: SceneContext): Fit {
+  const { content } = context;
   if (!beat.footage || !content) return "cover";
   const { fromMs, toMs } = beat.footage;
   const notes = content.frames.filter((frame) => frame.tMs >= fromMs && frame.tMs <= toMs);
   const screens = notes.filter((frame) => frame.kind === "screen").length;
 
-  return notes.length > 0 && screens * 2 >= notes.length ? "card" : "cover";
+  if (notes.length > 0 && screens * 2 >= notes.length) return "card";
+  return subjectOverflows(notes, coverShare(context)) ? "card" : "cover";
+}
+
+// The share of the source's width a cover crop keeps.
+function coverShare(context: SceneContext): number {
+  if (!context.source) return 1;
+  return context.target.width / context.target.height / (context.source.width / context.source.height);
+}
+
+function subjectOverflows(notes: FrameNote[], share: number): boolean {
+  const widths = notes.flatMap((note) => (note.subject ? [note.subject.w] : []));
+  return widths.length > 0 && average(widths) > share * subjectOverflowShare;
 }
 
 function footageTransform(beat: Beat, context: SceneContext, framing: Framing): Transform | undefined {
@@ -292,18 +317,24 @@ function footageTransform(beat: Beat, context: SceneContext, framing: Framing): 
 
   if (framing.fit === "card") {
     const area = cardArea(framing.layout, framing.side, context.destination.safeZone, context.captionsOn);
-    return fitContain(context.source, context.target, area);
+    return fitContain(context.source, context.target, area, framing.layout === "free" ? "bottom" : "middle");
   }
 
-  const focus = faceFocus(context.content, beat.footage);
+  const focus = framingFocus(context.content, beat.footage);
   return fitCover(context.source, context.target, focus, coverOptionsFor(framing.layout, framing.side));
 }
 
-function faceFocus(content: ContentMap | null, range: { fromMs: number; toMs: number }): Point | undefined {
-  const faces = content?.faces.filter((face) => face.tMs >= range.fromMs && face.tMs <= range.toMs) ?? [];
-  if (faces.length === 0) return undefined;
+// The frame is kept on the faces in range; without a face, on the subject the frame notes point at.
+function framingFocus(
+  content: ContentMap | null,
+  range: { fromMs: number; toMs: number },
+): Point | undefined {
+  const inRange = (box: FaceBox) => box.tMs >= range.fromMs && box.tMs <= range.toMs;
+  const faces = content?.faces.filter(inRange) ?? [];
+  const boxes = faces.length > 0 ? faces : subjectBoxes(content).filter(inRange);
+  if (boxes.length === 0) return undefined;
 
-  const centers = faces.map((face) => ({ x: face.x + face.w / 2, y: face.y + face.h / 2 }));
+  const centers = boxes.map((box) => ({ x: box.x + box.w / 2, y: box.y + box.h / 2 }));
 
   return { x: average(centers.map((center) => center.x)), y: average(centers.map((center) => center.y)) };
 }
@@ -317,10 +348,9 @@ function placeElements(
   const placed: Element[] = [];
   const { beat, durationMs } = slot;
   const panel = framing.layout === "free" ? undefined : panelBox(framing.layout, framing.side, framing.fit);
+  const { source, target } = context;
   const card =
-    framing.fit === "card"
-      ? cardArea(framing.layout, framing.side, context.destination.safeZone, context.captionsOn)
-      : undefined;
+    framing.fit === "card" && transform && source ? drawnCard(transform, source, target) : undefined;
   const reserved = [panel, card].filter((box): box is Box => box !== undefined);
 
   for (const overlay of beat.overlays) {
@@ -335,6 +365,16 @@ function placeElements(
   }
 
   return placed;
+}
+
+// The card as drawn, not the whole area it was fitted into, so overlays can use the space around it.
+function drawnCard(transform: Transform, source: Size, target: Size): Box {
+  return {
+    x: transform.x / target.width,
+    y: transform.y / target.height,
+    w: (source.width * transform.scale) / target.width,
+    h: (source.height * transform.scale) / target.height,
+  };
 }
 
 function fillsPanel(overlay: Overlay, framing: Framing): boolean {
@@ -356,28 +396,55 @@ function placeElement(
   const { beat, durationMs } = slot;
   const { destination } = context;
 
-  const zones = faceZones({
+  const zones = subjectZones(beat, transform, context);
+  const band = context.captionsOn && !isKineticKind(overlay.kind) ? [captionBand(destination.safeZone)] : [];
+  const box = placeOverlay(
+    overlay.kind,
+    destination.format,
+    destination.safeZone,
+    { soft: zones, hard: [...band, ...taken] },
+    placeOptions(overlay, beat, context),
+  );
+  if (overlapRatio(box, zones) > keepOutErrorShare) return undefined;
+  if (taken.some((other) => intersectionArea(box, other) > 0)) return undefined;
+
+  return elementFrom(beat, overlay, box, durationMs);
+}
+
+// Faces and small subjects over the whole beat, grown by the camera's zoom.
+function subjectZones(beat: Beat, transform: Transform | undefined, context: SceneContext): Box[] {
+  const faces = faceZones({
     content: context.content,
     source: context.source,
     transform,
     target: context.target,
     window: beatWindow(beat),
   });
-  const band = context.captionsOn ? [captionBand(destination.safeZone)] : [];
-  const face = styles[context.style].display;
-  const measured =
-    overlay.kind === "chip" ? chipSize(overlay.text, overlay.badge, destination.format, face) : undefined;
-  const box = placeOverlay(
-    overlay.kind,
-    destination.format,
-    destination.safeZone,
-    { soft: zones, hard: [...band, ...taken] },
-    measured,
-  );
-  if (overlapRatio(box, zones) > keepOutErrorShare) return undefined;
-  if (taken.some((other) => intersectionArea(box, other) > 0)) return undefined;
 
-  return elementFrom(beat, overlay, box, durationMs);
+  return zoomedZones(faces, cameraZoom(beat.camera));
+}
+
+function placeOptions(overlay: Overlay, beat: Beat, context: SceneContext): PlaceOptions {
+  const onBackdrop = beat.footage === undefined;
+  const face = labelFace(styles[context.style].display, onBackdrop);
+
+  return {
+    measured: measuredSize(overlay, context.destination.format, face),
+    onBackdrop,
+    titleSizes: overlay.kind === "title" ? titleLines(overlay).map((line) => line.size) : undefined,
+  };
+}
+
+// On a backdrop labels are set larger, like kinetic text, since nothing filmed sits behind them.
+function labelFace(face: LabelFace, onBackdrop: boolean): LabelFace {
+  return onBackdrop ? { ...face, labelScale: face.labelScale * backdropTypeScale } : face;
+}
+
+// Labels are as wide as their text; every other kind takes its slot's size.
+function measuredSize(overlay: Overlay, format: Format, face: LabelFace): LabelSize | undefined {
+  if (overlay.kind === "chip") return chipSize(overlay.text, overlay.badge, format, face);
+  if (overlay.kind === "sticker") return stickerSize(overlay.text, format, face);
+  return undefined;
 }
 
 function elementTiming(overlay: Overlay, sceneDurationMs: number): Timing {
@@ -397,16 +464,22 @@ function beatWindow(beat: Beat): Interval {
   return { startMs: beat.footage.fromMs, endMs: beat.footage.toMs };
 }
 
+// A subject that fills the frame is the backdrop text may cross; a small one, like a phone, is kept clear.
 function faceZones(input: FaceZoneInput): Box[] {
-  if (!input.content || !input.source || !input.transform) return [];
+  const { content, source, transform } = input;
+  if (!content || !source || !transform) return [];
 
-  return keepOutZones({
-    faces: input.content.faces,
-    window: input.window,
-    source: input.source,
-    transform: input.transform,
-    target: input.target,
-  });
+  const zonesOf = (boxes: FaceBox[]) =>
+    keepOutZones({ faces: boxes, window: input.window, source, transform, target: input.target });
+  const subjects = zonesOf(subjectBoxes(content)).filter((zone) => zone.w * zone.h <= maxSubjectShare);
+
+  return [...zonesOf(content.faces), ...subjects];
+}
+
+function subjectBoxes(content: ContentMap | null): FaceBox[] {
+  return (content?.frames ?? []).flatMap((frame) =>
+    frame.subject ? [{ ...frame.subject, tMs: frame.tMs }] : [],
+  );
 }
 
 function elementFrom(beat: Beat, overlay: Overlay, box: Box, sceneDurationMs: number): Element {
@@ -441,6 +514,7 @@ function elementFrom(beat: Beat, overlay: Overlay, box: Box, sceneDurationMs: nu
         ...base,
         kind: "counter",
         value: counterValue(overlay),
+        decimals: fractionDigits(overlay.text),
         prefix: overlay.prefix,
         suffix: overlay.suffix,
         label: overlay.sub,
@@ -475,9 +549,9 @@ function shiftWords(words: TranscriptWord[], byMs: number): TranscriptWord[] {
   return words.map((word) => ({ ...word, startMs: word.startMs + byMs, endMs: word.endMs + byMs }));
 }
 
-function titleWindows(elements: Element[], sceneStartMs: number): Window[] {
+function kineticWindows(elements: Element[], sceneStartMs: number): Window[] {
   return elements
-    .filter((element) => element.kind === "title")
+    .filter((element) => isKineticKind(element.kind))
     .map((element) => ({ startMs: sceneStartMs + element.enterMs, endMs: sceneStartMs + element.exitMs }));
 }
 

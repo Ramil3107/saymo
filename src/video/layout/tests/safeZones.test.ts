@@ -47,7 +47,47 @@ test("placeOverlay covers a face before it covers the captions when nothing is f
   const zone = destinations.reels.safeZone;
   const band = captionBand(zone);
   const face = { x: 0, y: 0, w: 1, h: band.y };
-  const box = placeOverlay("chip", "9:16", zone, { soft: [face], hard: [band] }, { w: 0.35, h: 0.06 });
+  const box = placeOverlay(
+    "chip",
+    "9:16",
+    zone,
+    { soft: [face], hard: [band] },
+    { measured: { w: 0.35, h: 0.06 } },
+  );
 
   expect(box.y + box.h <= band.y || box.y >= band.y + band.h).toBe(true);
+});
+
+test("placeOverlay gathers labels in the middle of a backdrop and at the edges over footage", () => {
+  const zone = destinations.reels.safeZone;
+  const size = { w: 0.3, h: 0.05 };
+  const onBackdrop = placeOverlay("chip", "9:16", zone, none, { measured: size, onBackdrop: true });
+  const overFootage = placeOverlay("chip", "9:16", zone, none, { measured: size });
+
+  expect(onBackdrop.x + onBackdrop.w / 2).toBeCloseTo(0.5, 2);
+  expect(overFootage.x).toBeLessThan(0.1);
+});
+
+test("placeOverlay puts the next label on a backdrop below the one in the middle", () => {
+  const zone = destinations.reels.safeZone;
+  const size = { w: 0.3, h: 0.05 };
+  const first = placeOverlay("chip", "9:16", zone, none, { measured: size, onBackdrop: true });
+  const second = placeOverlay(
+    "chip",
+    "9:16",
+    zone,
+    { soft: [], hard: [first] },
+    { measured: size, onBackdrop: true },
+  );
+
+  expect(second.y).toBeGreaterThan(first.y);
+});
+
+test("placeOverlay gives a title only the height its lines need", () => {
+  const zone = destinations.reels.safeZone;
+  const slot = placeOverlay("title", "9:16", zone, none);
+  const short = placeOverlay("title", "9:16", zone, none, { titleSizes: ["l", "m"] });
+
+  expect(short.h).toBeLessThan(slot.h);
+  expect(placeOverlay("title", "9:16", zone, none, { titleSizes: ["xl", "xl", "xl"] }).h).toBe(slot.h);
 });

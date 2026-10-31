@@ -39,16 +39,23 @@ export function fitCover(
   };
 }
 
-// Scales the source to fit inside an area of the target (frame fractions) and centers it there.
-export function fitContain(source: Size, target: Size, area: Area): CoverTransform {
+// Scales the source to fit inside an area of the target (frame fractions), centered across it and at the
+// middle or the bottom of it.
+export function fitContain(
+  source: Size,
+  target: Size,
+  area: Area,
+  vertical: "middle" | "bottom",
+): CoverTransform {
   const areaWidth = area.w * target.width;
   const areaHeight = area.h * target.height;
   const scale = Math.min(areaWidth / source.width, areaHeight / source.height);
+  const spareHeight = areaHeight - source.height * scale;
 
   return {
     scale,
     x: area.x * target.width + (areaWidth - source.width * scale) / 2,
-    y: area.y * target.height + (areaHeight - source.height * scale) / 2,
+    y: area.y * target.height + (vertical === "middle" ? spareHeight / 2 : spareHeight),
   };
 }
 

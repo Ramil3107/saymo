@@ -2,7 +2,14 @@ import { existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { expect, test } from "vitest";
-import { loadOrCreateManifest, type RunOptions, saveManifest, shouldRun } from "../manifest";
+import {
+  loadOrCreateManifest,
+  type RunOptions,
+  redoFrom,
+  type StepName,
+  saveManifest,
+  shouldRun,
+} from "../manifest";
 
 const options: RunOptions = {
   text: "Reports now export to PDF",
@@ -10,6 +17,7 @@ const options: RunOptions = {
   runDir: "runs/test",
   transcriber: "elevenlabs",
   director: "local",
+  vision: "local",
   directorModel: "claude-opus-5-5",
   visionModel: "claude-opus-5-5",
   voice: false,
@@ -50,4 +58,16 @@ test("shouldRun skips done steps only when resuming", () => {
   expect(shouldRun(reloaded, "direct", false)).toBe(true);
   expect(shouldRun(reloaded, "build", true)).toBe(true);
   expect(JSON.parse(readFileSync(join(runDir, "manifest.json"), "utf8")).steps.direct.ms).toBe(1200);
+});
+
+test("redoFrom resets a step and every step after it", () => {
+  const runDir = mkdtempSync(join(tmpdir(), "saymo-manifest-"));
+  const manifest = loadOrCreateManifest(runDir, { ...options, runDir });
+  const done: StepName[] = ["ingest", "direct", "build"];
+  for (const step of done) manifest.steps[step] = { status: "done" };
+
+  const redone = redoFrom(manifest, "direct");
+  expect(redone.steps.ingest.status).toBe("done");
+  expect(redone.steps.direct.status).toBe("pending");
+  expect(redone.steps.build.status).toBe("pending");
 });

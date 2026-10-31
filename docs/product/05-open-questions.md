@@ -20,6 +20,9 @@ Resolve before development starts or along the way. When a question is resolved,
 | Where music and voiceover come from | A license for commercial use is needed | Costs, rights |
 | Company registration country | Affects the choice of payment service and taxes | Payment |
 | What the watermark looks like | Not drawn | Design |
+| One video cut from several source videos (raised by the owner on 2026-10-31) | The first version takes one recording per video; edits in words, trimming and inserting are in. The document already lists assets, so scenes could point at several clips; upload, ingest and the director would need to take several | Upload limits, cost of a video |
+| Placing elements around any object, not only faces (2026-10-31) | Elements take free spots around keep-out zones; faces and, since 2026-10-31, the one subject the frame notes mark (a product, a phone, a screen) are kept clear and framed. Several objects with boxes, or anchoring an element to an object, would come from frame analysis returning boxes | Vision cost, layout |
+| A large background library, generated backgrounds (2026-10-31) | The first version builds backgrounds from the brand, gradients, shapes and the style's textures, and the vocabulary keeps adding them. Generated images or footage are outside the first version | Licenses, cost |
 
 ## Technical, to decide later
 

@@ -35,6 +35,7 @@ export const ElementSchema = z.discriminatedUnion("kind", [
   ElementBaseSchema.extend({
     kind: z.literal("counter"),
     value: z.number(),
+    decimals: z.number().optional(),
     prefix: z.string().optional(),
     suffix: z.string().optional(),
     label: z.string().optional(),

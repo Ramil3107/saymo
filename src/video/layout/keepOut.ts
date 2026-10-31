@@ -43,6 +43,18 @@ export function mapBoxThroughTransform(box: Box, source: Size, transform: Transf
   return { x: round6(left), y: round6(top), w: round6(right - left), h: round6(bottom - top) };
 }
 
+// A camera that zooms around the frame's center makes a face cover more of the frame by the end of the scene.
+export function zoomedZones(zones: Box[], scale: number): Box[] {
+  return zones.map((zone) => {
+    const left = clamp01(0.5 + (zone.x - 0.5) * scale);
+    const top = clamp01(0.5 + (zone.y - 0.5) * scale);
+    const right = clamp01(0.5 + (zone.x + zone.w - 0.5) * scale);
+    const bottom = clamp01(0.5 + (zone.y + zone.h - 0.5) * scale);
+
+    return { x: round6(left), y: round6(top), w: round6(right - left), h: round6(bottom - top) };
+  });
+}
+
 export function overlapRatio(element: Box, zones: Box[]): number {
   const area = element.w * element.h;
   if (area === 0) return 0;

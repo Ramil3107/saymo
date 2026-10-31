@@ -18,6 +18,10 @@ export type TitleLine = z.infer<typeof TitleLineSchema>;
 
 export type TitleSize = TitleLine["size"];
 
+// A title line's largest font size as a share of the title's width; lines are set at this line height.
+export const titleSizeShare: Record<TitleSize, number> = { xl: 0.22, l: 0.15, m: 0.095, s: 0.06 };
+export const titleLineHeight = 1.04;
+
 export type Tone = TitleLine["tone"];
 
 export type Align = TitleLine["align"];

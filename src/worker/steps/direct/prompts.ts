@@ -1,6 +1,6 @@
 import { type DestinationId, destinations } from "../../../video/destinations";
 import { registers } from "../../../video/registers";
-import type { ContentMap, FaceBox, FrameNote, Shot } from "../../../video/schema/content";
+import type { Box, ContentMap, FaceBox, FrameNote, Shot } from "../../../video/schema/content";
 import type { Transcript, TranscriptWord } from "../../../video/schema/transcript";
 import { styles } from "../../../video/styles";
 
@@ -38,7 +38,7 @@ export function directorSystemPrompt(): string {
     "",
     "Three entry modes: footage with motion graphics (the main one), text only (a video made entirely of graphics), and minimal (captions, cuts and zooms). Choose the mode from what you are given and from the destination; do not ask about it.",
     "",
-    "Vocabulary of overlays (kind: fields): headline (text, optional sub), chip (text of one to three words, optional badge of two or three characters such as Fe, B12 or 01), big-number (text is the number, sub is its label), lower-third (text is the name, sub is the role), quote (text, sub is the author), sticker (text), title-card (text is a title of two to five words, sub is a short section label such as '02 · Як перевіритись'), list (text is the title, items are two to six entries of one to four words), title (the kinetic headline of graphics beats: lines are one to three lines, each with text, size xl, l, m or s, tone ink, accent or alt, align left, center or right, and marked for a marker sweep under it; entrance comes from the style's title entrances), counter (value is the number, prefix and suffix such as - and %, sub is a short label; for one striking number), corner-label (text of one to three words, a small label in a corner, mostly in bold-pop). Layouts per beat: free (the default, chips float beside the subject), panel-top (a dark panel over the top of the frame holding a title-card, the subject moves down), panel-side (a dark panel over one side holding a list, the subject moves to the other side). Use panel layouts for section openers and enumerations, two to five per minute, never two beats in a row. Camera per beat: none, push, punch-in or pan with intensity 0 to 1. Captions styles, picked by the register and the content: rail (the default: a short phrase whose words appear as they are said, keywords in the accent color), keyword-box (three words in heavy capitals, words pop in as they are said, keywords in an accent box; creator and sale videos), bold-center (one or two huge words at a time in the middle of the frame; hooks and launches), pop (three words in capitals, the spoken word grows), karaoke (a line, the spoken word in the accent color), karaoke-pill (a line, an accent capsule under the spoken word), box (a line on a dark rounded pill; quiet and accessible), minimal (one lowercase line in a light weight; lifestyle and education), weight-shift (words thicken from light to heavy as they are said), marker (keywords get a marker sweep), typewriter (a line typed on a white pill), editorial (a serif line with keywords in italic; premium), outline (outlined capitals that fill as they are said). captions.keywords lists 15 to 40 words from the speech that deserve the accent color, spelled exactly as spoken; an empty list when there is no speech.",
+    "Vocabulary of overlays (kind: fields): headline (text, optional sub), chip (text of one to three words, optional badge of two or three characters such as Fe, B12 or 01), big-number (text is the number, sub is its label), lower-third (text is the name, sub is the role), quote (text, sub is the author), sticker (text), title-card (text is a title of two to five words, sub is a short section label such as '02 · Як перевіритись'), list (text is the title, items are two to six entries of one to four words), title (the kinetic headline of graphics beats: lines are one to three lines, each with text, size xl, l, m or s, tone ink, accent or alt, align left, center or right, and marked for a marker sweep under it; entrance comes from the style's title entrances), counter (value is the number, prefix and suffix such as - and %, sub is a short label; for one striking number), corner-label (text of one to three words, a small label in a corner, mostly in bold-pop). Layouts per beat: free (the default, chips float beside the subject), panel-top (a dark panel over the top of the frame holding a title-card, the subject moves down), panel-side (a dark panel over one side holding a list, the subject moves to the other side). Use panel layouts for section openers and enumerations over footage, two to five per minute, never two beats in a row; a beat without footage takes no panel and no list, it enumerates with chips, which stack in the middle of the frame. Camera per beat: none, push, punch-in or pan with intensity 0 to 1. Captions styles, picked by the register and the content: rail (the default: a short phrase whose words appear as they are said, keywords in the accent color), keyword-box (three words in heavy capitals, words pop in as they are said, keywords in an accent box; creator and sale videos), bold-center (one or two huge words at a time in the middle of the frame; hooks and launches), pop (three words in capitals, the spoken word grows), karaoke (a line, the spoken word in the accent color), karaoke-pill (a line, an accent capsule under the spoken word), box (a line on a dark rounded pill; quiet and accessible), minimal (one lowercase line in a light weight; lifestyle and education), weight-shift (words thicken from light to heavy as they are said), marker (keywords get a marker sweep), typewriter (a line typed on a white pill), editorial (a serif line with keywords in italic; premium), outline (outlined capitals that fill as they are said). captions.keywords lists 15 to 40 words from the speech that deserve the accent color, spelled exactly as spoken; an empty list when there is no speech.",
     "",
     "Destinations:",
     destinationTable(),
@@ -123,9 +123,15 @@ function frameLines(frames: FrameNote[]): string {
   return frames
     .map((frame) => {
       const text = frame.onScreenText.length ? ` On-screen text: ${frame.onScreenText.join(" | ")}` : "";
-      return `${frame.tMs} ms, ${frame.kind}: ${frame.description}${text}`;
+      return `${frame.tMs} ms, ${frame.kind}: ${frame.description}${text}${subjectNote(frame.subject)}`;
     })
     .join("\n");
+}
+
+function subjectNote(subject: Box | undefined): string {
+  if (!subject) return "";
+  const span = (from: number, size: number) => `${from.toFixed(2)}–${(from + size).toFixed(2)}`;
+  return ` Subject at x ${span(subject.x, subject.w)}, y ${span(subject.y, subject.h)}.`;
 }
 
 function facesSummary(faces: FaceBox[]): string {

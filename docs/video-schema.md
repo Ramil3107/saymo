@@ -58,7 +58,7 @@ An element is one of eleven kinds, picked by `kind`. Every element has an `id`, 
 - `title-card`: `text` and an optional `sub` used as the section label; it fills the top panel of a `panel-top` beat.
 - `list`: `text` as the title and `items`; it fills the side panel of a `panel-side` beat.
 - `title`: `lines` (each a `text`, a `size` `xl`, `l`, `m` or `s`, a `tone` `ink`, `accent` or `alt`, an `align` and an optional `marked`) and an `entrance` (`type`, `rise`, `pop`, `spread`, `punch` or `reveal`); the kinetic title of the style.
-- `counter`: a numeric `value`, an optional `prefix`, `suffix` and `label`; it punches in and counts up.
+- `counter`: a numeric `value`, optional `decimals` (how many digits it counts and shows after the point, taken from how the plan writes the number, so `$2.50` lands on 2.50), an optional `prefix`, `suffix` and `label`; it punches in and counts up.
 - `corner-label`: `text`; a small label typed in a corner, with chevrons in `bold-pop`.
 
 ## Schema rules

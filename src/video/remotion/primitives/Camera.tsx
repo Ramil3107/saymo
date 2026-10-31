@@ -1,14 +1,10 @@
 import type { ReactNode } from "react";
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
+import { panShiftPercent, panZoom, punchInZoom, pushZoom } from "../../motion/camera";
 import type { Scene } from "../../schema/video";
 import { frameToMs } from "../frames";
 
 type SceneCamera = Scene["camera"];
-
-const pushZoom = 0.08;
-const punchInZoom = 0.15;
-const panShiftPercent = 4;
-const panZoom = 0.04;
 
 export function Camera({
   camera,

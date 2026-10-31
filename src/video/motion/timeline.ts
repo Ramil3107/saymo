@@ -36,14 +36,15 @@ export function lettersShown(ms: number, startMs: number, letterCount: number, l
 export function countAt(
   ms: number,
   window: { startMs: number; durationMs: number; stepMs: number },
-  range: { from: number; to: number },
+  range: { from: number; to: number; decimals?: number },
   curve: Curve,
 ): number {
   const stepping = window.stepMs > 0 && ms < window.startMs + window.durationMs;
   const sampleMs = stepping ? quantize(ms, window.startMs, window.stepMs) : ms;
   const progress = eased(sampleMs, window.startMs, window.durationMs, curve);
+  const scale = 10 ** (range.decimals ?? 0);
 
-  return Math.round(range.from + (range.to - range.from) * progress);
+  return Math.round((range.from + (range.to - range.from) * progress) * scale) / scale;
 }
 
 export function blink(ms: number, periodMs: number): boolean {

@@ -30,6 +30,7 @@ export const FrameNoteSchema = z.object({
   description: z.string(),
   kind: z.enum(["face", "screen", "other"]),
   onScreenText: z.array(z.string()),
+  subject: BoxSchema.optional(),
 });
 
 export type FrameNote = z.infer<typeof FrameNoteSchema>;

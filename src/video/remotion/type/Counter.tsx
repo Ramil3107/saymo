@@ -10,6 +10,7 @@ import type { TypeColors, TypeFont } from "./KineticTitle";
 type Props = {
   from: number;
   to: number;
+  decimals?: number;
   prefix?: string;
   suffix?: string;
   label?: string;
@@ -20,6 +21,7 @@ type Props = {
   font: TypeFont;
   tempo: Tempo;
   width: number;
+  sizeScale?: number;
 };
 
 const countMoves = 4;
@@ -31,7 +33,6 @@ const measureSize = 100;
 const minPerPx = 0.01;
 const labelShare = 0.05;
 const ghostScale = 2.4;
-const numberFormat = new Intl.NumberFormat("en-US");
 
 const baseline: CSSProperties = { alignItems: "baseline" };
 
@@ -47,12 +48,13 @@ export function countDurationMs(tempo: Tempo): number {
 }
 
 export function Counter(props: Props) {
-  const { from, to, prefix = "", suffix = "", label, ghost, atMs, font, tempo, width } = props;
+  const { from, to, decimals = 0, prefix = "", suffix = "", label, ghost, atMs, font, tempo, width } = props;
   const ms = useMs();
   const countMs = countDurationMs(tempo);
   const window = { startMs: atMs, durationMs: countMs, stepMs: tempo.countStepMs };
-  const value = countAt(ms, window, { from, to }, tempo.enterCurve);
-  const fontSize = numberSize(`${prefix}${numberFormat.format(to)}`, suffix, font, width);
+  const value = countAt(ms, window, { from, to, decimals }, tempo.enterCurve);
+  const number = `${prefix}${formatCount(to, decimals)}`;
+  const fontSize = numberSize(number, suffix, font, width, props.sizeScale ?? 1);
 
   return (
     <div style={{ ...column, fontFamily: font.family, fontWeight: font.weight }}>
@@ -73,7 +75,7 @@ function GhostLayer(props: Props & { fontSize: number }) {
       unitPx={width}
       style={{ position: "absolute", inset: 0 }}
     >
-      <Ghost text={numberFormat.format(to)} fontSize={fontSize} color={colors.ink} />
+      <Ghost text={formatCount(to, props.decimals ?? 0)} fontSize={fontSize} color={colors.ink} />
     </Move>
   );
 }
@@ -90,8 +92,8 @@ function CounterNumber(props: Props & { prefix: string; suffix: string; value: n
   return (
     <Move spec={{ enter: "punch", atMs, exit }} tempo={tempo} unitPx={width} innerStyle={baseline}>
       <Stable
-        final={`${prefix}${numberFormat.format(to)}`}
-        current={`${prefix}${numberFormat.format(value)}`}
+        final={`${prefix}${formatCount(to, props.decimals ?? 0)}`}
+        current={`${prefix}${formatCount(value, props.decimals ?? 0)}`}
         style={{ fontSize, color: colors.accent, lineHeight: 1, textShadow: colors.shadow }}
       />
       {suffix ? (
@@ -154,12 +156,22 @@ function Ghost({ text, fontSize, color }: { text: string; fontSize: number; colo
 }
 
 // The suffix is drawn at half size, so the number takes the width the suffix leaves.
-function numberSize(number: string, suffix: string, font: TypeFont, width: number): number {
+function numberSize(
+  number: string,
+  suffix: string,
+  font: TypeFont,
+  width: number,
+  sizeScale: number,
+): number {
   const style = { fontFamily: font.family, fontWeight: font.weight, fontSize: measureSize };
   const perPx =
     (measureText({ ...style, text: number }).width +
       measureText({ ...style, text: suffix }).width * suffixScale) /
     measureSize;
 
-  return Math.min(width * numberShare, (width * fitShare) / Math.max(perPx, minPerPx));
+  return Math.min(width * numberShare * sizeScale, (width * fitShare) / Math.max(perPx, minPerPx));
+}
+
+function formatCount(value: number, decimals: number): string {
+  return value.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 }

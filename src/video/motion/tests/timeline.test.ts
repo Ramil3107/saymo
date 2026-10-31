@@ -56,6 +56,12 @@ describe("countAt", () => {
   it("starts at the first value", () => {
     expect(countAt(0, { startMs: 0, durationMs: 800, stepMs: 0 }, range, glide.enterCurve)).toBe(10);
   });
+
+  it("lands on a price with cents instead of rounding it to a whole number", () => {
+    const window = { startMs: 0, durationMs: 800, stepMs: 0 };
+    expect(countAt(800, window, { from: 0, to: 2.5, decimals: 2 }, glide.enterCurve)).toBe(2.5);
+    expect(countAt(800, window, { from: 0, to: 2.5 }, glide.enterCurve)).toBe(3);
+  });
 });
 
 describe("blink and chase", () => {

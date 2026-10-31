@@ -1,20 +1,30 @@
 import type { CSSProperties } from "react";
+import { stickerFontShare, stickerPaddingShare } from "../../layout/stickerSize";
 import type { StyleKit } from "../style/kit";
 import type { PrimitiveProps } from "../theme";
 import { ElementBox } from "./ElementBox";
 import { fittedSize, labelBox, labelText } from "./labelStyle";
+import { type Surface, typeScale } from "./surface";
 
-const paddingShare = 0.4;
 const pillShare = 0.9;
-const maxFontShare = 0.42;
 const tiltDegrees = -4;
 
-export function Sticker({ element, theme, frame }: PrimitiveProps<"sticker">) {
+export function Sticker({
+  element,
+  theme,
+  frame,
+  surface,
+}: PrimitiveProps<"sticker"> & { surface: Surface }) {
   const { kit } = theme;
   const height = element.box.h * frame.height;
-  const padding = height * paddingShare;
+  const padding = height * stickerPaddingShare;
   const text = labelText(kit, element.text);
-  const fontSize = fittedSize(kit, text, height * maxFontShare, element.box.w * frame.width - padding * 2);
+  const fontSize = fittedSize(
+    kit,
+    text,
+    height * stickerFontShare * kit.style.display.labelScale * typeScale(surface),
+    element.box.w * frame.width - padding * 2,
+  );
 
   return (
     <ElementBox

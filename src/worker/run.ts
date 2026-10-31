@@ -14,7 +14,7 @@ import { defaultBrand } from "../video/brand";
 import { type QaReport, QaReportSchema, runQa } from "../video/qa/checks";
 import { renderOnLambda, uploadRunAssets } from "../video/render/renderLambda";
 import { posterTimeMs, renderLocal, renderPoster } from "../video/render/renderLocal";
-import { type ContentMap, ContentMapSchema } from "../video/schema/content";
+import { type ContentMap, ContentMapSchema, type FrameNote } from "../video/schema/content";
 import { type Plan, PlanSchema } from "../video/schema/plan";
 import { type Transcript, TranscriptSchema } from "../video/schema/transcript";
 import { type VideoDoc, VideoDocSchema } from "../video/schema/video";
@@ -22,6 +22,7 @@ import {
   loadOrCreateManifest,
   type Manifest,
   type RunOptions,
+  redoFrom,
   type StepName,
   saveManifest,
   shouldRun,
@@ -36,12 +37,19 @@ import {
   SpokenBeatSchema,
 } from "./steps/build/buildVideo";
 import { direct } from "./steps/direct/director";
-import { directLocally, WaitingForPlanError } from "./steps/direct/localDirector";
+import { directLocally } from "./steps/direct/localDirector";
 import type { DirectorInput } from "./steps/direct/prompts";
 import { type IngestResult, IngestResultSchema, ingest } from "./steps/ingest";
+import { WaitingError } from "./steps/local";
 import { buildContentMap } from "./steps/see/contentMap";
-import { assertVisionBudget, describeKeyframes, selectFramesForDescription } from "./steps/see/describe";
+import {
+  assertVisionBudget,
+  describeKeyframes,
+  type Frame,
+  selectFramesForDescription,
+} from "./steps/see/describe";
 import { detectFaces, rekognitionDetector } from "./steps/see/faces";
+import { describeLocally } from "./steps/see/localVision";
 import { deepgramTranscriber } from "./steps/transcribe/deepgram";
 import { elevenLabsTranscriber } from "./steps/transcribe/elevenlabs";
 import type { Transcriber } from "./steps/transcribe/types";
@@ -109,10 +117,11 @@ export async function runPipeline(options: RunOptions, env: Env): Promise<RunRes
 }
 
 function requireCredentials(options: RunOptions, env: Env): void {
-  const callsClaude = options.director === "api" || options.source !== undefined;
+  const describesByApi = options.source !== undefined && options.vision === "api";
+  const callsClaude = options.director === "api" || describesByApi;
   if (callsClaude && !process.env.ANTHROPIC_AUTH_TOKEN) requireEnv(env, "ANTHROPIC_API_KEY");
   if (options.director === "api") assertPricedModel(options.directorModel);
-  assertPricedModel(options.visionModel);
+  if (describesByApi) assertPricedModel(options.visionModel);
 
   if (options.source) {
     requireEnv(env, options.transcriber === "deepgram" ? "DEEPGRAM_API_KEY" : "ELEVENLABS_API_KEY");
@@ -127,7 +136,8 @@ function requireCredentials(options: RunOptions, env: Env): void {
 }
 
 function openRun(options: RunOptions, env: Env): Run {
-  const manifest = loadOrCreateManifest(options.runDir, options);
+  const loaded = loadOrCreateManifest(options.runDir, options);
+  const manifest = options.redo ? redoFrom(loaded, options.redo) : loaded;
 
   return {
     options,
@@ -200,24 +210,32 @@ function seeStep(run: Run, ingested: IngestResult): Promise<Seen> {
     file: "see.json",
     schema: SeenSchema,
     work: async () => {
-      const selected = selectFramesForDescription(ingested.keyframes, ingested.shots);
-      assertVisionBudget(selected.length, run.options.visionModel, run.env.SAYMO_VISION_BUDGET_USD);
-
+      const frames = await describeFrames(
+        run,
+        selectFramesForDescription(ingested.keyframes, ingested.shots),
+      );
       const faces = await detectFaces(
         rekognitionDetector(run.env.AWS_REGION),
         ingested.keyframes,
         run.metrics,
       );
-      const frames = await describeKeyframes({
-        client: run.client,
-        model: run.options.visionModel,
-        frames: selected,
-        budgetUsd: run.env.SAYMO_VISION_BUDGET_USD,
-        metrics: run.metrics,
-      });
 
       return { faces, frames };
     },
+  });
+}
+
+// Frames are described before faces are detected, so a run waiting for local descriptions pays for nothing.
+function describeFrames(run: Run, frames: Frame[]): Promise<FrameNote[]> {
+  if (run.options.vision === "local") return describeLocally(frames, artifact(run, "vision"));
+
+  assertVisionBudget(frames.length, run.options.visionModel, run.env.SAYMO_VISION_BUDGET_USD);
+  return describeKeyframes({
+    client: run.client,
+    model: run.options.visionModel,
+    frames,
+    budgetUsd: run.env.SAYMO_VISION_BUDGET_USD,
+    metrics: run.metrics,
   });
 }
 
@@ -406,7 +424,7 @@ async function step<T>(run: Run, spec: Step<T>): Promise<T> {
     save(run);
     return value;
   } catch (error) {
-    const status = error instanceof WaitingForPlanError ? "waiting" : "failed";
+    const status = error instanceof WaitingError ? "waiting" : "failed";
     run.manifest.steps[spec.name] = { status, error: errorMessage(error) };
     save(run);
     throw error;

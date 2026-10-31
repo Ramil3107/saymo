@@ -2,7 +2,8 @@ import { z } from "zod";
 import { destinations, type SafeZone } from "../destinations";
 import { intersectionArea } from "../layout/geometry";
 import { keepOutErrorShare, overlapRatio } from "../layout/keepOut";
-import { isPanelKind } from "../layout/layouts";
+import { isKineticKind, isPanelKind } from "../layout/layouts";
+import { captionBand } from "../layout/safeZones";
 import { fitsInBox } from "../layout/textWidth";
 import { registers } from "../registers";
 import type { Box } from "../schema/content";
@@ -21,6 +22,7 @@ export const QaIssueSchema = z.object({
     "voice-overflow",
     "plan-over-cap",
     "plan-over-source",
+    "overlay-left-out",
   ]),
   severity: z.enum(["error", "warning"]),
   message: z.string(),
@@ -78,11 +80,30 @@ export function runQa(
   const issues = [
     ...planWithinLimits(plan, sourceDurationMs),
     ...documentIssues(doc, plan),
+    ...leftOutIssues(doc, plan),
     ...doc.scenes.flatMap((scene) => sceneIssues(doc, scene, avoid[scene.id] ?? [])),
     ...voiceIssues(doc),
   ];
 
   return { ok: !issues.some((issue) => issue.severity === "error"), issues };
+}
+
+// The build leaves out an overlay that would cover a face or another element; the director should know.
+function leftOutIssues(doc: VideoDoc, plan: Plan): QaIssue[] {
+  const placed = new Set(doc.scenes.flatMap((scene) => scene.elements.map((element) => element.id)));
+
+  return plan.beats.flatMap((beat) =>
+    beat.overlays
+      .filter((overlay) => !placed.has(`${beat.id}-${overlay.id}`))
+      .map(
+        (overlay): QaIssue => ({
+          code: "overlay-left-out",
+          severity: "warning",
+          message: `The ${overlay.kind} "${overlay.text}" found no spot clear of faces and other elements`,
+          sceneId: beat.id,
+        }),
+      ),
+  );
 }
 
 function documentIssues(doc: VideoDoc, plan: Plan): QaIssue[] {
@@ -182,13 +203,19 @@ function elementIssues(doc: VideoDoc, scene: Scene, element: Element, avoid: Box
     report("safe-zone", "error", "Element leaves the safe zone");
   }
 
-  const covered = overlapRatio(element.box, avoid);
+  const covered = overlapRatio(element.box, [...avoid, ...captionZone(doc, element)]);
   if (covered > 0) {
     const severity: Severity = covered > keepOutErrorShare ? "error" : "warning";
     report("avoid-zone", severity, `Element covers a keep-out zone by ${Math.round(covered * 100)}%`);
   }
 
   return issues;
+}
+
+// Captions step aside for kinetic text, so only the other elements must keep off the caption band.
+function captionZone(doc: VideoDoc, element: Element): Box[] {
+  if (!doc.captions || isKineticKind(element.kind)) return [];
+  return [captionBand(destinations[doc.destination].safeZone)];
 }
 
 function voiceIssues(doc: VideoDoc): QaIssue[] {

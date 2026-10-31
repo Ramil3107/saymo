@@ -73,7 +73,7 @@ docs/             documentation pages, built into a VitePress site
 - `pnpm format`: fixes formatting after a red `pnpm check`.
 - `pnpm typecheck`: type check, `tsc --noEmit`.
 - `pnpm test`: tests, Vitest.
-- `pnpm spike`: runs the pipeline on a video or text; the director is local by default (the run stops for a plan written in the session, then `--resume`), `--director api` calls the API. Details in the `spike` skill.
+- `pnpm spike`: runs the pipeline on a video or text; the director and the frame descriptions are local by default (the run stops for a plan or notes written in the session, then `--resume`), `--director api` and `--vision api` call the API, `--redo <step>` reruns from a step. Details in the `spike` skill.
 - `pnpm docs:dev`: the documentation site, locally.
 - `pnpm docs:build`: builds the documentation site and fails on dead links.
 - `pnpm docs:preview`: serves the built site.

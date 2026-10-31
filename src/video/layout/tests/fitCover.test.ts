@@ -48,9 +48,18 @@ test("fitContain fits a phone recording inside an area and centers it", () => {
   const source = { width: 1206, height: 2622 };
   const target = { width: 1080, height: 1920 };
   const area = { x: 0.06, y: 0.18, w: 0.88, h: 0.5 };
-  const placed = fitContain(source, target, area);
+  const placed = fitContain(source, target, area, "middle");
 
   expect(placed.scale).toBeCloseTo((0.5 * 1920) / 2622, 6);
   expect(placed.x + (source.width * placed.scale) / 2).toBeCloseTo((0.06 + 0.44) * 1080, 3);
   expect(placed.y).toBeCloseTo(0.18 * 1920, 3);
+});
+
+test("fitContain can set a wide recording at the bottom of its area, leaving the top free", () => {
+  const source = { width: 1280, height: 720 };
+  const target = { width: 1080, height: 1920 };
+  const area = { x: 0.04, y: 0.2, w: 0.92, h: 0.5 };
+  const placed = fitContain(source, target, area, "bottom");
+
+  expect(placed.y + source.height * placed.scale).toBeCloseTo(0.7 * 1920, 3);
 });

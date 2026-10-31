@@ -4,14 +4,15 @@ import type { StyleKit } from "../style/kit";
 import type { PrimitiveProps } from "../theme";
 import { ElementBox } from "./ElementBox";
 import { fittedSize, labelBox, labelText } from "./labelStyle";
+import { type Surface, typeScale } from "./surface";
 
 const badgeShare = 1.5;
 const badgeGapShare = 0.4;
 const paddingShare = 0.7;
 
-export function Chip({ element, theme, frame }: PrimitiveProps<"chip">) {
+export function Chip({ element, theme, frame, surface }: PrimitiveProps<"chip"> & { surface: Surface }) {
   const { kit } = theme;
-  const baseSize = frame.height * chipFontShare * kit.style.display.labelScale;
+  const baseSize = frame.height * chipFontShare * kit.style.display.labelScale * typeScale(surface);
   const multiline = chipLines(element.box.h * frame.height, baseSize) > 1;
   const text = labelText(kit, element.text);
   const badgeRoom = element.badge ? baseSize * (badgeShare + badgeGapShare) : 0;

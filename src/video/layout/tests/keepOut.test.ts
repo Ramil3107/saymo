@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { fitCover } from "../fitCover";
-import { keepOutZones, mapBoxThroughTransform, overlapRatio } from "../keepOut";
+import { keepOutZones, mapBoxThroughTransform, overlapRatio, zoomedZones } from "../keepOut";
 
 const source = { width: 1920, height: 1080 };
 const target = { width: 1080, height: 1920 };
@@ -35,4 +35,12 @@ test("overlapRatio is the overlapped share of the element", () => {
   const element = { x: 0, y: 0, w: 0.4, h: 0.4 };
   expect(overlapRatio(element, [{ x: 0.2, y: 0.2, w: 1, h: 1 }])).toBeCloseTo(0.25, 6);
   expect(overlapRatio(element, [])).toBe(0);
+});
+
+test("zoomedZones grows a zone around the frame's center and keeps it inside the frame", () => {
+  const [zone] = zoomedZones([{ x: 0.3, y: 0.2, w: 0.4, h: 0.4 }], 1.5);
+  expect(zone).toEqual({ x: 0.2, y: 0.05, w: 0.6, h: 0.6 });
+
+  const [edge] = zoomedZones([{ x: 0, y: 0, w: 0.2, h: 0.2 }], 2);
+  expect(edge).toEqual({ x: 0, y: 0, w: 0, h: 0 });
 });

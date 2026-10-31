@@ -4,6 +4,21 @@ import { z } from "zod";
 import { providers } from "../lib/metrics";
 import { DestinationIdSchema } from "../video/destinations";
 
+export const StepNameSchema = z.enum([
+  "ingest",
+  "transcribe",
+  "see",
+  "direct",
+  "voice",
+  "build",
+  "qa",
+  "render",
+]);
+
+export type StepName = z.infer<typeof StepNameSchema>;
+
+export const stepNames = StepNameSchema.options;
+
 export const RunOptionsSchema = z.object({
   source: z.string().optional(),
   text: z.string().optional(),
@@ -11,21 +26,19 @@ export const RunOptionsSchema = z.object({
   destination: DestinationIdSchema,
   runDir: z.string(),
   transcriber: z.enum(["elevenlabs", "deepgram"]),
-  // Runs recorded before the local director existed asked the API.
+  // Runs recorded before the local modes existed asked the API.
   director: z.enum(["api", "local"]).default("api"),
   directorModel: z.string(),
+  vision: z.enum(["api", "local"]).default("api"),
   visionModel: z.string(),
   voice: z.boolean(),
   voiceId: z.string(),
   render: z.enum(["local", "lambda", "none"]),
   resume: z.boolean(),
+  redo: StepNameSchema.optional(),
 });
 
 export type RunOptions = z.infer<typeof RunOptionsSchema>;
-
-export const stepNames = ["ingest", "transcribe", "see", "direct", "voice", "build", "qa", "render"] as const;
-
-export type StepName = (typeof stepNames)[number];
 
 const StepStateSchema = z.object({
   status: z.enum(["pending", "done", "failed", "skipped", "waiting"]),
@@ -47,7 +60,7 @@ export const ManifestSchema = z.object({
   id: z.string(),
   createdAt: z.string(),
   options: RunOptionsSchema,
-  steps: z.record(z.enum(stepNames), StepStateSchema),
+  steps: z.record(StepNameSchema, StepStateSchema),
   events: z.array(UsageEventSchema),
 });
 
@@ -66,6 +79,14 @@ export function loadOrCreateManifest(runDir: string, options: RunOptions): Manif
 
 export function saveManifest(runDir: string, manifest: Manifest): void {
   writeFileSync(manifestFile(runDir), `${JSON.stringify(manifest, null, 2)}\n`);
+}
+
+// Redoing a step redoes every step after it, since each reads what the one before it wrote.
+export function redoFrom(manifest: Manifest, step: StepName): Manifest {
+  const steps = { ...manifest.steps };
+  for (const name of stepNames.slice(stepNames.indexOf(step))) steps[name] = { status: "pending" };
+
+  return { ...manifest, steps };
 }
 
 export function shouldRun(manifest: Manifest, step: StepName, resume: boolean): boolean {

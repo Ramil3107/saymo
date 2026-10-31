@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import footagePlanJson from "../../../../fixtures/plan.footage.json" with { type: "json" };
 import textPlanJson from "../../../../fixtures/plan.text.json" with { type: "json" };
 import sampleDocJson from "../../../../fixtures/video.sample.json" with { type: "json" };
-import { PlanSchema } from "../../schema/plan";
+import { type Overlay, PlanSchema } from "../../schema/plan";
 import { type VideoDoc, VideoDocSchema } from "../../schema/video";
 import { planWithinLimits, QaReportSchema, runQa } from "../checks";
 
@@ -125,4 +125,31 @@ test("runQa flags two elements that overlap in time and space", () => {
   const report = runQa(doc, textPlan, {}, null);
   expect(report.issues.map((i) => i.code)).toContain("elements-overlap");
   expect(report.ok).toBe(false);
+});
+
+test("runQa warns about an overlay the build left out", () => {
+  const [first, ...rest] = textPlan.beats;
+  if (!first) throw new Error("fixture has no beats");
+  const missing: Overlay = { id: "lost", kind: "chip", text: "Lost", atMs: 0, durationMs: 1000 };
+  const plan = { ...textPlan, beats: [{ ...first, overlays: [...first.overlays, missing] }, ...rest] };
+
+  const issues = runQa(sampleDoc, plan, {}, null).issues.filter((i) => i.code === "overlay-left-out");
+  expect(issues.map((issue) => issue.message)).toContain(
+    'The chip "Lost" found no spot clear of faces and other elements',
+  );
+});
+
+test("runQa lets kinetic text use the caption band but not a chip", () => {
+  const inBand = { x: 0.2, y: 0.62, w: 0.6, h: 0.1 };
+  const scenes = sampleDoc.scenes.map((scene) => ({
+    ...scene,
+    elements: scene.elements.map((element) => ({ ...element, box: inBand })),
+  }));
+  const doc: VideoDoc = { ...sampleDoc, scenes };
+
+  const flagged = runQa(doc, textPlan, {}, null)
+    .issues.filter((issue) => issue.code === "avoid-zone")
+    .map((issue) => issue.elementId);
+  expect(flagged).toContain("b2-chip");
+  expect(flagged).not.toContain("b1-headline");
 });

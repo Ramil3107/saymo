@@ -18,6 +18,7 @@ export type StyleKit = {
   panel: PanelTones;
   label: LabelTones;
   transition: TransitionColors;
+  scrim: string;
 };
 
 export type PanelTones = { background: string; text: string; accent: string };
@@ -32,6 +33,8 @@ export type LabelTones = {
 };
 
 const footageShadow = "0 2px 18px rgba(0, 0, 0, 0.55)";
+const footageScrim =
+  "radial-gradient(closest-side, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.32) 60%, rgba(0, 0, 0, 0))";
 const white = "#FFFFFF";
 
 // Everything a scene needs to draw in a style: the style's own choices with the brand's colors and font folded in.
@@ -57,6 +60,7 @@ export function styleKit(id: StyleId, brand: VideoDoc["brand"]): StyleKit {
     panel: panelTones(style, palette),
     label: labelTones(style, palette),
     transition: transitionColors(style, palette),
+    scrim: footageScrim,
   };
 }
 
