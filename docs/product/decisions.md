@@ -4,6 +4,12 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-10-31 · The giant number stays whole in the frame
+
+- **Decided:** the `edge-number` composition, where the frame's left edge cropped the first figure of a counter, becomes `giant-number`: the counter as wide as the text area allows and whole in the frame, the label under it; its other form still sits on an accent field. The element `fill` loses `bleed`. This changes the composition list of the entry "A backdrop beat names its composition, and the build lays it out as data" below. The owner pointed at the cropped figure on 2026-10-31.
+- **Why:** on the owner's first look the cropped "4" of "40%" read as a defect, not a technique, and the stress mark drawn under it ran off the frame too. In a 9:16 frame the width already limits the size, so the crop added little size for the risk.
+- **Rejected:** a smaller crop (still reads as a mistake); cropping by the bottom or the top edge (under the app's interface in Reels).
+
 ### 2026-10-31 · A backdrop beat names its composition, and the build lays it out as data
 
 - **Decided:** a beat without footage carries an optional `composition` (`center`, `fill`, `split`, `edge-number`, `column`, `grid`). The director picks it; the build turns it into element boxes and color fields, and the document carries the fields (`fields` on a scene) and, per element, the field under it (`on`) and how its text fills the box (`fill`). The renderer draws what the document says and knows nothing about compositions. Two beats in a row without footage never share one: the plan check rejects it, so the API director gets its one retry. A repeat takes the family's other form, counted per video. Every render also waits for its fonts before it draws. This is the lead's call, the first step of the variety plan.
