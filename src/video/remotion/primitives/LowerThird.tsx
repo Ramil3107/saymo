@@ -3,6 +3,7 @@ import type { StyleKit } from "../style/kit";
 import type { PrimitiveProps } from "../theme";
 import { ElementBox } from "./ElementBox";
 import { fittedSize, labelBox, labelText } from "./labelStyle";
+import type { Surface } from "./surface";
 
 const paddingShare = 0.25;
 const nameShare = 0.56;
@@ -10,7 +11,12 @@ const nameShareWithRole = 0.5;
 const roleScale = 0.6;
 const barShare = 0.08;
 
-export function LowerThird({ element, theme, frame }: PrimitiveProps<"lower-third">) {
+export function LowerThird({
+  element,
+  theme,
+  frame,
+  surface,
+}: PrimitiveProps<"lower-third"> & { surface: Surface }) {
   const { kit } = theme;
   const height = element.box.h * frame.height;
   const padding = height * paddingShare;
@@ -23,7 +29,7 @@ export function LowerThird({ element, theme, frame }: PrimitiveProps<"lower-thir
       element={element}
       theme={theme}
       frame={frame}
-      style={{ flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-end" }}
+      style={{ flexDirection: "column", alignItems: lineAlign(surface), justifyContent: "flex-end" }}
     >
       <div data-anchor style={{ ...nameStyle(kit, nameSize, padding), ...accentBar(kit, height) }}>
         {name}
@@ -31,6 +37,11 @@ export function LowerThird({ element, theme, frame }: PrimitiveProps<"lower-thir
       {element.role ? <div style={roleStyle(kit, nameSize, padding)}>{element.role}</div> : null}
     </ElementBox>
   );
+}
+
+// On the backdrop the lower third stacks with centered type, so its lines center too.
+function lineAlign(surface: Surface): CSSProperties["alignItems"] {
+  return surface === "backdrop" ? "center" : "flex-start";
 }
 
 function nameStyle(kit: StyleKit, fontSize: number, padding: number): CSSProperties {

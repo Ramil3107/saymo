@@ -139,7 +139,7 @@ function ElementBody(props: ElementProps) {
     case "big-number":
       return <BigNumberElement element={element} theme={theme} frame={frame} surface={surface} />;
     case "lower-third":
-      return <LowerThird element={element} theme={theme} frame={frame} />;
+      return <LowerThird element={element} theme={theme} frame={frame} surface={surface} />;
     case "quote":
       return <Quote element={element} theme={theme} frame={frame} surface={surface} />;
     case "sticker":
