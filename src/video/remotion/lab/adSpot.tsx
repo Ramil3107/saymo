@@ -97,7 +97,7 @@ function HookScene(props: SpotProps) {
 }
 
 function HookAccent({ kit, width, height }: SpotProps) {
-  if (kit.style.accents.includes("chevrons")) {
+  if (kit.style.flourishes.includes("chevrons")) {
     return (
       <CornerLabel
         {...kit}
@@ -138,7 +138,7 @@ function CounterScene(props: SpotProps) {
         to={3}
         suffix={upper(kit, " маркери")}
         label="в одному аналізі"
-        ghost={kit.style.accents.includes("burst")}
+        ghost={kit.style.flourishes.includes("ghost-numbers")}
         atMs={atMs}
         width={width * titleShare}
       />
@@ -149,14 +149,14 @@ function CounterScene(props: SpotProps) {
 
 function CounterAccent({ kit, width, height }: SpotProps) {
   const landedMs = atMs + countDurationMs(kit.tempo);
-  if (kit.style.accents.includes("burst")) {
+  if (kit.style.accents.celebrate === "burst") {
     return (
       <Burst
-        at={{ x: width * 0.78, y: height * 0.4 }}
+        around={{ x: width * 0.75, y: height * 0.4 - width * 0.03, w: width * 0.06, h: width * 0.06 }}
         atMs={landedMs}
-        size={width * 0.18}
         tempo={kit.tempo}
         color={kit.palette.ink}
+        widthPx={width * 0.0063}
       />
     );
   }
@@ -178,7 +178,7 @@ function CollageScene(props: SpotProps) {
   const { kit, width, height } = props;
   const tag = tagRect(width, height);
   const area = { x: width * 0.06, y: height * 0.1, w: width * 0.88, h: height * 0.56 };
-  const layout = kit.style.accents.includes("grow-frame") ? "staircase" : "scatter";
+  const layout = kit.style.accents.frame === "grow-frame" ? "staircase" : "scatter";
 
   return (
     <Stage kit={kit} width={width} height={height}>
@@ -191,7 +191,7 @@ function CollageScene(props: SpotProps) {
 
 function CollageAccent({ kit, width, height }: SpotProps) {
   const tag = tagRect(width, height);
-  if (kit.style.accents.includes("grow-frame")) {
+  if (kit.style.accents.frame === "grow-frame") {
     const from = { x: width / 2, y: tag.y + tag.h / 2, w: 2, h: 2 };
     return (
       <GrowFrame
@@ -254,7 +254,7 @@ function CallScene({ kit, width, height }: SpotProps) {
         atMs={atMs}
         width={width * titleShare}
       />
-      {kit.style.accents.includes("cursor") ? (
+      {kit.style.flourishes.includes("cursor") ? (
         <Cursor
           from={{ x: width * 0.85, y: height * 0.85 }}
           to={{ x: width * 0.62, y: height * 0.53 }}

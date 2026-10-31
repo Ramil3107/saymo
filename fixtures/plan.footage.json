@@ -38,7 +38,7 @@
           "text": "Reports in one click",
           "atMs": 200,
           "durationMs": 2600,
-          "emphasis": "marker"
+          "accent": "stress"
         }
       ]
     },
@@ -93,7 +93,7 @@
           "sub": "faster reports",
           "atMs": 500,
           "durationMs": 4000,
-          "emphasis": "pulse"
+          "accent": "celebrate"
         }
       ]
     },

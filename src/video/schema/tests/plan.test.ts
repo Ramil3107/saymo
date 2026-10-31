@@ -86,3 +86,18 @@ test.each([
   };
   expect(PlanSchema.safeParse(plan).success).toBe(valid);
 });
+
+test("an overlay's accent is one of the four intents", () => {
+  const [first] = textPlan.beats;
+  if (!first) throw new Error("The text plan has no beats");
+  const accented = (accent: string) => ({
+    ...textPlan,
+    beats: [
+      { ...first, overlays: first.overlays.map((overlay) => ({ ...overlay, accent })) },
+      ...textPlan.beats.slice(1),
+    ],
+  });
+
+  expect(PlanSchema.safeParse(accented("focus")).success).toBe(true);
+  expect(PlanSchema.safeParse(accented("marker")).success).toBe(false);
+});

@@ -3,6 +3,7 @@ import { destinations, formatSize } from "../destinations";
 import { registers } from "../registers";
 import type { Element, Scene, VideoDoc } from "../schema/video";
 import { defaultStyle } from "../styles";
+import { Accented } from "./accents/ElementAccent";
 import { CaptionLayer } from "./captions/CaptionLayer";
 import { loadBrandFont } from "./fonts";
 import { sceneFrames } from "./frames";
@@ -114,7 +115,20 @@ function SceneView({ scene, doc, theme }: { scene: Scene; doc: VideoDoc; theme: 
   );
 }
 
-function ElementView(props: { element: Element; theme: Theme; frame: Frame; surface: Surface }) {
+type ElementProps = { element: Element; theme: Theme; frame: Frame; surface: Surface };
+
+function ElementView(props: ElementProps) {
+  const { accent } = props.element;
+  if (!accent) return <ElementBody {...props} />;
+
+  return (
+    <Accented accent={accent} {...props}>
+      <ElementBody {...props} />
+    </Accented>
+  );
+}
+
+function ElementBody(props: ElementProps) {
   const { element, theme, frame, surface } = props;
 
   switch (element.kind) {

@@ -88,11 +88,16 @@ export function BurstSparklesDemo({ look, width, height }: DemoProps) {
         <div style={pillStyle(width, palette.accent, palette.surface)}>Saymo</div>
       </Popped>
       <Burst
-        at={{ x: center.x + width * 0.27, y: center.y - height * 0.04 }}
+        around={{
+          x: center.x + width * 0.245,
+          y: center.y - height * 0.04 - width * 0.025,
+          w: width * 0.05,
+          h: width * 0.05,
+        }}
         atMs={500}
-        size={width * 0.16}
         tempo={tempo}
         color={palette.ink}
+        widthPx={width * 0.0056}
       />
       <Sparkles points={sparkles} atMs={600} size={width * 0.06} tempo={tempo} color={palette.highlight} />
     </div>

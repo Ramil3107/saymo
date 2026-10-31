@@ -42,6 +42,7 @@
           "kind": "headline",
           "text": "Raw clips in",
           "sub": "a finished reel out",
+          "accent": "focus",
           "atMs": 0,
           "durationMs": 2600
         }
@@ -55,9 +56,24 @@
       "transition": "whip",
       "overlays": [
         { "id": "o1", "kind": "chip", "text": "Captions", "badge": "01", "atMs": 0, "durationMs": 3000 },
-        { "id": "o2", "kind": "chip", "text": "Motion", "badge": "02", "atMs": 250, "durationMs": 2750 },
+        {
+          "id": "o2",
+          "kind": "chip",
+          "text": "Motion",
+          "badge": "02",
+          "accent": "frame",
+          "atMs": 250,
+          "durationMs": 2750
+        },
         { "id": "o3", "kind": "chip", "text": "Music", "badge": "03", "atMs": 500, "durationMs": 2500 },
-        { "id": "o4", "kind": "sticker", "text": "New", "atMs": 900, "durationMs": 2100 }
+        {
+          "id": "o4",
+          "kind": "sticker",
+          "text": "New",
+          "accent": "celebrate",
+          "atMs": 900,
+          "durationMs": 2100
+        }
       ]
     },
     {
@@ -72,6 +88,7 @@
           "kind": "big-number",
           "text": "2 min",
           "sub": "from upload to reel",
+          "accent": "stress",
           "atMs": 0,
           "durationMs": 2600
         }
@@ -139,6 +156,7 @@
         {
           "id": "o1",
           "kind": "counter",
+          "accent": "celebrate",
           "text": "0",
           "value": 0,
           "prefix": "$",

@@ -28,6 +28,7 @@ const rules = [
   "- style is the one of the styles that fits the brand, the content and the register; captions.style, every beat's transition and every title entrance come from that style's lists.",
   "- title lines are short, one or two words each and three lines at most, so the title can be set large; a longer thought goes to a headline or to the captions.",
   "- a beat's transition is how it enters: cut inside a continuous talk; the style's other transitions at section changes and reveals, two to five per minute, never on every beat.",
+  "- an accent marks the one overlay of a beat that carries its point, once it has settled: celebrate for a win, a result or something new, frame to single out one item among several, focus for the key phrase, stress for the word or number the message turns on. The style draws it. One accent per beat at most, two to six per minute, on a title, headline, counter, big-number, chip, sticker or lower-third, and on an overlay that stays at least two seconds.",
   "- return only the plan object that matches the schema.",
 ];
 
@@ -80,7 +81,8 @@ function destinationTable(): string {
 function styleTable(): string {
   return Object.entries(styles)
     .map(([id, style]) => {
-      const lists = `captions ${style.captions.join(", ")}; transitions ${style.transitions.join(", ")}; title entrances ${style.titleEntrances.join(", ")}`;
+      const accents = Object.entries(style.accents).map(([accent, mark]) => `${accent} as ${mark}`);
+      const lists = `captions ${style.captions.join(", ")}; transitions ${style.transitions.join(", ")}; title entrances ${style.titleEntrances.join(", ")}; accents ${accents.join(", ")}`;
       return `${id}: ${style.summary} Uses ${lists}.`;
     })
     .join("\n");

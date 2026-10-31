@@ -25,7 +25,7 @@
           "text": "Reports, now in PDF",
           "atMs": 0,
           "durationMs": 2000,
-          "emphasis": "marker"
+          "accent": "stress"
         }
       ],
       "voiceText": "Reports, now in PDF."
@@ -50,7 +50,7 @@
           "sub": "faster",
           "atMs": 3000,
           "durationMs": 5500,
-          "emphasis": "pulse"
+          "accent": "celebrate"
         }
       ],
       "voiceText": "Reports now export to PDF in one click. No more copying tables by hand, and it takes a third of the time."

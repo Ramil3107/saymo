@@ -40,42 +40,17 @@ export function TitleElement({ element, theme, frame, surface }: KineticProps<"t
   );
 }
 
-// A headline is a title the director wrote as one sentence: the sentence is the main line and the sub an accent line.
 export function HeadlineElement({ element, theme, frame, surface }: KineticProps<"headline">) {
-  const main: TitleLine = {
-    text: element.text,
-    size: wordCount(element.text) > shortLineWords ? "m" : "l",
-    tone: "ink",
-    align: "center",
-  };
-  const sub: TitleLine[] = element.sub
-    ? [{ text: element.sub, size: "s", tone: "accent", align: "center" }]
-    : [];
-  const title: ElementOf<"title"> = {
-    ...element,
-    kind: "title",
-    lines: [main, ...sub],
-    entrance: theme.kit.style.titleEntrances[0] ?? "rise",
-  };
-
+  const title = headlineAsTitle(element, theme.kit);
   return <TitleElement element={title} theme={theme} frame={frame} surface={surface} />;
 }
 
-// A big number counts up when its value starts with a number; otherwise it is set as a headline.
 export function BigNumberElement({ element, theme, frame, surface }: KineticProps<"big-number">) {
-  const number = parseNumber(element.value);
-  if (!number) {
-    const headline: ElementOf<"headline"> = {
-      ...element,
-      kind: "headline",
-      text: element.value,
-      sub: element.label,
-    };
-    return <HeadlineElement element={headline} theme={theme} frame={frame} surface={surface} />;
-  }
+  const shown = bigNumberAs(element);
+  if (shown.kind === "headline")
+    return <HeadlineElement element={shown} theme={theme} frame={frame} surface={surface} />;
 
-  const counter: ElementOf<"counter"> = { ...element, kind: "counter", ...number, label: element.label };
-  return <CounterElement element={counter} theme={theme} frame={frame} surface={surface} />;
+  return <CounterElement element={shown} theme={theme} frame={frame} surface={surface} />;
 }
 
 export function CounterElement({ element, theme, frame, surface }: KineticProps<"counter">) {
@@ -92,7 +67,7 @@ export function CounterElement({ element, theme, frame, surface }: KineticProps<
         prefix={element.prefix}
         suffix={element.suffix ? casedText(kit, element.suffix) : undefined}
         label={element.label}
-        ghost={kit.style.accents.includes("burst")}
+        ghost={kit.style.flourishes.includes("ghost-numbers")}
         atMs={element.enterMs}
         exit={exitOf(element, kit)}
         width={element.box.w * frame.width}
@@ -112,7 +87,7 @@ export function CornerElement({ element, theme, frame, surface }: KineticProps<"
         font={kit.display}
         text={element.text}
         corner={element.box.x + element.box.w / 2 < 0.5 ? "top-left" : "top-right"}
-        chevrons={kit.style.accents.includes("chevrons")}
+        chevrons={kit.style.flourishes.includes("chevrons")}
         atMs={element.enterMs}
         exit={exitOf(element, kit)}
         width={element.box.w * frame.width}
@@ -121,6 +96,44 @@ export function CornerElement({ element, theme, frame, surface }: KineticProps<"
       />
     </div>
   );
+}
+
+// A headline is a title the director wrote as one sentence: the sentence is the main line and the sub an accent line.
+export function headlineAsTitle(element: ElementOf<"headline">, kit: StyleKit): ElementOf<"title"> {
+  const main: TitleLine = {
+    text: element.text,
+    size: wordCount(element.text) > shortLineWords ? "m" : "l",
+    tone: "ink",
+    align: "center",
+  };
+  const sub: TitleLine[] = element.sub
+    ? [{ text: element.sub, size: "s", tone: "accent", align: "center" }]
+    : [];
+
+  return {
+    ...element,
+    kind: "title",
+    lines: [main, ...sub],
+    entrance: kit.style.titleEntrances[0] ?? "rise",
+  };
+}
+
+// A big number counts up when its value starts with a number; otherwise it is set as a headline.
+export function bigNumberAs(element: ElementOf<"big-number">): ElementOf<"counter"> | ElementOf<"headline"> {
+  const number = parseNumber(element.value);
+  if (!number) return { ...element, kind: "headline", text: element.value, sub: element.label };
+
+  return { ...element, kind: "counter", ...number, label: element.label };
+}
+
+export function parseNumber(value: string): { value: number; prefix?: string; suffix?: string } | null {
+  const match = /^([^\d-]*)(-?\d+(?:[.,]\d+)?)(.*)$/.exec(value.trim());
+  if (!match) return null;
+
+  const number = Number.parseFloat((match[2] ?? "").replace(",", "."));
+  if (!Number.isFinite(number)) return null;
+
+  return { value: number, prefix: match[1] || undefined, suffix: match[3]?.trim() || undefined };
 }
 
 function boxStyle(box: { x: number; y: number; w: number; h: number }, frame: Frame): CSSProperties {
@@ -155,14 +168,4 @@ function casedText(kit: StyleKit, text: string): string {
 
 function wordCount(text: string): number {
   return text.split(/\s+/).filter(Boolean).length;
-}
-
-export function parseNumber(value: string): { value: number; prefix?: string; suffix?: string } | null {
-  const match = /^([^\d-]*)(-?\d+(?:[.,]\d+)?)(.*)$/.exec(value.trim());
-  if (!match) return null;
-
-  const number = Number.parseFloat((match[2] ?? "").replace(",", "."));
-  if (!Number.isFinite(number)) return null;
-
-  return { value: number, prefix: match[1] || undefined, suffix: match[3]?.trim() || undefined };
 }

@@ -4,6 +4,12 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-10-31 · An accent is an intent, and the style draws it
+
+- **Decided:** an overlay, and its element, carries an optional `accent` from four intents: `celebrate`, `frame`, `focus` and `stress`. The director picks the intent; the style decides the mark (`bold-pop`: burst, growing frame, brackets, flash blocks; `clean-paper`: sparkles, selection box, circle, underline). The mark is drawn around the text the element shows, measured on the page each frame. It replaces `emphasis` (`marker`, `underline`, `pulse`), which nothing drew. This is the lead's call.
+- **Why:** the style owns the look, so a plan moved to another style keeps its accents and they always fit the look; the director thinks in what to point at, not in shapes. Measuring the text on the page puts the mark on the words, not on the slot the layout reserved, which is often much wider.
+- **Rejected:** the director naming the shape (a burst in a calm style, and restyling a plan would need a mapping); marks drawn around the element's box (a circle around a wide empty slot); computing text extents per element kind (a second copy of each kind's layout to keep in step).
+
 ### 2026-10-30 · The style owns the look and the tempo, the register keeps the pacing
 
 - **Decided:** a video has a style (`bold-pop` or `clean-paper` for now) that sets the display face, the tones, the textures, the tempo and the caption presets, transitions, title entrances and accents it draws from; the brand gives its colors. The register keeps the pacing (scene length, holds, density, music tempo) and picks a default style when the plan names none, so existing plans render as before. The director picks the style and each beat's transition; while a kinetic title is on screen the captions step aside. This is the lead's call.

@@ -24,7 +24,9 @@ export function Sticker({ element, theme, frame }: PrimitiveProps<"sticker">) {
       preset="pop"
       style={{ justifyContent: "center" }}
     >
-      <div style={stickerStyle(kit, fontSize, padding, height)}>{text}</div>
+      <div data-anchor style={stickerStyle(kit, fontSize, padding, height)}>
+        {text}
+      </div>
     </ElementBox>
   );
 }

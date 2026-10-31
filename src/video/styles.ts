@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { Exit } from "./motion/moves";
 import type { TempoId } from "./motion/tempo";
 import type { RegisterId } from "./registers";
-import type { CaptionStyle } from "./schema/plan";
+import type { Accent, CaptionStyle } from "./schema/plan";
 import type { Transition } from "./schema/video";
 import type { TitleEntrance } from "./type/schedule";
 
@@ -14,17 +14,17 @@ export type DisplayFont = "unbounded" | "inter";
 
 export type Texture = "blobs" | "grain" | "paper-grid" | "halftone";
 
-export type Accent =
-  | "chevrons"
-  | "flash-blocks"
+export type AccentMark =
+  | "burst"
   | "grow-frame"
   | "brackets"
-  | "burst"
+  | "flash-blocks"
   | "sparkles"
   | "selection"
-  | "arrow"
-  | "scribble"
-  | "cursor";
+  | "circle"
+  | "underline";
+
+export type Flourish = "chevrons" | "ghost-numbers" | "cursor";
 
 export type Tones = { background: string; ink: string; surface: string; muted: string; highlight: string };
 
@@ -32,7 +32,7 @@ export type Style = {
   name: string;
   summary: string;
   tempo: TempoId;
-  display: { font: DisplayFont; weight: number; upper: boolean };
+  display: { font: DisplayFont; weight: number; upper: boolean; labelScale: number; widthScale: number };
   surfaces: { panel: "light" | "dark"; labels: "soft" | "block" };
   tones: Tones;
   textures: Texture[];
@@ -40,7 +40,8 @@ export type Style = {
   transitions: Transition[];
   titleEntrances: TitleEntrance[];
   exit: Exit;
-  accents: Accent[];
+  accents: Record<Accent, AccentMark>;
+  flourishes: Flourish[];
 };
 
 export const styles: Record<StyleId, Style> = {
@@ -49,7 +50,7 @@ export const styles: Record<StyleId, Style> = {
     summary:
       "Loud and fast, after Higgsfield: a squared display face in capitals on off-white with pastel color fields, the brand color as a hot accent and a bright highlight, flashes, whips and pixel breaks, chevrons and growing frames. Launches, sales, creators.",
     tempo: "snap",
-    display: { font: "unbounded", weight: 900, upper: true },
+    display: { font: "unbounded", weight: 900, upper: true, labelScale: 0.85, widthScale: 1.55 },
     surfaces: { panel: "dark", labels: "block" },
     tones: {
       background: "#F6F4EF",
@@ -63,14 +64,15 @@ export const styles: Record<StyleId, Style> = {
     transitions: ["flash", "whip", "pixelate", "zoom", "cut"],
     titleEntrances: ["type", "punch", "spread", "pop"],
     exit: "smear",
-    accents: ["chevrons", "flash-blocks", "grow-frame", "brackets", "burst"],
+    accents: { celebrate: "burst", frame: "grow-frame", focus: "brackets", stress: "flash-blocks" },
+    flourishes: ["chevrons", "ghost-numbers"],
   },
   "clean-paper": {
     name: "Clean paper",
     summary:
       "Calm and clear, after motionvid: a neutral sans in sentence case on warm paper with a faint grid, the brand color for keywords and buttons, typing with a caret, panel wipes and dips, sparkles, selection boxes and drawn arrows. Explainers, clinics, SaaS, local business.",
     tempo: "glide",
-    display: { font: "inter", weight: 800, upper: false },
+    display: { font: "inter", weight: 800, upper: false, labelScale: 1, widthScale: 1 },
     surfaces: { panel: "light", labels: "soft" },
     tones: {
       background: "#F3F1EC",
@@ -84,7 +86,8 @@ export const styles: Record<StyleId, Style> = {
     transitions: ["wipe", "dip", "zoom", "cut"],
     titleEntrances: ["rise", "type", "reveal"],
     exit: "fade",
-    accents: ["sparkles", "selection", "arrow", "scribble", "cursor"],
+    accents: { celebrate: "sparkles", frame: "selection", focus: "circle", stress: "underline" },
+    flourishes: ["cursor"],
   },
 };
 

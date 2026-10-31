@@ -4,14 +4,14 @@ import { RegisterIdSchema } from "../registers";
 import { StyleIdSchema } from "../styles";
 import { TitleEntranceSchema, TitleLineSchema } from "../type/schedule";
 import { BoxSchema } from "./content";
-import { CameraSchema, CaptionStyleSchema, TransitionSchema } from "./plan";
+import { AccentSchema, CameraSchema, CaptionStyleSchema, TransitionSchema } from "./plan";
 
 const ElementBaseSchema = z.object({
   id: z.string(),
   enterMs: z.number(),
   exitMs: z.number(),
   box: BoxSchema,
-  emphasis: z.enum(["marker", "underline", "pulse"]).optional(),
+  accent: AccentSchema.optional(),
 });
 
 export const ElementSchema = z.discriminatedUnion("kind", [

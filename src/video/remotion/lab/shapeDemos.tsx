@@ -99,11 +99,16 @@ export function MorphBurstDemo({ look, width }: DemoProps) {
             <span style={{ fontSize: width * 0.09, fontWeight: 900, color: palette.surface }}>Saymo</span>
           </div>
           <Burst
-            at={{ x: boxWidthOf(width, shrunk, widened), y: 0 }}
+            around={{
+              x: boxWidthOf(width, shrunk, widened) - width * 0.024,
+              y: -width * 0.024,
+              w: width * 0.048,
+              h: width * 0.048,
+            }}
             atMs={widenAtMs + tempo.moveMs}
-            size={width * 0.15}
             tempo={tempo}
             color={palette.ink}
+            widthPx={width * 0.0053}
           />
         </div>
       </Move>

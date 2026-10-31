@@ -1,10 +1,12 @@
 import { expect, test } from "vitest";
 import { OverlaySchema } from "../../schema/plan";
-import { chipLines, chipSize } from "../chipSize";
+import { chipLines, chipSize, type LabelFace } from "../chipSize";
+
+const plain: LabelFace = { labelScale: 1, widthScale: 1 };
 
 test("chipSize grows with the text and wraps long text onto a second line", () => {
-  const short = chipSize("нудота", undefined, "9:16");
-  const long = chipSize("порушення випорожнень шлунку", undefined, "9:16");
+  const short = chipSize("нудота", undefined, "9:16", plain);
+  const long = chipSize("порушення випорожнень шлунку", undefined, "9:16", plain);
 
   expect(long.w).toBeGreaterThan(short.w);
   expect(long.h).toBeCloseTo(short.h * 2 - short.h * 0.35, 1);
@@ -12,7 +14,19 @@ test("chipSize grows with the text and wraps long text onto a second line", () =
 });
 
 test("chipSize leaves room for a badge", () => {
-  expect(chipSize("залізо", "Fe", "9:16").w).toBeGreaterThan(chipSize("залізо", undefined, "9:16").w);
+  expect(chipSize("залізо", "Fe", "9:16", plain).w).toBeGreaterThan(
+    chipSize("залізо", undefined, "9:16", plain).w,
+  );
+});
+
+test("chipSize widens a chip for a wider display face and shrinks it for a smaller label", () => {
+  const base = chipSize("Motion", undefined, "9:16", plain);
+  const wide = chipSize("Motion", undefined, "9:16", { labelScale: 1, widthScale: 1.55 });
+  const small = chipSize("Motion", undefined, "9:16", { labelScale: 0.85, widthScale: 1 });
+
+  expect(wide.w).toBeGreaterThan(base.w * 1.3);
+  expect(wide.h).toBe(base.h);
+  expect(small.h).toBeLessThan(base.h);
 });
 
 test("an overlay may carry a badge", () => {

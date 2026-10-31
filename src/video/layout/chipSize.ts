@@ -4,6 +4,9 @@ import { estimateTextWidth } from "./textWidth";
 
 type Size = { w: number; h: number };
 
+// A display face as labels see it: labelScale sizes the text, widthScale is its width over the estimate.
+export type LabelFace = { labelScale: number; widthScale: number };
+
 export const chipFontShare = 0.021;
 export const chipLineHeight = 1.12;
 export const chipMaxLines = 2;
@@ -14,11 +17,11 @@ const badgeShare = 1.5;
 const badgeGapShare = 0.4;
 const maxLineShare = 0.3;
 
-// A chip is as wide as its text; long text wraps onto a second line. Sizes are frame fractions.
-export function chipSize(text: string, badge: string | undefined, format: Format): Size {
+// A chip is as wide as its text in the style's face; long text wraps onto a second line. Sizes are frame fractions.
+export function chipSize(text: string, badge: string | undefined, format: Format, face: LabelFace): Size {
   const { width, height } = formatSize(format);
-  const fontPx = height * chipFontShare;
-  const textPx = estimateTextWidth(text, fontPx);
+  const fontPx = height * chipFontShare * face.labelScale;
+  const textPx = estimateTextWidth(text, fontPx) * face.widthScale;
   const maxLinePx = width * maxLineShare;
   const lines = Math.min(chipMaxLines, Math.ceil(textPx / maxLinePx));
   const linePx = lines > 1 ? maxLinePx : textPx;

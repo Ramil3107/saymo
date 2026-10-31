@@ -47,7 +47,7 @@ Fields of a scene:
 
 ## Elements
 
-An element is one of eleven kinds, picked by `kind`. Every element has an `id`, `enterMs` and `exitMs` (counted from the start of its scene), a `box` and an optional `emphasis` (`marker`, `underline` or `pulse`). The `box` is a rectangle `x`, `y`, `w`, `h` in fractions of the frame, from 0 to 1. On top of that:
+An element is one of eleven kinds, picked by `kind`. Every element has an `id`, `enterMs` and `exitMs` (counted from the start of its scene), a `box` and an optional `accent`: what the mark around the element says, `celebrate`, `frame`, `focus` or `stress`, drawn by the style (see [Vocabulary](/vocabulary#accents-in-the-document)). The `box` is a rectangle `x`, `y`, `w`, `h` in fractions of the frame, from 0 to 1. On top of that:
 
 - `headline`: `text` and an optional `sub`;
 - `chip`: `text`;

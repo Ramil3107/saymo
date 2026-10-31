@@ -52,4 +52,5 @@ test("the system prompt lists every style with its captions and transitions", ()
   expect(prompt).toContain("clean-paper:");
   expect(prompt).toContain("transitions wipe, dip, zoom, cut");
   expect(prompt).toContain("counter (value is the number");
+  expect(prompt).toContain("accents celebrate as sparkles, frame as selection");
 });

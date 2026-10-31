@@ -42,6 +42,11 @@ export const TransitionSchema = z.enum(["cut", "flash", "wipe", "whip", "zoom", 
 
 export type Transition = z.infer<typeof TransitionSchema>;
 
+// What an accent says about its element; the style decides how it is drawn.
+export const AccentSchema = z.enum(["celebrate", "frame", "focus", "stress"]);
+
+export type Accent = z.infer<typeof AccentSchema>;
+
 export const OverlaySchema = z.object({
   id: z.string(),
   kind: OverlayKindSchema,
@@ -56,7 +61,7 @@ export const OverlaySchema = z.object({
   suffix: z.string().optional(),
   atMs: z.number(),
   durationMs: z.number(),
-  emphasis: z.enum(["marker", "underline", "pulse"]).optional(),
+  accent: AccentSchema.optional(),
 });
 
 export type Overlay = z.infer<typeof OverlaySchema>;

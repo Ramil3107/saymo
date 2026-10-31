@@ -4,6 +4,7 @@ import type { OverlayKind } from "../schema/plan";
 import { boxesOverlap, round6 } from "./geometry";
 import { overlapRatio } from "./keepOut";
 
+export type Avoid = { soft: Box[]; hard: Box[] };
 type Horizontal = "left" | "center" | "right";
 type Vertical = "top" | "middle" | "bottom";
 type Slot = [Horizontal, Vertical];
@@ -96,21 +97,26 @@ const scanEpsilon = 1e-9;
 const captionBottomGap = 0.02;
 const captionBandHeight = 0.1;
 
+// Soft zones (faces) are avoided when a spot allows; hard zones (captions, placed elements) are covered only
+// when every spot covers them.
 export function placeOverlay(
   kind: OverlayKind,
   _format: Format,
   safeZone: SafeZone,
-  avoid: Box[],
+  avoid: Avoid,
   measured?: Size,
 ): Box {
   const inner = innerArea(safeZone);
   const size = measured ?? overlaySize(kind, inner);
-  const candidates = [...preferredSlots(kind, inner, size), ...scannedSlots(kind, inner, size)];
+  const slots = [...preferredSlots(kind, inner, size), ...scannedSlots(kind, inner, size)];
+  const clear = slots.filter((box) => !avoid.hard.some((zone) => boxesOverlap(box, zone)));
+  const candidates = clear.length > 0 ? clear : slots;
+  const zones = [...avoid.soft, ...avoid.hard];
 
-  const free = candidates.find((box) => !avoid.some((zone) => boxesOverlap(box, zone)));
+  const free = candidates.find((box) => !zones.some((zone) => boxesOverlap(box, zone)));
   if (free) return free;
 
-  return leastCovered(candidates, avoid);
+  return leastCovered(candidates, zones);
 }
 
 // Centered on the frame: the wider side margin is used on both sides.

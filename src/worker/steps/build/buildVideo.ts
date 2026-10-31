@@ -31,7 +31,7 @@ import {
   type VideoDoc,
   VideoDocSchema,
 } from "../../../video/schema/video";
-import { defaultStyle } from "../../../video/styles";
+import { defaultStyle, type StyleId, styles } from "../../../video/styles";
 import type { TitleLine } from "../../../video/type/schedule";
 
 export const SpokenBeatSchema = z.object({
@@ -81,6 +81,7 @@ type SceneContext = {
   captionsOn: boolean;
   captionStyle: Plan["captions"]["style"];
   spoken: SpokenBeat | undefined;
+  style: StyleId;
 };
 
 type BuiltScene = {
@@ -114,6 +115,7 @@ export function buildVideo(
   const target = formatSize(destination.format);
   const source = assets.sourceVideo ? sizeOf(assets.sourceVideo.info) : undefined;
   const spokenByBeat = new Map((assets.voice ?? []).map((spoken) => [spoken.beatId, spoken]));
+  const style = plan.style ?? defaultStyle[plan.register];
 
   const slots = timeline(plan, assets.voice);
   const built = slots.map((slot) =>
@@ -125,6 +127,7 @@ export function buildVideo(
       captionsOn: plan.captions.enabled,
       captionStyle: plan.captions.style,
       spoken: spokenByBeat.get(slot.beat.id),
+      style,
     }),
   );
 
@@ -145,7 +148,7 @@ export function buildVideo(
     durationMs: slots.reduce((sum, slot) => sum + slot.durationMs, 0),
     destination: plan.destination,
     register: plan.register,
-    style: plan.style ?? defaultStyle[plan.register],
+    style,
     brand,
     assets: documentAssets(assets),
     scenes: built.map((scene) => scene.scene),
@@ -361,13 +364,14 @@ function placeElement(
     window: beatWindow(beat),
   });
   const band = context.captionsOn ? [captionBand(destination.safeZone)] : [];
+  const face = styles[context.style].display;
   const measured =
-    overlay.kind === "chip" ? chipSize(overlay.text, overlay.badge, destination.format) : undefined;
+    overlay.kind === "chip" ? chipSize(overlay.text, overlay.badge, destination.format, face) : undefined;
   const box = placeOverlay(
     overlay.kind,
     destination.format,
     destination.safeZone,
-    [...zones, ...band, ...taken],
+    { soft: zones, hard: [...band, ...taken] },
     measured,
   );
   if (overlapRatio(box, zones) > keepOutErrorShare) return undefined;
@@ -410,7 +414,7 @@ function elementFrom(beat: Beat, overlay: Overlay, box: Box, sceneDurationMs: nu
     id: `${beat.id}-${overlay.id}`,
     ...elementTiming(overlay, sceneDurationMs),
     box,
-    emphasis: overlay.emphasis,
+    accent: overlay.accent,
   };
 
   switch (overlay.kind) {

@@ -91,7 +91,7 @@ function TitleRow(props: RowProps) {
         textShadow: colors.shadow,
       }}
     >
-      <span style={markerStyle(colors.marker, marked)}>
+      <span data-anchor style={markerStyle(colors.marker, marked)}>
         <RowBody {...props} />
       </span>
     </div>

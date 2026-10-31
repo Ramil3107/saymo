@@ -94,7 +94,11 @@ function CounterNumber(props: Props & { prefix: string; suffix: string; value: n
         current={`${prefix}${numberFormat.format(value)}`}
         style={{ fontSize, color: colors.accent, lineHeight: 1, textShadow: colors.shadow }}
       />
-      {suffix ? <span style={suffixStyle}>{suffix.trim()}</span> : null}
+      {suffix ? (
+        <span data-anchor style={suffixStyle}>
+          {suffix.trim()}
+        </span>
+      ) : null}
     </Move>
   );
 }
@@ -105,6 +109,7 @@ function Label(props: Props & { text: string }) {
   return (
     <Move spec={{ enter: "cut", atMs, exit }} tempo={tempo} unitPx={width}>
       <div
+        data-anchor
         style={{
           fontSize: width * labelShare,
           color: colors.ink,
@@ -120,7 +125,7 @@ function Label(props: Props & { text: string }) {
 
 function Stable({ final, current, style }: { final: string; current: string; style: CSSProperties }) {
   return (
-    <span style={{ ...style, position: "relative", display: "inline-block", whiteSpace: "pre" }}>
+    <span data-anchor style={{ ...style, position: "relative", display: "inline-block", whiteSpace: "pre" }}>
       <span style={{ visibility: "hidden" }}>{final}</span>
       <span style={{ position: "absolute", inset: 0, textAlign: "center" }}>{current}</span>
     </span>

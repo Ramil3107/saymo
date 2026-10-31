@@ -13,7 +13,7 @@ The vocabulary is a set of React components on Remotion that take their paramete
 | Text | headline, subheading, big number with a counter, quote, lower third, chip (paper pill sized to its text, optional badge such as Fe or 01, pops in with a blur and floats), sticker, title-card (section label and a big title on a dark panel), list (title and numbered items on a dark side panel) |
 | Captions | thirteen presets built from one caption look, see [Captions](#captions) |
 | Enters and exits | fade, slide, mask, by word, by letter, typewriter |
-| Accents | marker, underline, ring, pulse, shake, flash |
+| Accents | celebrate, frame, focus, stress: four intents the style draws around an element, see [Accents in the document](#accents-in-the-document) |
 | Transitions | cut, fade, slide, wipe, push |
 | Backgrounds | color, gradient, brand, blurred footage |
 | Audio | music ducked under the voice, voice, loudness normalization |
@@ -57,7 +57,7 @@ The style of a video sets its tempo: `bold-pop` moves in `snap` and `clean-paper
 
 - `GrowFrame`: a frame grows from a point to the edges, thick at first, and the shot flashes the frame's color (Higgsfield).
 - `FlashBlocks`: color blocks over a collage, two frames each in `snap`, wiped in and out in `glide`.
-- `Burst` and `Sparkles`: radial lines that fly apart, four-point stars that pop in one by one and keep twinkling.
+- `Burst` and `Sparkles`: rays that fly out from an ellipse around a rect and shrink as they go, four-point stars that pop in one by one and keep twinkling.
 - `DrawnArrow`: a curved stroke drawn from tail to tip, its head opening when it arrives.
 - `SelectionBox`: a design-tool selection drawn around a tag, corner handles popping in one by one (motionvid).
 - `Scribble`: a hand-drawn circle that overshoots its start, or a wavy underline.
@@ -67,6 +67,19 @@ The style of a video sets its tempo: `bold-pop` moves in `snap` and `clean-paper
 - Textures: `Grain` (film grain with a new seed every frame), `PaperGrid` (a faint grid with a vignette), `Halftone` (dots fading across the picture), `Blobs` (soft color fields drifting behind the content).
 
 `pnpm remotion:lab` also renders `runs/lab/accent-lab.mp4`, nine demos over a still of `runs/face-v2` that `src/cli/labAssets.ts` prepares in `runs/lab/public`.
+
+### Accents in the document
+
+An overlay in the plan, and its element in the document, can carry an `accent`: what the mark says about it, not how it looks. The style draws it:
+
+| Accent | Says | `bold-pop` | `clean-paper` |
+| --- | --- | --- | --- |
+| `celebrate` | a win, a result, something new | a burst | sparkles |
+| `frame` | this one among several | a growing frame | a selection box |
+| `focus` | the key phrase | viewfinder brackets | a hand-drawn circle |
+| `stress` | the word or number the message turns on | flash blocks behind the text | a hand-drawn underline |
+
+`Accented` in `src/video/remotion/accents/ElementAccent.tsx` wraps the element and measures the text it shows on the page: titles mark their rows, counters their number, unit and label, chips, stickers and lower thirds their label, each with `data-anchor`. The mark is drawn around those boxes every frame, so it follows wrapping, fitted sizes and a floating chip, and flash blocks go behind the text. It starts once the element has settled (a title's entrance has ended, a counter has landed, a label has popped in) and fades as the element starts to leave. Over footage it takes the highlight, on the backdrop the accent color. Quotes, title cards, lists and corner labels take no accent. The director puts at most one accent on a beat, two to six a minute.
 
 ## Media
 
@@ -98,14 +111,14 @@ The build writes the transition each beat names, `cut` by default. `pnpm remotio
 
 ## Styles
 
-A style is the look of a whole video, kept as data in `src/video/styles.ts`: a name and a summary for the director, a tempo, the display face and its case, the tones (background, ink, surface, muted and a default highlight), the textures, and the caption presets, transitions, title entrances and accents it draws from. The register keeps the pacing (scene length, holds, density); the style decides how it looks.
+A style is the look of a whole video, kept as data in `src/video/styles.ts`: a name and a summary for the director, a tempo, the display face and its case, the tones (background, ink, surface, muted and a default highlight), the textures, and the caption presets, transitions and title entrances it draws from, how it draws each accent, and its flourishes (corner chevrons and ghost numbers in `bold-pop`, a cursor in `clean-paper`). The register keeps the pacing (scene length, holds, density); the style decides how it looks.
 
-- `bold-pop`, after Higgsfield: Unbounded in capitals on off-white with drifting color fields and grain, `snap`; captions `bold-center`, `keyword-box`, `pop`, `outline`; transitions flash, whip, pixelate, zoom; titles typed, punched, tracked in or popped; chevrons, flash blocks, growing frames, brackets, bursts.
-- `clean-paper`, after motionvid: Inter in sentence case on warm paper with a faint grid, `glide`; captions `keyword-box`, `karaoke-pill`, `marker`, `typewriter`, `minimal`; transitions wipe, dip, zoom; titles rising, typed or revealed; sparkles, selection boxes, drawn arrows, scribbles, a cursor.
+- `bold-pop`, after Higgsfield: Unbounded in capitals on off-white with drifting color fields and grain, `snap`; captions `bold-center`, `keyword-box`, `pop`, `outline`; transitions flash, whip, pixelate, zoom; titles typed, punched, tracked in or popped; accents as bursts, growing frames, brackets and flash blocks.
+- `clean-paper`, after motionvid: Inter in sentence case on warm paper with a faint grid, `glide`; captions `keyword-box`, `karaoke-pill`, `marker`, `typewriter`, `minimal`; transitions wipe, dip, zoom; titles rising, typed or revealed; accents as sparkles, selection boxes, circles and underlines.
 
 The brand gives the colors (`src/video/style/palette.ts`): the first brand color that is not near white becomes the accent, darkened until it reads at 3:1 on the background; a light brand color becomes the highlight, or the style's own; another dark brand color, or a deeper accent, becomes the second tone. `styleKit` in `src/video/remotion/style` folds the style, the brand palette, the display face and the brand's text face together, and `Backdrop` draws the background with the style's textures.
 
-Every document element draws in the style. A style's surfaces decide the rest: `bold-pop` has dark panels and block labels (flat highlight slabs in the display face, capitals, a hard offset shadow), `clean-paper` has light panels and soft labels (white pills with a soft shadow and an accent badge). Chips, stickers and lower thirds are labels; title cards and lists sit on panels; quotes and kinetic text are white with a shadow over footage and ink on the backdrop; a headline is drawn as a kinetic title and a big number as a counter when it starts with a number; a document shown in a card sits on the style's backdrop; wipes and dips take their colors from the style. Labels shrink to fit their box in the display face, which can be much wider than the face the layout estimated with.
+Every document element draws in the style. A style's surfaces decide the rest: `bold-pop` has dark panels and block labels (flat highlight slabs in the display face, capitals, a hard offset shadow), `clean-paper` has light panels and soft labels (white pills with a soft shadow and an accent badge). Chips, stickers and lower thirds are labels; title cards and lists sit on panels; quotes and kinetic text are white with a shadow over footage and ink on the backdrop; a headline is drawn as a kinetic title and a big number as a counter when it starts with a number; a document shown in a card sits on the style's backdrop; wipes and dips take their colors from the style. The layout sizes a chip for the style's face: `display.labelScale` sets its text size and `display.widthScale` how much wider the face runs than the layout's estimate, measured in the renderer (Unbounded capitals up to 1.55 times, drawn at 0.85 of the size since capitals read larger; Inter about 1). A label still shrinks to fit its box if a line runs long.
 
 `pnpm render:plan fixtures/plan.vocabulary.json --out runs/vocab-bold --style bold-pop` builds a text-mode plan that holds every element kind, checks it and renders it locally; `--style` moves any plan to another style. `pnpm remotion:styles` renders a 14-second spot in both styles side by side with the brand colors of `runs/face-v2`: a hook, a counter, a collage with a tag, the footage with the style's captions, a call to action, joined by the style's transitions. Since step 7 the plan and the document carry a `style`; the director picks it from the summaries above, and every beat names the transition it enters by.
 
@@ -185,7 +198,7 @@ Each step ends with a render the owner reviews.
 4. Media: photo collage, a thumbnail that becomes a player, a grid that lights the cell being named, UI cards with a camera into a detail, flipping states, cut-out figures (background removal). Built on 2026-10-30 with a burst of shots and a phone frame, except the cut-out figures.
 5. Transitions: cut, flash cut, panel wipe, perspective push, zoom into a detail, mosaic resolve, dissolve. Built on 2026-10-30 as cut, flash, wipe, whip, zoom, pixelate and dip; a dissolve would need scenes to overlap and is left out.
 6. Styles: one like Higgsfield and one like motionvid first, each with its own cadence, curves and accent budget. Built on 2026-10-30 as `bold-pop` and `clean-paper`, with the palette taken from the brand.
-7. The director and the build use them on `runs/face-v2` and on a text-mode ad, compared with the reference clips. Built on 2026-10-30 for styles, transitions, titles, counters and corner labels, checked on `runs/face-v2` with a hand-written plan; accents and media in the document, and a text-mode ad, are next.
+7. The director and the build use them on `runs/face-v2` and on a text-mode ad, compared with the reference clips. Built on 2026-10-30 for styles, transitions, titles, counters and corner labels, checked on `runs/face-v2` with a hand-written plan; accents in the document built on 2026-10-31; media in the document and a text-mode ad are next.
 8. The sound-effect layer, synced to the moves.
 
 ### Gaps noted after the design spike

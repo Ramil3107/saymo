@@ -432,3 +432,24 @@ test("buildVideo starts no caption page while a title is on screen", () => {
   expect(titled?.elements[0]?.kind).toBe("title");
   expect(inside).toEqual([]);
 });
+
+test("buildVideo carries an overlay's accent onto its element", () => {
+  const doc = buildVideo(textPlan, null, {}, brand);
+  const accents = doc.scenes.flatMap((scene) => scene.elements.map((element) => element.accent));
+
+  expect(accents).toContain("stress");
+  expect(accents).toContain("celebrate");
+});
+
+test("buildVideo sizes chips for the style's display face", () => {
+  const chip = { id: "c", kind: "chip", text: "Free shipping", atMs: 0, durationMs: 2000 };
+  const first = textPlanJson.beats[0];
+  if (!first) throw new Error("The text plan has no beats");
+  const beats = [{ ...first, overlays: [chip] }, ...textPlanJson.beats.slice(1)];
+  const widthIn = (style: string) => {
+    const doc = buildVideo(PlanSchema.parse({ ...textPlanJson, style, beats }), null, {}, brand);
+    return doc.scenes[0]?.elements[0]?.box.w ?? 0;
+  };
+
+  expect(widthIn("bold-pop")).toBeGreaterThan(widthIn("clean-paper"));
+});

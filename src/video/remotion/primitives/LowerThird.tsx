@@ -25,7 +25,9 @@ export function LowerThird({ element, theme, frame }: PrimitiveProps<"lower-thir
       frame={frame}
       style={{ flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-end" }}
     >
-      <div style={{ ...nameStyle(kit, nameSize, padding), ...accentBar(kit, height) }}>{name}</div>
+      <div data-anchor style={{ ...nameStyle(kit, nameSize, padding), ...accentBar(kit, height) }}>
+        {name}
+      </div>
       {element.role ? <div style={roleStyle(kit, nameSize, padding)}>{element.role}</div> : null}
     </ElementBox>
   );

@@ -11,7 +11,7 @@ const paddingShare = 0.7;
 
 export function Chip({ element, theme, frame }: PrimitiveProps<"chip">) {
   const { kit } = theme;
-  const baseSize = frame.height * chipFontShare;
+  const baseSize = frame.height * chipFontShare * kit.style.display.labelScale;
   const multiline = chipLines(element.box.h * frame.height, baseSize) > 1;
   const text = labelText(kit, element.text);
   const badgeRoom = element.badge ? baseSize * (badgeShare + badgeGapShare) : 0;
@@ -21,7 +21,7 @@ export function Chip({ element, theme, frame }: PrimitiveProps<"chip">) {
 
   return (
     <ElementBox element={element} theme={theme} frame={frame} preset="pop">
-      <div style={chipStyle(kit, fontSize, multiline, Boolean(element.badge))}>
+      <div data-anchor style={chipStyle(kit, fontSize, multiline, Boolean(element.badge))}>
         {element.badge ? <Badge text={element.badge} fontSize={fontSize} kit={kit} /> : null}
         <div
           style={{
