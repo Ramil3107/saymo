@@ -26,6 +26,7 @@ export default withMermaid(
         { text: "Vocabulary", link: "/vocabulary" },
         { text: "Decisions", link: "/product/decisions" },
         { text: "Learnings", link: "/learnings" },
+        { text: "Handoff", link: "/handoff" },
         {
           text: "Runbooks",
           items: [

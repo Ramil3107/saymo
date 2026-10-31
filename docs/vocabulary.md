@@ -218,3 +218,23 @@ Most of them fold into the steps above:
 - Caption styles beyond the rail: a line-level box, and the owner's note that word-per-box looks odd.
 
 Each step is checked on the same run: delete `video.json`, `qa.json`, `render.json` and `out.mp4` in `runs/face-v2`, then `pnpm spike runs/inputs/face.mp4 --run face-v2 --resume --render local`, and compare it with the reference clips.
+
+### Variety across videos
+
+The owner's verdict on the final runs of 2026-10-31: each video works, but they all look alike, and a user would see the template after about eleven of them. The library needs many more elements, animations and techniques. The NASA explainer held up best, because its footage brings the variety; the text-only ads, where the frame is only our graphics, show the sameness most.
+
+A contact sheet of one frame per beat of the four text-only ads (`runs/final/text-contact-sheet.jpg`, 22 frames) shows where it comes from:
+
+- Color: the same blue accent in every video, since none had a brand and the default palette applied.
+- Composition: small type centered in the middle third, about two thirds of every frame empty.
+- Background: two in all, one per style.
+- Elements: titles and chips make 42 of the 58 overlays.
+- Motion: plain cuts join 29 of the 47 beats, and the camera never moves on the backdrop.
+
+Three ways to start, the choice is the owner's and is still open:
+
+1. Compositions and color (recommended): about ten composition families (type filling the frame, half-frame color blocks, a giant number cropped by the edge, a grid of tiles, a column at the edge, bands), palettes for videos without a brand, six to eight new backgrounds, a camera that moves over the backdrop, and a guard against repeats: neighbouring scenes and one user's videos do not repeat a composition. Checked on a contact sheet of twelve videos that must not read as one template. New blocks follow: a price tag, a checklist, a rating, before and after, steps.
+2. Styles first: six to eight more complete styles (face, palette, background, motion). Videos differ from each other, but inside each one the centered type stays, and every new element has to be drawn in every style.
+3. One reference at a time (step 9 as it is): closest to the owner's taste, but slow, and the sameness stays for a long time.
+
+The recommendation is 1, then 2, with references built alongside as they arrive.
