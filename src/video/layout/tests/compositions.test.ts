@@ -6,7 +6,7 @@ import { intersectionArea } from "../geometry";
 
 type Family = Exclude<Composition, "center">;
 
-const families: Family[] = ["fill", "split", "edge-number", "column", "grid"];
+const families: Family[] = ["fill", "split", "giant-number", "column", "grid"];
 const formats: DestinationId[] = ["reels", "file", "youtube"];
 const chip = (id: string, w = 0.3) => ({ id, size: { w, h: 0.05 }, enterMs: 300, exitMs: 2000 });
 const beat: Pieces = { leadId: "title", supports: [chip("a"), chip("b")] };
@@ -52,12 +52,12 @@ describe.each(families)("compose %s", (family) => {
 });
 
 describe("compose", () => {
-  it("spreads a fill title, fits a split one and bleeds an edge number", () => {
+  it("spreads a fill title and fits a split title and a giant number", () => {
     const fill = (family: Family) => compose(family, beat, contextFor("reels")).placements.get("title")?.fill;
 
     expect(fill("fill")).toBe("spread");
     expect(fill("split")).toBe("fit");
-    expect(fill("edge-number")).toBe("bleed");
+    expect(fill("giant-number")).toBe("fit");
   });
 
   it("puts the split field on top first and at the bottom on a repeat, the title on the field", () => {
@@ -109,6 +109,14 @@ describe("compose", () => {
 });
 
 describe("compose with a corner label", () => {
+  it.each(families)(
+    "starts the %s lead at the top of the text area when there is no corner label",
+    (family) => {
+      const lead = compose(family, beat, contextFor("reels")).placements.get("title")?.box;
+      expect(lead?.y).toBeCloseTo(destinations.reels.safeZone.top + 0.04, 6);
+    },
+  );
+
   it.each(families)("gives the %s corner label the top line and keeps the rest below it", (family) => {
     const { placements } = compose(family, { ...beat, cornerId: "corner" }, contextFor("reels"));
     const corner = placements.get("corner")?.box;
@@ -121,6 +129,6 @@ describe("compose with a corner label", () => {
 
 it("stacks a label that exactly fills the room left for it", () => {
   const sticker = { id: "s", size: { w: 0.3, h: 0.1 }, enterMs: 0, exitMs: 2000 };
-  const { placements } = compose("edge-number", { leadId: "n", supports: [sticker] }, contextFor("reels"));
+  const { placements } = compose("giant-number", { leadId: "n", supports: [sticker] }, contextFor("reels"));
   expect(placements.has("s")).toBe(true);
 });

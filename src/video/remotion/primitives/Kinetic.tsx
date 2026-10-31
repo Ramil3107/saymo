@@ -84,11 +84,7 @@ export function CounterElement({ element, theme, frame, surface }: KineticProps<
         atMs={element.enterMs}
         exit={exitOf(element, kit)}
         width={element.box.w * frame.width}
-        fill={
-          element.fill
-            ? { height: element.box.h * frame.height, edgePx: bleedEdge(element, frame) }
-            : undefined
-        }
+        fill={element.fill ? { height: element.box.h * frame.height } : undefined}
       />
     </KineticBox>
   );
@@ -203,13 +199,8 @@ function boxStyle(box: { x: number; y: number; w: number; h: number }, frame: Fr
   };
 }
 
-function bleedEdge(element: ElementOf<"counter">, frame: Frame): number | undefined {
-  return element.fill === "bleed" ? element.box.x * frame.width : undefined;
-}
-
-// Filled text keeps to the left like the composition around it; bleeding text keeps to the right and runs past the left.
+// Filled text keeps to the left like the composition around it.
 function fillJustify(fill: TypeFill | undefined): CSSProperties["justifyContent"] {
-  if (fill === "bleed") return "flex-end";
   return fill ? "flex-start" : "center";
 }
 

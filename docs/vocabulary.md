@@ -131,7 +131,7 @@ A composition is how a beat without footage fills the frame. The director names 
 | `center` | the title in the middle, labels gathered around it; the default, so older plans render as before | the same |
 | `fill` | the title's lines as wide as the text area and spread over its height, alternating edges | the frame turns dark |
 | `split` | an accent field over the top half holds the title, the labels stack on the other half | the field moves to the bottom |
-| `edge-number` | a counter so large that the frame's left edge crops a third of its first figure, the label under it starting at the text area's edge | it sits on an accent field |
+| `giant-number` | a counter as wide as the text area allows, whole in the frame, the label under it | it sits on an accent field |
 | `column` | a dark band down the left edge, the title flush against it, labels under the title | the band takes the accent |
 | `grid` | up to four chips or stickers become tiles in the palette's colors, each coming and going with its label, under a short title | the tile colors shift by one |
 
@@ -252,7 +252,7 @@ The owner chose on 2026-10-31 to start with compositions and color; more complet
 
 A composition is how a beat on the backdrop fills the frame: where the type sits and how large it is, and which color fields cut the frame. The director names one per beat, and the build turns it into element boxes and fields. The plan:
 
-1. The first five families: `fill` (the title fills the frame), `split` (a color field over half the frame, the title on it), `edge-number` (a giant counter cropped by the frame edge), `column` (a color band at the edge, the type flush against it) and `grid` (chips as colored tiles). `center` stays as today's layout and the default, so older plans render unchanged. Text on a field takes colors that read on it, and neighbouring beats never repeat a composition. Checked on a composition lab in both styles and on the four text-only ads planned again, as a contact sheet beside the old one. Built on 2026-10-31, see [Compositions](#compositions); the owner has not reviewed it yet. Building it turned up that every render measured text before its fonts had loaded, so `bold-pop` titles ran wider than their box; renders now wait for the fonts.
+1. The first five families: `fill` (the title fills the frame), `split` (a color field over half the frame, the title on it), `giant-number` (a counter as wide as the frame allows), `column` (a color band at the edge, the type flush against it) and `grid` (chips as colored tiles). `center` stays as today's layout and the default, so older plans render unchanged. Text on a field takes colors that read on it, and neighbouring beats never repeat a composition. Checked on a composition lab in both styles and on the four text-only ads planned again, as a contact sheet beside the old one. Built on 2026-10-31, see [Compositions](#compositions); the owner has not reviewed it yet. Building it turned up that every render measured text before its fonts had loaded, so `bold-pop` titles ran wider than their box; renders now wait for the fonts.
 2. Five more families (bands, a diagonal cut, an inset card, a corner stack, a word repeated in outline) and palettes for videos without a brand.
 3. Six to eight new backgrounds and a camera that moves over the backdrop.
 4. No repeats across one user's videos: the director's brief lists the compositions and palettes of the user's recent videos. Checked on a contact sheet of twelve videos that must not read as one template.

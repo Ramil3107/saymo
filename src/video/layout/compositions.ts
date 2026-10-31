@@ -4,7 +4,7 @@ import { type Box, BoxSchema } from "../schema/content";
 import { round6 } from "./geometry";
 import { type Inner, innerArea } from "./safeZones";
 
-export const CompositionSchema = z.enum(["center", "fill", "split", "edge-number", "column", "grid"]);
+export const CompositionSchema = z.enum(["center", "fill", "split", "giant-number", "column", "grid"]);
 
 export type Composition = z.infer<typeof CompositionSchema>;
 
@@ -22,9 +22,8 @@ export const FieldSchema = z.object({
 
 export type Field = z.infer<typeof FieldSchema>;
 
-// fit: the text is as large as its box allows; spread: also spread over the box's height;
-// bleed: larger than its box, running past the box's left edge so the frame crops it.
-export const TypeFillSchema = z.enum(["fit", "spread", "bleed"]);
+// fit: the text is as large as its box allows; spread: also spread over the box's height.
+export const TypeFillSchema = z.enum(["fit", "spread"]);
 
 export type TypeFill = z.infer<typeof TypeFillSchema>;
 
@@ -61,7 +60,7 @@ export function compose(
 ): Composed {
   const area = textArea(composition, innerArea(context.safeZone));
   const corner = cornerAt(pieces.cornerId, area);
-  const below = corner ? { ...area, top: area.top + cornerHeight + gap } : area;
+  const below = corner.length > 0 ? { ...area, top: area.top + cornerHeight + gap } : area;
   const arranged = arrange(composition, { ...pieces, area: below, context });
 
   return { placements: new Map([...corner, ...arranged.placements]), fields: arranged.fields };
@@ -86,8 +85,8 @@ function arrange(composition: Exclude<Composition, "center">, parts: Parts): Arr
       return fill(parts);
     case "split":
       return split(parts);
-    case "edge-number":
-      return edgeNumber(parts);
+    case "giant-number":
+      return giantNumber(parts);
     case "column":
       return column(parts);
     case "grid":
@@ -118,12 +117,12 @@ function split({ leadId, supports, area, context }: Parts): Arranged {
   };
 }
 
-// A number so large the frame's left edge crops it; on every other use it sits on an accent field.
-function edgeNumber({ leadId, supports, area, context }: Parts): Arranged {
+// A number as wide as the text area, whole in the frame; on every other use it sits on an accent field.
+function giantNumber({ leadId, supports, area, context }: Parts): Arranged {
   const { leadArea, stack } = underStack(area, supports);
   const fields = context.variant % 2 === 1 ? [persistent(wholeFrame, "accent", "bottom", context)] : [];
 
-  return { placements: [...leadAt(leadId, leadArea, "bleed"), ...stack], fields };
+  return { placements: [...leadAt(leadId, leadArea, "fit"), ...stack], fields };
 }
 
 // A color band runs down the left edge, and the type stands flush against it.

@@ -106,7 +106,7 @@
       "startMs": 4800,
       "durationMs": 2400,
       "transition": "whip",
-      "composition": "edge-number",
+      "composition": "giant-number",
       "overlays": [
         {
           "id": "n",
