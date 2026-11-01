@@ -1,12 +1,13 @@
+import { useMemo } from "react";
 import { AbsoluteFill, Sequence, useVideoConfig } from "remotion";
 import { destinations, formatSize } from "../destinations";
+import { documentFonts } from "../fonts/library";
 import { registers } from "../registers";
 import type { Element, Scene, VideoDoc } from "../schema/video";
 import { defaultStyle } from "../styles";
 import { Accented } from "./accents/ElementAccent";
 import { CaptionLayer } from "./captions/CaptionLayer";
 import { FontsLoaded } from "./FontsLoaded";
-import { loadBrandFont } from "./fonts";
 import { sceneFrames } from "./frames";
 import { SceneTransition } from "./motion/SceneTransition";
 import { Background } from "./primitives/Background";
@@ -35,10 +36,11 @@ import type { Frame, Theme } from "./theme";
 export function SaymoVideo(doc: VideoDoc) {
   const theme = themeFor(doc);
   const { fontFamily, safeZone } = theme;
+  const fonts = useMemo(() => documentFonts(doc), [doc]);
   const musicSrc = doc.music ? assetSrc(doc, doc.music.assetId) : undefined;
 
   return (
-    <FontsLoaded>
+    <FontsLoaded fonts={fonts}>
       <AbsoluteFill style={{ backgroundColor: doc.brand.colors[0], fontFamily }}>
         <Scenes doc={doc} theme={theme} />
         {doc.captions ? (
@@ -67,7 +69,7 @@ function themeFor(doc: VideoDoc): Theme {
     register: registers[doc.register],
     tempo: kit.tempo,
     kit,
-    fontFamily: loadBrandFont(doc.brand.font).fontFamily,
+    fontFamily: kit.textFamily,
     safeZone: destinations[doc.destination].safeZone,
   };
 }

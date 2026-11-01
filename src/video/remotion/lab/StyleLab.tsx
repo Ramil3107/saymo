@@ -1,5 +1,6 @@
 import type { CalculateMetadataFunction } from "remotion";
 import { AbsoluteFill } from "remotion";
+import { styleFonts } from "../../fonts/library";
 import { type StyleId, styles } from "../../styles";
 import { FontsLoaded } from "../FontsLoaded";
 import { msToFrame } from "../frames";
@@ -10,6 +11,8 @@ import { type CaptionLabProps, CaptionLabPropsSchema } from "./captionLabProps";
 const panel = { width: 540, height: 960, top: 92, gap: 80 };
 const labWidth = 1920;
 const shown: StyleId[] = ["bold-pop", "clean-paper"];
+const brandFont = "Onest";
+const fonts = shown.flatMap((id) => styleFonts(id, brandFont));
 const label = {
   fontFamily: "Helvetica, Arial, sans-serif",
   fontSize: 24,
@@ -25,7 +28,7 @@ export const styleLabMetadata: CalculateMetadataFunction<CaptionLabProps> = ({ p
 
 export function StyleLab(lab: CaptionLabProps) {
   return (
-    <FontsLoaded>
+    <FontsLoaded fonts={fonts}>
       <AbsoluteFill style={{ backgroundColor: "#101014" }}>
         {shown.map((id, index) => (
           <StylePanel
@@ -41,7 +44,7 @@ export function StyleLab(lab: CaptionLabProps) {
 }
 
 function StylePanel({ id, lab, left }: { id: StyleId; lab: CaptionLabProps; left: number }) {
-  const kit = styleKit(id, { colors: lab.colors, font: "Onest" });
+  const kit = styleKit(id, { colors: lab.colors, font: brandFont });
 
   return (
     <>

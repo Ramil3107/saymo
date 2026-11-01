@@ -1,9 +1,9 @@
+import { cssFamily, libraryFont } from "../../fonts/library";
 import type { FieldTone } from "../../layout/compositions";
 import { type Tempo, tempos } from "../../motion/tempo";
 import type { VideoDoc } from "../../schema/video";
 import { brandPalette, type FieldColors, fieldColors, type Palette } from "../../style/palette";
 import { type Style, type StyleId, styles } from "../../styles";
-import { displayFamily, loadBrandFont } from "../fonts";
 import type { TransitionColors } from "../motion/SceneTransition";
 import type { TypeColors, TypeFont } from "../type/KineticTitle";
 
@@ -49,8 +49,8 @@ export function styleKit(id: StyleId, brand: VideoDoc["brand"]): StyleKit {
     style,
     palette,
     tempo: tempos[style.tempo],
-    display: { family: displayFamily(style.display.font), weight: style.display.weight },
-    textFamily: loadBrandFont(brand.font).fontFamily,
+    display: { family: cssFamily(libraryFont(style.display.font)), weight: style.display.weight },
+    textFamily: cssFamily(libraryFont(brand.font)),
     colors: { ink: palette.ink, accent: palette.accent, alt: palette.alt, marker: palette.highlight },
     onFootage: {
       ink: white,

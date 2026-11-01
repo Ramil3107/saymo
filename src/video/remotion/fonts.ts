@@ -1,36 +1,30 @@
-import { loadFont as loadInter } from "@remotion/google-fonts/Inter";
-import { loadFont } from "@remotion/google-fonts/Onest";
-import { loadFont as loadPlayfair } from "@remotion/google-fonts/PlayfairDisplay";
-import { loadFont as loadUnbounded } from "@remotion/google-fonts/Unbounded";
-import type { DisplayFont } from "../styles";
+import { staticFile } from "remotion";
+import { withFallbacks } from "../fonts/library";
+import type { FontFile, LibraryFont } from "../fonts/manifest";
 
-const onest = loadFont("normal", {
-  weights: ["300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin", "cyrillic"],
-});
+const loads = new Map<string, Promise<void>>();
 
-const playfair = loadPlayfair("normal", { weights: ["500", "700"], subsets: ["latin", "cyrillic"] });
-const playfairItalic = loadPlayfair("italic", { weights: ["500", "700"], subsets: ["latin", "cyrillic"] });
-
-const unbounded = loadUnbounded("normal", { weights: ["500", "700", "900"], subsets: ["latin", "cyrillic"] });
-const inter = loadInter("normal", { weights: ["500", "700", "800", "900"], subsets: ["latin", "cyrillic"] });
-const faces = [onest, playfair, playfairItalic, unbounded, inter];
-
-const displayFamilies: Record<DisplayFont, string> = {
-  unbounded: unbounded.fontFamily,
-  inter: inter.fontFamily,
-};
-
-export const serifFamily = playfair.fontFamily;
-
-export async function fontsLoaded(): Promise<void> {
-  await Promise.all(faces.map((face) => face.waitUntilDone()));
+// Faces come from the library in `public/fonts`, each family once per page, so no render waits on the network.
+export async function loadFonts(fonts: LibraryFont[]): Promise<void> {
+  await Promise.all(withFallbacks(fonts).map(loadFamily));
 }
 
-export function displayFamily(font: DisplayFont): string {
-  return displayFamilies[font];
+function loadFamily(font: LibraryFont): Promise<void> {
+  const known = loads.get(font.id);
+  if (known) return known;
+
+  const loading = Promise.all(font.files.map((file) => loadFace(font.family, file))).then(() => undefined);
+  loads.set(font.id, loading);
+  return loading;
 }
 
-export function loadBrandFont(_family: string): { fontFamily: string } {
-  return { fontFamily: onest.fontFamily };
+async function loadFace(family: string, file: FontFile): Promise<void> {
+  const source = `url("${staticFile(`fonts/${file.path}`)}") format("woff2")`;
+  const face = new FontFace(family, source, {
+    weight: file.weight,
+    style: file.style,
+    unicodeRange: file.unicodeRange,
+  });
+
+  document.fonts.add(await face.load());
 }

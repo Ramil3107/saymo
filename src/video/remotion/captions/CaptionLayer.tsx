@@ -3,9 +3,9 @@ import { type CSSProperties, Fragment } from "react";
 import { type CaptionLook, type CaptionSize, captionLooks } from "../../captions/looks";
 import { isKeyword } from "../../captions/rail";
 import type { SafeZone } from "../../destinations";
+import { captionSerif, cssFamily } from "../../fonts/library";
 import { captionBand } from "../../layout/safeZones";
 import type { CaptionPage, VideoDoc } from "../../schema/video";
-import { serifFamily } from "../fonts";
 import { useMs } from "../motion/Move";
 import { wholePx } from "../motion/pixels";
 import type { Frame, Theme } from "../theme";
@@ -25,6 +25,7 @@ const middleBottomShare = 0.3;
 const scrimTopShare = 0.56;
 const lineHeight = 1.2;
 const fitShare = 0.94;
+const serifFamily = cssFamily(captionSerif);
 
 export function CaptionLayer({ captions, theme, safeZone, frame }: Props) {
   const ms = useMs();

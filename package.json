@@ -36,7 +36,6 @@
     "@remotion/bundler": "4.0.539",
     "@remotion/captions": "4.0.539",
     "@remotion/cli": "4.0.539",
-    "@remotion/google-fonts": "4.0.539",
     "@remotion/lambda": "4.0.539",
     "@remotion/layout-utils": "4.0.539",
     "@remotion/media": "4.0.539",

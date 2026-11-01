@@ -190,9 +190,6 @@ importers:
       '@remotion/cli':
         specifier: 4.0.539
         version: 4.0.539(lightningcss@1.33.0)(postcss@8.5.32)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@8.1.1)(typescript@7.0.2)
-      '@remotion/google-fonts':
-        specifier: 4.0.539
-        version: 4.0.539(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@remotion/lambda':
         specifier: 4.0.539
         version: 4.0.539(@remotion/bundler@4.0.539(lightningcss@1.33.0)(postcss@8.5.32)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(lightningcss@1.33.0)(postcss@8.5.32)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@8.1.1)(typescript@7.0.2)
@@ -1344,9 +1341,6 @@ packages:
 
   '@remotion/elevenlabs@4.0.539':
     resolution: {integrity: sha512-B/WswM4UWebc9kHhMGnFhQH13od27p6x480fe2UJCrljkCI5UZPKiRyzH6LIPAknyuYInds48DnQVNVaJwuqPg==}
-
-  '@remotion/google-fonts@4.0.539':
-    resolution: {integrity: sha512-mhpFjeSXkAB/nznbxZj6GCjul0bdHjLEFJU/naT2c7BEir8OWBCmqHBeXCGRlDMJCEwauSbetrZ230CzufUxHg==}
 
   '@remotion/lambda-client@4.0.539':
     resolution: {integrity: sha512-yXPN9P3c/2Qw+iIXiRcguWOt2CF7kW5YoytfXTSwzXUtbftaw8EcE68yXaAxx/NOsACJUwatCT5u2LdWGRCP1g==}
@@ -5327,13 +5321,6 @@ snapshots:
     dependencies:
       '@remotion/captions': 4.0.539
       zod: 4.5.4
-
-  '@remotion/google-fonts@4.0.539(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
-    dependencies:
-      remotion: 4.0.539(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-    transitivePeerDependencies:
-      - react
-      - react-dom
 
   '@remotion/lambda-client@4.0.539': {}
 

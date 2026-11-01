@@ -1,4 +1,4 @@
-import { mkdir } from "node:fs/promises";
+import { cp, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { runFfmpeg } from "../lib/ffmpeg";
@@ -9,6 +9,7 @@ import { TranscriptSchema } from "../video/schema/transcript";
 import { VideoDocSchema } from "../video/schema/video";
 
 const publicDir = "runs/lab/public";
+const fontLibrary = "public/fonts";
 const footageName = "caption-footage.mp4";
 const stills: Record<string, string> = {
   "subject.jpg": "0003.jpg",
@@ -37,6 +38,8 @@ async function main(): Promise<void> {
   const durationMs = Number(values.seconds) * 1000;
 
   await mkdir(publicDir, { recursive: true });
+  // Most labs render with this folder as the public dir, so it carries a copy of the font library.
+  await cp(fontLibrary, join(publicDir, "fonts"), { recursive: true });
   await cutFootage(join(runDir, "source.mp4"), fromMs, durationMs);
   for (const [name, frame] of Object.entries(stills)) await copyStill(join(runDir, "frames", frame), name);
   await writeJson(propsPath, await labProps(runDir, fromMs, durationMs));

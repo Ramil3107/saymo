@@ -10,8 +10,6 @@ export const StyleIdSchema = z.enum(["bold-pop", "clean-paper"]);
 
 export type StyleId = z.infer<typeof StyleIdSchema>;
 
-export type DisplayFont = "unbounded" | "inter";
-
 export type Texture = "blobs" | "grain" | "paper-grid" | "halftone";
 
 export type AccentMark =
@@ -32,7 +30,7 @@ export type Style = {
   name: string;
   summary: string;
   tempo: TempoId;
-  display: { font: DisplayFont; weight: number; upper: boolean; labelScale: number; widthScale: number };
+  display: { font: string; weight: number; upper: boolean; labelScale: number; widthScale: number };
   surfaces: { panel: "light" | "dark"; labels: "soft" | "block" };
   tones: Tones;
   textures: Texture[];
