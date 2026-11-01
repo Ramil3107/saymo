@@ -1,6 +1,7 @@
 import { fitText } from "@remotion/layout-utils";
 import type { CSSProperties } from "react";
 import { interpolateColors } from "remotion";
+import type { TypeFill } from "../../layout/compositions";
 import { type MoveSpec, mix } from "../../motion/moves";
 import type { Tempo } from "../../motion/tempo";
 import { eased, linear, smoothstep } from "../../motion/timeline";
@@ -23,8 +24,9 @@ export type TypeColors = { ink: string; accent: string; alt: string; marker: str
 
 export type TypeFont = { family: string; weight: number };
 
-// A title that fills its box: every line as wide as the box, the stack shrunk to its height, spread over it or not.
-export type TitleFill = { height: number; spread: boolean };
+// A title that fills its box: every line as wide as the box, the stack shrunk to its height, spread over it or
+// not; in rows, every line centered in a row of its own and no taller than the row allows.
+export type TitleFill = { height: number; lines: TypeFill };
 
 export type TitleProps = {
   lines: TitleLine[];
@@ -33,6 +35,7 @@ export type TitleProps = {
   exit?: MoveSpec["exit"];
   swapAtMs?: number;
   colors: TypeColors;
+  lineColors?: TypeColors[];
   font: TypeFont;
   tempo: Tempo;
   width: number;
@@ -46,9 +49,11 @@ type RowProps = TitleProps & {
   isLast: boolean;
   markAtMs: number;
   fontSize: number;
+  rowHeight?: number;
 };
 
 const fitShare = 0.92;
+const rowTypeShare = 0.62;
 const spreadFromEm = 0.7;
 const markerHeight = "42%";
 const justify: Record<Align, CSSProperties["justifyContent"]> = {
@@ -63,14 +68,15 @@ export function KineticTitle(props: TitleProps) {
   const cues = lineCues(lines, entrance, atMs, tempo);
   const markAtMs = entranceEndMs(lines, entrance, atMs, tempo) + tempo.quickMs;
   const sizes = lineSizes(props);
-  const spread = fill?.spread && lines.length > 1;
+  const spread = fill?.lines === "spread" && lines.length > 1;
+  const rowHeight = fill?.lines === "rows" ? fill.height / lines.length : undefined;
 
   return (
     <Move
       spec={{ enter: "cut", atMs, exit }}
       tempo={tempo}
       unitPx={width}
-      style={{ width, height: spread ? fill?.height : undefined }}
+      style={{ width, height: spread || rowHeight ? fill?.height : undefined }}
       innerStyle={{
         flexDirection: "column",
         alignItems: "stretch",
@@ -86,11 +92,13 @@ export function KineticTitle(props: TitleProps) {
           <TitleRow
             key={line.text}
             {...props}
+            colors={props.lineColors?.[index] ?? props.colors}
             line={line}
             cue={cue}
             isLast={isLast}
             markAtMs={markAtMs}
             fontSize={sizes[index] ?? 0}
+            rowHeight={rowHeight}
           />
         );
       })}
@@ -99,7 +107,7 @@ export function KineticTitle(props: TitleProps) {
 }
 
 function TitleRow(props: RowProps) {
-  const { line, font, colors, tempo, swapAtMs, markAtMs, fontSize } = props;
+  const { line, font, colors, tempo, swapAtMs, markAtMs, fontSize, rowHeight } = props;
   const ms = useMs();
   const marked = line.marked ? eased(ms, markAtMs, tempo.moveMs * 2, tempo.enterCurve) : 0;
 
@@ -108,6 +116,8 @@ function TitleRow(props: RowProps) {
       style={{
         display: "flex",
         justifyContent: justify[line.align],
+        alignItems: rowHeight ? "center" : undefined,
+        height: rowHeight,
         fontSize,
         fontWeight: font.weight,
         lineHeight: titleLineHeight,
@@ -199,13 +209,18 @@ function Spread({ text, atMs, tempo }: { text: string; atMs: number; tempo: Temp
   );
 }
 
-// A filled title sets every line as wide as the box, then shrinks the stack together until it fits the height.
+// A filled title sets every line as wide as the box, then shrinks the stack together until it fits the height;
+// in rows each line only keeps within its own row.
 function lineSizes({ lines, font, width, sizeScale = 1, fill }: TitleProps): number[] {
   const sizes = lines.map((line) => {
     const fitted = fittedSize(line.text, font, width);
     return fill ? fitted : Math.min(width * titleSizeShare[line.size] * sizeScale, fitted);
   });
   if (!fill) return sizes;
+  if (fill.lines === "rows") {
+    const rowSize = ((fill.height / lines.length) * rowTypeShare) / titleLineHeight;
+    return sizes.map((size) => Math.min(size, rowSize));
+  }
 
   const stacked = sizes.reduce((sum, size) => sum + size * titleLineHeight, 0);
   const shrink = Math.min(1, fill.height / Math.max(stacked, 1));

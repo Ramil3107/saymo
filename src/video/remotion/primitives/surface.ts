@@ -5,6 +5,8 @@ import type { TypeColors } from "../type/KineticTitle";
 
 export type Surface = "footage" | "backdrop";
 
+const noMarker = "transparent";
+
 export function typeScale(surface: Surface): number {
   return surface === "backdrop" ? backdropTypeScale : 1;
 }
@@ -13,7 +15,7 @@ export function typeScale(surface: Surface): number {
 export function typeColors(kit: StyleKit, surface: Surface, on: FieldTone | undefined): TypeColors {
   if (on) {
     const field = kit.fields[on];
-    return { ink: field.ink, accent: field.accent, alt: field.ink, marker: field.accent };
+    return { ink: field.ink, accent: field.accent, alt: field.ink, marker: field.marker ?? noMarker };
   }
 
   return surface === "footage" ? kit.onFootage : kit.colors;

@@ -4,7 +4,8 @@ import { contrastRatio, luminance, mixHex, readableOn } from "./color";
 
 export type Palette = Tones & { accent: string; alt: string };
 
-export type FieldColors = { background: string; ink: string; accent: string };
+// marker: the bar swept under a marked line, a palette color the text reads on, or none when no color does.
+export type FieldColors = { background: string; ink: string; accent: string; marker?: string };
 
 const textRatio = 3;
 const lightLuminance = 0.5;
@@ -26,7 +27,8 @@ export function brandPalette(tones: Tones, brandColors: string[]): Palette {
   };
 }
 
-// Text on a color field: ink or white, whichever reads better, and the first palette color that reads on it.
+// Text on a color field: ink or white, whichever reads better, the first palette color that reads on the field,
+// and the first one the text reads on for a marker.
 export function fieldColors(palette: Palette, tone: FieldTone): FieldColors {
   const background = palette[tone];
   const ink =
@@ -34,8 +36,11 @@ export function fieldColors(palette: Palette, tone: FieldTone): FieldColors {
   const accent = [palette.highlight, palette.accent, palette.background].find(
     (color) => color !== background && contrastRatio(color, background) >= textRatio,
   );
+  const marker = [palette.highlight, palette.accent, palette.alt].find(
+    (color) => color !== background && contrastRatio(ink, color) >= textRatio,
+  );
 
-  return { background, ink, accent: accent ?? ink };
+  return { background, ink, accent: accent ?? ink, marker };
 }
 
 function isNearWhite(color: string): boolean {

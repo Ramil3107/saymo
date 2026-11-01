@@ -15,6 +15,7 @@ const ElementBaseSchema = z.object({
   accent: AccentSchema.optional(),
   on: FieldToneSchema.optional(),
   fill: TypeFillSchema.optional(),
+  lineOn: z.array(FieldToneSchema).optional(),
 });
 
 export const ElementSchema = z.discriminatedUnion("kind", [

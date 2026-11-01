@@ -12,6 +12,7 @@ import {
   compose,
   type Field,
   type FieldTone,
+  fieldCovers,
   type Pieces,
   type Placement,
 } from "../../../video/layout/compositions";
@@ -420,12 +421,44 @@ function compositionPieces(beat: Beat, context: SceneContext, sceneDurationMs: n
     return size ? [{ id: overlay.id, size, ...elementTiming(overlay, sceneDurationMs) }] : [];
   });
 
-  return { leadId: lead?.id, cornerId: corner?.id, supports };
+  return {
+    leadId: lead?.id,
+    leadLines: lead ? leadLines(lead) : undefined,
+    keyword: lead ? keywordOf(lead) : undefined,
+    cornerId: corner?.id,
+    supports,
+  };
 }
 
-// Text that fills its box is aligned by the composition: spread lines alternate edges, the rest keep left.
+// How many lines the lead is drawn in: a title's lines, a headline and its sub, or one number.
+function leadLines(lead: Overlay): number {
+  if (lead.kind === "title") return titleLines(lead).length;
+  if (lead.kind === "headline" && lead.sub) return 2;
+  return 1;
+}
+
+// The word an echo repeats: the title's marked line, else its accent line, else the lead's longest word.
+function keywordOf(lead: Overlay): string {
+  const lines = lead.lines ?? [];
+  const line =
+    lines.find((candidate) => candidate.marked) ?? lines.find((candidate) => candidate.tone === "accent");
+  return line?.text ?? longestWord(lead.text);
+}
+
+function longestWord(text: string): string {
+  return text.split(/\s+/).reduce((longest, word) => (word.length > longest.length ? word : longest), "");
+}
+
+// Text that fills its box is aligned by the composition: spread lines alternate edges, the rest keep to its side.
+// Lines set in rows of their own carry the field under each and no accent, since their bands already mark them.
 function composedElement(element: Element, placement: Placement): Element {
-  const filled = { ...element, fill: placement.fill };
+  const inRows = placement.fill === "rows";
+  const filled = {
+    ...element,
+    fill: placement.fill,
+    lineOn: placement.lineOn,
+    accent: inRows ? undefined : element.accent,
+  };
   if (filled.kind !== "title" || !placement.fill) return filled;
 
   const lines = filled.lines.map((line, index) => ({ ...line, align: lineAlign(placement, index) }));
@@ -433,7 +466,7 @@ function composedElement(element: Element, placement: Placement): Element {
 }
 
 function lineAlign(placement: Placement, index: number): TitleLine["align"] {
-  if (placement.fill !== "spread") return "left";
+  if (placement.fill !== "spread") return placement.align ?? "left";
   return index % 2 === 0 ? "left" : "right";
 }
 
@@ -443,7 +476,7 @@ function fieldUnder(element: Element, fields: Field[]): FieldTone | undefined {
   const center = { x: element.box.x + element.box.w / 2, y: element.box.y + element.box.h / 2 };
   const under = fields.filter((field) => {
     if (!sharesTime(field, element)) return false;
-    return isLabel ? sameBox(field.box, element.box) : containsPoint(field.box, center);
+    return isLabel ? sameBox(field.box, element.box) : fieldCovers(field, center);
   });
 
   return under.at(-1)?.tone;
@@ -451,10 +484,6 @@ function fieldUnder(element: Element, fields: Field[]): FieldTone | undefined {
 
 function sameBox(a: Box, b: Box): boolean {
   return a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h;
-}
-
-function containsPoint(box: Box, point: Point): boolean {
-  return point.x >= box.x && point.x <= box.x + box.w && point.y >= box.y && point.y <= box.y + box.h;
 }
 
 function framedElements(

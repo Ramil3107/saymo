@@ -1,5 +1,7 @@
 import type { Box } from "../schema/content";
 
+export type Point = { x: number; y: number };
+
 export function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value));
 }
@@ -35,4 +37,16 @@ export function intersectionArea(a: Box, b: Box): number {
   const h = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
 
   return w > 0 && h > 0 ? w * h : 0;
+}
+
+// Even-odd ray casting: a point on the polygon's edge may fall either way.
+export function insidePolygon(polygon: Point[], point: Point): boolean {
+  let inside = false;
+  polygon.forEach((a, index) => {
+    const b = polygon[(index + polygon.length - 1) % polygon.length] ?? a;
+    const crosses = a.y > point.y !== b.y > point.y;
+    if (crosses && point.x < ((b.x - a.x) * (point.y - a.y)) / (b.y - a.y) + a.x) inside = !inside;
+  });
+
+  return inside;
 }

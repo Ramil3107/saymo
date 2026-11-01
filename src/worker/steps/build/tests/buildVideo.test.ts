@@ -535,6 +535,56 @@ test("buildVideo lays out backdrop beats by their composition", () => {
   ).toEqual([]);
 });
 
+test("buildVideo sets a bands title in rows, each line on its band and with no accent, and echoes the key word", () => {
+  const title = {
+    id: "t",
+    kind: "title" as const,
+    text: "Black Friday",
+    lines: [
+      { text: "Black", size: "xl" as const, tone: "ink" as const, align: "center" as const },
+      {
+        text: "Friday",
+        size: "xl" as const,
+        tone: "accent" as const,
+        align: "center" as const,
+        marked: true,
+      },
+    ],
+    entrance: "punch" as const,
+    atMs: 0,
+    durationMs: 2000,
+    accent: "focus" as const,
+  };
+  const beats = textPlan.beats.slice(0, 2).map((beat, index) => ({
+    ...beat,
+    overlays: [title],
+    composition: index === 0 ? ("bands" as const) : ("echo" as const),
+  }));
+  const plan = { ...textPlan, beats, lengthMs: beats.reduce((sum, beat) => sum + beat.durationMs, 0) };
+  const [bands, echo] = buildVideo(plan, null, {}, brand).scenes;
+
+  expect(bands?.elements[0]).toMatchObject({
+    fill: "rows",
+    lineOn: bands?.fields?.map((field) => field.tone),
+  });
+  expect(bands?.elements[0]?.accent).toBeUndefined();
+  expect(echo?.elements[0]?.accent).toBe("focus");
+  expect(echo?.fields?.[0]?.echo?.text).toBe("Friday");
+  expect(echo?.elements[0]?.on).toBeUndefined();
+});
+
+test("buildVideo gives text above a diagonal cut the field's colors", () => {
+  const beats = textPlan.beats.map((beat, index) => ({
+    ...beat,
+    composition: index === 1 ? ("diagonal" as const) : undefined,
+  }));
+  const scene = buildVideo({ ...textPlan, beats }, null, {}, brand).scenes[1];
+
+  expect(scene?.fields?.[0]?.outline).toBeDefined();
+  expect(scene?.elements.find((element) => element.kind === "big-number")?.on).toBe("accent");
+  expect(scene?.elements.find((element) => element.kind === "chip")?.on).toBeUndefined();
+});
+
 test("buildVideo gives a repeated composition its other form and ignores compositions over footage", () => {
   const compositions = ["split", "grid", "split"] as const;
   const beats = textPlan.beats.map((beat, index) => ({ ...beat, composition: compositions[index] }));

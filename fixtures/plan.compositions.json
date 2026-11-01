@@ -1,9 +1,9 @@
 {
   "title": "Composition lab",
-  "summary": "Every composition family on the backdrop, each twice, to check how they fill the frame.",
+  "summary": "Every composition family on the backdrop, the first five and the five after them each twice, to check how they fill the frame.",
   "cast": [],
   "destination": "reels",
-  "lengthMs": 19200,
+  "lengthMs": 43200,
   "register": "playful-sale",
   "style": "bold-pop",
   "musicMood": "upbeat",
@@ -330,6 +330,381 @@
           "text": "citydental.com",
           "atMs": 900,
           "durationMs": 1500
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "role": "setup",
+      "startMs": 19200,
+      "durationMs": 2400,
+      "transition": "cut",
+      "composition": "bands",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "Fresh bread daily",
+          "lines": [
+            {
+              "text": "Fresh",
+              "size": "xl",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "bread",
+              "size": "xl",
+              "tone": "accent",
+              "align": "center"
+            },
+            {
+              "text": "daily",
+              "size": "l",
+              "tone": "ink",
+              "align": "center"
+            }
+          ],
+          "entrance": "punch",
+          "atMs": 0,
+          "durationMs": 2400
+        },
+        {
+          "id": "a",
+          "kind": "chip",
+          "text": "Since 1998",
+          "atMs": 500,
+          "durationMs": 1900
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "role": "message",
+      "startMs": 21600,
+      "durationMs": 2400,
+      "transition": "flash",
+      "composition": "diagonal",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "New drop",
+          "lines": [
+            {
+              "text": "New",
+              "size": "xl",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "drop",
+              "size": "xl",
+              "tone": "accent",
+              "align": "center"
+            }
+          ],
+          "entrance": "pop",
+          "atMs": 0,
+          "durationMs": 2400
+        },
+        {
+          "id": "a",
+          "kind": "chip",
+          "text": "Limited",
+          "atMs": 400,
+          "durationMs": 2000
+        },
+        {
+          "id": "b",
+          "kind": "chip",
+          "text": "Ships Friday",
+          "atMs": 700,
+          "durationMs": 1700
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "role": "proof",
+      "startMs": 24000,
+      "durationMs": 2400,
+      "transition": "whip",
+      "composition": "inset",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "Free trial",
+          "lines": [
+            {
+              "text": "Free",
+              "size": "xl",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "trial",
+              "size": "xl",
+              "tone": "accent",
+              "align": "center"
+            }
+          ],
+          "entrance": "type",
+          "atMs": 0,
+          "durationMs": 2400,
+          "accent": "celebrate"
+        },
+        {
+          "id": "a",
+          "kind": "chip",
+          "text": "No card needed",
+          "atMs": 600,
+          "durationMs": 1800
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "role": "how",
+      "startMs": 26400,
+      "durationMs": 2400,
+      "transition": "cut",
+      "composition": "corner-stack",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "Meet Nova",
+          "lines": [
+            {
+              "text": "Meet",
+              "size": "xl",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "Nova",
+              "size": "xl",
+              "tone": "accent",
+              "align": "center"
+            }
+          ],
+          "entrance": "spread",
+          "atMs": 0,
+          "durationMs": 2400
+        },
+        {
+          "id": "a",
+          "kind": "chip",
+          "text": "Pre-order",
+          "atMs": 500,
+          "durationMs": 1900
+        },
+        {
+          "id": "b",
+          "kind": "chip",
+          "text": "From $99",
+          "atMs": 800,
+          "durationMs": 1600
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "role": "message",
+      "startMs": 28800,
+      "durationMs": 2400,
+      "transition": "pixelate",
+      "composition": "echo",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "Summer sale",
+          "lines": [
+            {
+              "text": "Summer",
+              "size": "xl",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "sale",
+              "size": "xl",
+              "tone": "accent",
+              "align": "center",
+              "marked": true
+            }
+          ],
+          "entrance": "punch",
+          "atMs": 0,
+          "durationMs": 2400
+        },
+        {
+          "id": "a",
+          "kind": "chip",
+          "text": "Up to 50%",
+          "atMs": 600,
+          "durationMs": 1800
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "role": "setup",
+      "startMs": 31200,
+      "durationMs": 2400,
+      "transition": "zoom",
+      "composition": "bands",
+      "overlays": [
+        {
+          "id": "h",
+          "kind": "headline",
+          "text": "Book a visit",
+          "sub": "Mon to Sat",
+          "atMs": 0,
+          "durationMs": 2400
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "role": "proof",
+      "startMs": 33600,
+      "durationMs": 2400,
+      "transition": "cut",
+      "composition": "diagonal",
+      "overlays": [
+        {
+          "id": "n",
+          "kind": "counter",
+          "text": "2×",
+          "value": 2,
+          "atMs": 0,
+          "durationMs": 2400,
+          "suffix": "×",
+          "sub": "faster",
+          "accent": "stress"
+        },
+        {
+          "id": "a",
+          "kind": "chip",
+          "text": "Clients pay",
+          "atMs": 500,
+          "durationMs": 1900
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "role": "message",
+      "startMs": 36000,
+      "durationMs": 2400,
+      "transition": "flash",
+      "composition": "inset",
+      "overlays": [
+        {
+          "id": "n",
+          "kind": "counter",
+          "text": "$149",
+          "value": 149,
+          "atMs": 0,
+          "durationMs": 2400,
+          "prefix": "$",
+          "sub": "per visit"
+        },
+        {
+          "id": "a",
+          "kind": "chip",
+          "text": "Whiter in one visit",
+          "atMs": 600,
+          "durationMs": 1800
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "role": "how",
+      "startMs": 38400,
+      "durationMs": 2400,
+      "transition": "whip",
+      "composition": "corner-stack",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "Open late",
+          "lines": [
+            {
+              "text": "Open",
+              "size": "xl",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "late",
+              "size": "xl",
+              "tone": "accent",
+              "align": "center"
+            }
+          ],
+          "entrance": "pop",
+          "atMs": 0,
+          "durationMs": 2400
+        },
+        {
+          "id": "a",
+          "kind": "chip",
+          "text": "Fridays",
+          "atMs": 400,
+          "durationMs": 2000
+        },
+        {
+          "id": "b",
+          "kind": "chip",
+          "text": "Saturdays",
+          "atMs": 700,
+          "durationMs": 1700
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "role": "cta",
+      "startMs": 40800,
+      "durationMs": 2400,
+      "transition": "cut",
+      "composition": "echo",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "Go big",
+          "lines": [
+            {
+              "text": "Go",
+              "size": "xl",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "big",
+              "size": "xl",
+              "tone": "accent",
+              "align": "center"
+            }
+          ],
+          "entrance": "type",
+          "atMs": 0,
+          "durationMs": 2400
+        },
+        {
+          "id": "c",
+          "kind": "corner-label",
+          "text": "Saymo",
+          "atMs": 200,
+          "durationMs": 2200
         }
       ]
     }

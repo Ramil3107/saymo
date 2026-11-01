@@ -22,6 +22,7 @@ describe.each(Object.entries(styles))("the %s palettes", (_, style) => {
     for (const tone of fieldTones) {
       const colors = fieldColors(palette, tone);
       expect(contrastRatio(colors.ink, colors.background)).toBeGreaterThanOrEqual(3);
+      if (colors.marker) expect(contrastRatio(colors.ink, colors.marker)).toBeGreaterThanOrEqual(3);
     }
   });
 });

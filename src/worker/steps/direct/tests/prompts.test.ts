@@ -1,5 +1,6 @@
 import { expect, test } from "vitest";
 import sampleContent from "../../../../../fixtures/content.sample.json" with { type: "json" };
+import { CompositionSchema } from "../../../../video/layout/compositions";
 import { ContentMapSchema } from "../../../../video/schema/content";
 import { directorSystemPrompt, directorUserMessage } from "../prompts";
 
@@ -61,4 +62,8 @@ test("a brief without a brand asks for a palette, and the system prompt lists th
   );
   expect(directorSystemPrompt()).toContain("terracotta: burnt clay");
   expect(directorSystemPrompt()).toContain("palettes cobalt, ocean, forest, terracotta, plum");
+});
+
+test("the system prompt describes every composition family", () => {
+  for (const family of CompositionSchema.options) expect(directorSystemPrompt()).toContain(`${family} (`);
 });

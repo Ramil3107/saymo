@@ -35,17 +35,14 @@ export function TitleElement({ element, theme, frame, surface }: KineticProps<"t
         {...kit}
         sizeScale={typeScale(surface)}
         colors={typeColors(kit, surface, element.on)}
+        lineColors={element.lineOn?.map((tone) => typeColors(kit, surface, tone))}
         font={kit.display}
         lines={element.lines.map((line) => cased(kit, line))}
         entrance={element.entrance}
         atMs={element.enterMs}
         exit={exitOf(element, kit)}
         width={width}
-        fill={
-          element.fill
-            ? { height: element.box.h * frame.height, spread: element.fill === "spread" }
-            : undefined
-        }
+        fill={element.fill ? { height: element.box.h * frame.height, lines: element.fill } : undefined}
       />
     </KineticBox>
   );

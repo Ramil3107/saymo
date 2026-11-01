@@ -1,15 +1,43 @@
 import { describe, expect, it } from "vitest";
 import { type DestinationId, destinations } from "../../destinations";
 import type { Box } from "../../schema/content";
-import { type ComposeContext, type Composition, compose, type Pieces } from "../compositions";
+import {
+  type ComposeContext,
+  type Composition,
+  compose,
+  type Field,
+  fieldCovers,
+  type Pieces,
+} from "../compositions";
 import { intersectionArea } from "../geometry";
 
 type Family = Exclude<Composition, "center">;
 
-const families: Family[] = ["fill", "split", "giant-number", "column", "grid"];
+const families: Family[] = [
+  "fill",
+  "split",
+  "giant-number",
+  "column",
+  "grid",
+  "bands",
+  "diagonal",
+  "inset",
+  "corner-stack",
+  "echo",
+];
+const fromTheTop: Family[] = [
+  "fill",
+  "split",
+  "giant-number",
+  "column",
+  "grid",
+  "diagonal",
+  "corner-stack",
+  "echo",
+];
 const formats: DestinationId[] = ["reels", "file", "youtube"];
 const chip = (id: string, w = 0.3) => ({ id, size: { w, h: 0.05 }, enterMs: 300, exitMs: 2000 });
-const beat: Pieces = { leadId: "title", supports: [chip("a"), chip("b")] };
+const beat: Pieces = { leadId: "title", leadLines: 2, keyword: "Friday", supports: [chip("a"), chip("b")] };
 const epsilon = 1e-6;
 
 function contextFor(destination: DestinationId, variant = 0): ComposeContext {
@@ -28,16 +56,21 @@ function insideSafeZone(box: Box, destination: DestinationId): boolean {
 }
 
 describe.each(families)("compose %s", (family) => {
-  it.each(formats)("places the title and the labels inside the %s safe zone, apart", (destination) => {
-    const { placements } = compose(family, beat, contextFor(destination));
-    const boxes = [...placements.values()].map((placement) => placement.box);
+  it.each(formats)(
+    "places the title and the labels inside the %s safe zone, apart, in both forms",
+    (destination) => {
+      for (const variant of [0, 1]) {
+        const { placements } = compose(family, beat, contextFor(destination, variant));
+        const boxes = [...placements.values()].map((placement) => placement.box);
 
-    expect([...placements.keys()].sort()).toEqual(["a", "b", "title"]);
-    for (const box of boxes) expect(insideSafeZone(box, destination)).toBe(true);
-    boxes.forEach((box, index) => {
-      for (const other of boxes.slice(index + 1)) expect(intersectionArea(box, other)).toBe(0);
-    });
-  });
+        expect([...placements.keys()].sort()).toEqual(["a", "b", "title"]);
+        for (const box of boxes) expect(insideSafeZone(box, destination)).toBe(true);
+        boxes.forEach((box, index) => {
+          for (const other of boxes.slice(index + 1)) expect(intersectionArea(box, other)).toBe(0);
+        });
+      }
+    },
+  );
 
   it("keeps its fields inside the frame", () => {
     for (const variant of [0, 1]) {
@@ -109,7 +142,7 @@ describe("compose", () => {
 });
 
 describe("compose with a corner label", () => {
-  it.each(families)(
+  it.each(fromTheTop)(
     "starts the %s lead at the top of the text area when there is no corner label",
     (family) => {
       const lead = compose(family, beat, contextFor("reels")).placements.get("title")?.box;
@@ -132,3 +165,123 @@ it("stacks a label that exactly fills the room left for it", () => {
   const { placements } = compose("giant-number", { leadId: "n", supports: [sticker] }, contextFor("reels"));
   expect(placements.has("s")).toBe(true);
 });
+
+describe("compose bands", () => {
+  it("gives every title line a full-width band of its own and the lead the tone of each", () => {
+    const { placements, fields } = compose("bands", beat, contextFor("reels"));
+    const lead = placements.get("title");
+
+    expect(lead).toMatchObject({ fill: "rows", align: "left" });
+    expect(fields.map((field) => [field.box.x, field.box.w])).toEqual([
+      [0, 1],
+      [0, 1],
+    ]);
+    expect(lead?.lineOn).toEqual(fields.map((field) => field.tone));
+    expect(fields.map((field) => field.from)).toEqual(["left", "right"]);
+    for (const field of fields)
+      expect(intersectionArea(field.box, lead?.box ?? field.box)).toBeGreaterThan(0);
+  });
+
+  it("turns the frame dark under the bands and sets the lines right on a repeat", () => {
+    const { placements, fields } = compose("bands", beat, contextFor("reels", 1));
+
+    expect(fields[0]).toMatchObject({ tone: "ink", box: { x: 0, y: 0, w: 1, h: 1 } });
+    expect(fields).toHaveLength(3);
+    expect(placements.get("title")?.align).toBe("right");
+  });
+});
+
+describe("compose diagonal", () => {
+  it("puts the title above the slanted cut and the labels under its high end, flush right", () => {
+    const { placements, fields } = compose("diagonal", beat, contextFor("reels"));
+    const [field] = fields;
+    const title = placements.get("title")?.box;
+    const label = placements.get("a")?.box;
+
+    expect(field?.outline).toHaveLength(4);
+    expect(corners(title).every((point) => covered(field, point))).toBe(true);
+    expect(corners(label).some((point) => covered(field, point))).toBe(false);
+    expect((label?.x ?? 0) + (label?.w ?? 0)).toBeCloseTo(1 - destinations.reels.safeZone.right - 0.04, 6);
+  });
+
+  it("lets the cut fall the other way on a repeat, the labels flush left", () => {
+    const first = compose("diagonal", beat, contextFor("reels", 0)).fields[0]?.outline;
+    const repeat = compose("diagonal", beat, contextFor("reels", 1));
+
+    expect(repeat.fields[0]?.outline).not.toEqual(first);
+    expect(repeat.placements.get("a")?.box.x).toBeCloseTo(destinations.reels.safeZone.left + 0.04, 6);
+  });
+});
+
+describe("compose inset", () => {
+  it("raises a card inside a frame of color and sets the title within it", () => {
+    const { placements, fields } = compose("inset", beat, contextFor("reels"));
+    const [frame, card] = fields;
+    const title = placements.get("title")?.box;
+
+    expect(frame).toMatchObject({ tone: "accent", box: { x: 0, y: 0, w: 1, h: 1 } });
+    expect(card).toMatchObject({ tone: "surface", raised: true });
+    expect(corners(title).every((point) => covered(card, point))).toBe(true);
+    expect(title?.x).toBeGreaterThan(card?.box.x ?? 1);
+  });
+
+  it("lands a dark card on the backdrop on a repeat", () => {
+    const { fields } = compose("inset", beat, contextFor("reels", 1));
+    expect(fields).toEqual([expect.objectContaining({ tone: "ink", raised: true })]);
+  });
+});
+
+describe("compose corner-stack", () => {
+  it("sets the title on a block that runs off the top-left of the frame, the labels off it", () => {
+    const { placements, fields } = compose("corner-stack", beat, contextFor("reels"));
+    const [block] = fields;
+
+    expect(block?.box).toMatchObject({ x: 0, y: 0 });
+    expect(corners(placements.get("title")?.box).every((point) => covered(block, point))).toBe(true);
+    expect(corners(placements.get("a")?.box).some((point) => covered(block, point))).toBe(false);
+  });
+
+  it("takes the bottom-right corner on a repeat, its lines flush right", () => {
+    const { placements, fields } = compose("corner-stack", beat, contextFor("reels", 1));
+    const block = fields[0]?.box;
+
+    expect((block?.x ?? 0) + (block?.w ?? 0)).toBeCloseTo(1, 6);
+    expect((block?.y ?? 0) + (block?.h ?? 0)).toBeCloseTo(1, 6);
+    expect(placements.get("title")?.align).toBe("right");
+    expect(corners(placements.get("a")?.box).some((point) => covered(fields[0], point))).toBe(false);
+  });
+});
+
+describe("compose echo", () => {
+  it("repeats the key word in rows over the frame, which text does not count as its field", () => {
+    const { fields } = compose("echo", beat, contextFor("reels"));
+    const [pattern] = fields;
+
+    expect(pattern?.echo).toEqual({ text: "Friday", rows: 9 });
+    expect(pattern && fieldCovers(pattern, { x: 0.5, y: 0.5 })).toBe(false);
+    expect(compose("echo", beat, contextFor("youtube")).fields[0]?.echo?.rows).toBe(5);
+  });
+
+  it("puts the echo on a dark frame on a repeat and leaves it out without a key word", () => {
+    expect(compose("echo", beat, contextFor("reels", 1)).fields.map((field) => field.tone)).toEqual([
+      "ink",
+      "highlight",
+    ]);
+    expect(compose("echo", { ...beat, keyword: undefined }, contextFor("reels")).fields).toEqual([]);
+  });
+});
+
+function corners(box: Box | undefined): { x: number; y: number }[] {
+  if (!box) return [];
+  const inset = 1e-3;
+  return [
+    { x: box.x + inset, y: box.y + inset },
+    { x: box.x + box.w - inset, y: box.y + inset },
+    { x: box.x + inset, y: box.y + box.h - inset },
+    { x: box.x + box.w - inset, y: box.y + box.h - inset },
+  ];
+}
+
+function covered(field: Field | undefined, point: { x: number; y: number }): boolean {
+  return field ? fieldCovers(field, point) : false;
+}

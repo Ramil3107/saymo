@@ -1,10 +1,22 @@
 import { z } from "zod";
-import type { Format, SafeZone } from "../destinations";
+import { type Format, formatSize, type SafeZone } from "../destinations";
 import { type Box, BoxSchema } from "../schema/content";
-import { round6 } from "./geometry";
+import { insidePolygon, type Point, round6 } from "./geometry";
 import { type Inner, innerArea } from "./safeZones";
 
-export const CompositionSchema = z.enum(["center", "fill", "split", "giant-number", "column", "grid"]);
+export const CompositionSchema = z.enum([
+  "center",
+  "fill",
+  "split",
+  "giant-number",
+  "column",
+  "grid",
+  "bands",
+  "diagonal",
+  "inset",
+  "corner-stack",
+  "echo",
+]);
 
 export type Composition = z.infer<typeof CompositionSchema>;
 
@@ -18,27 +30,50 @@ export const FieldSchema = z.object({
   from: z.enum(["left", "right", "top", "bottom"]),
   enterMs: z.number(),
   exitMs: z.number(),
+  // The field's outline as points inside its box, from 0 to 1; the whole box when absent.
+  outline: z.array(z.object({ x: z.number(), y: z.number() })).optional(),
+  // A card: it lands with the style's corners and shadow instead of sweeping in.
+  raised: z.boolean().optional(),
+  // A word repeated in outlined rows across the box instead of a fill.
+  echo: z.object({ text: z.string(), rows: z.number() }).optional(),
 });
 
 export type Field = z.infer<typeof FieldSchema>;
 
-// fit: the text is as large as its box allows; spread: also spread over the box's height.
-export const TypeFillSchema = z.enum(["fit", "spread"]);
+// fit: the text is as large as its box allows; spread: also spread over the box's height; rows: each line in a
+// row of its own, the rows sharing the box's height.
+export const TypeFillSchema = z.enum(["fit", "spread", "rows"]);
 
 export type TypeFill = z.infer<typeof TypeFillSchema>;
 
-// The beat as a composition sees it: the one lead text, a corner label, and the labels with their sizes and times.
-export type Pieces = { leadId?: string; cornerId?: string; supports: Support[] };
+// The beat as a composition sees it: the one lead text with its line count and key word, a corner label, and the
+// labels with their sizes and times.
+export type Pieces = {
+  leadId?: string;
+  leadLines?: number;
+  keyword?: string;
+  cornerId?: string;
+  supports: Support[];
+};
 export type Support = { id: string; size: Size; enterMs: number; exitMs: number };
-export type Placement = { box: Box; fill?: TypeFill };
+export type Placement = { box: Box; fill?: TypeFill; align?: Flush; lineOn?: FieldTone[] };
 export type Composed = { placements: Map<string, Placement>; fields: Field[] };
 
 // variant: how many beats before this one used the same composition, so repeats alternate their form.
 export type ComposeContext = { format: Format; safeZone: SafeZone; variant: number; durationMs: number };
 
 type Size = { w: number; h: number };
+type Flush = "left" | "right";
 type Arranged = { placements: [string, Placement][]; fields: Field[] };
 type Parts = Pieces & { area: Inner; context: ComposeContext };
+type Stack = {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+  direction: "down" | "up";
+  flush: Flush;
+};
 
 const gap = 0.03;
 const fitEpsilon = 1e-9;
@@ -51,6 +86,19 @@ const gridLeadShare = 0.24;
 const maxTiles = 4;
 const tileTones: FieldTone[] = ["accent", "ink", "highlight", "alt"];
 const wholeFrame: Box = { x: 0, y: 0, w: 1, h: 1 };
+const bandRowShareOfWidth = 0.3;
+const bandGap = 0.012;
+const bandStaggerMs = 90;
+const bandTones: FieldTone[][] = [
+  ["accent", "ink", "highlight"],
+  ["highlight", "accent", "surface"],
+];
+const cutHigh = 0.4;
+const cutLow = 0.6;
+const cardPad = 0.05;
+const stackLeadWidth = 0.8;
+const stackLeadHeight = 0.42;
+const echoRows: Record<Format, number> = { "9:16": 9, "1:1": 6, "16:9": 5 };
 
 // Places a backdrop beat's lead text and supporting labels, and the color fields that cut the frame.
 export function compose(
@@ -64,6 +112,16 @@ export function compose(
   const arranged = arrange(composition, { ...pieces, area: below, context });
 
   return { placements: new Map([...corner, ...arranged.placements]), fields: arranged.fields };
+}
+
+// Whether text at a point sits on the field's color: an echo is only outlines, an outlined field covers its outline.
+export function fieldCovers(field: Field, point: Point): boolean {
+  const { box, outline } = field;
+  if (field.echo) return false;
+  if (point.x < box.x || point.x > box.x + box.w || point.y < box.y || point.y > box.y + box.h) return false;
+  if (!outline) return true;
+
+  return insidePolygon(outline, { x: (point.x - box.x) / box.w, y: (point.y - box.y) / box.h });
 }
 
 // The area type may use: inside the safe zone, and clear of the column's band.
@@ -91,6 +149,16 @@ function arrange(composition: Exclude<Composition, "center">, parts: Parts): Arr
       return column(parts);
     case "grid":
       return grid(parts);
+    case "bands":
+      return bands(parts);
+    case "diagonal":
+      return diagonal(parts);
+    case "inset":
+      return inset(parts);
+    case "corner-stack":
+      return cornerStack(parts);
+    case "echo":
+      return echo(parts);
   }
 }
 
@@ -108,8 +176,8 @@ function split({ leadId, supports, area, context }: Parts): Arranged {
   const field = onTop ? { x: 0, y: 0, w: 1, h: splitAt } : { x: 0, y: splitAt, w: 1, h: 1 - splitAt };
   const leadArea = onTop ? { ...area, bottom: splitAt - gap } : { ...area, top: splitAt + gap };
   const stack = onTop
-    ? stacked(supports, area.left, splitAt + gap, area.bottom, "down")
-    : stacked(supports, area.left, area.top, splitAt - gap, "up");
+    ? stacked(supports, { ...area, top: splitAt + gap, direction: "down", flush: "left" })
+    : stacked(supports, { ...area, bottom: splitAt - gap, direction: "up", flush: "left" });
 
   return {
     placements: [...leadAt(leadId, leadArea, "fit"), ...stack],
@@ -157,11 +225,133 @@ function grid({ leadId, supports, area, context }: Parts): Arranged {
   return { placements: [...leadAt(leadId, { ...area, bottom: leadBottom }, "fit"), ...placements], fields };
 }
 
+// Every title line sits in a full-width band of its own; on every other use the frame turns dark under the bands.
+function bands({ leadId, leadLines = 1, supports, area, context }: Parts): Arranged {
+  const { leadArea, stack } = underStack(area, supports);
+  const row = Math.min((leadArea.bottom - leadArea.top) / leadLines, bandRow(area, context.format));
+  const top = (leadArea.top + leadArea.bottom - row * leadLines) / 2;
+  const dark = context.variant % 2 === 1;
+  const tones = bandTones[dark ? 1 : 0] ?? tileTones;
+  const rows = Array.from({ length: leadLines }, (_, index) => bandAt(index, top + index * row, row, tones));
+
+  const lead: Placement = {
+    box: boxOf(area.left, top, area.right - area.left, row * leadLines),
+    fill: "rows",
+    align: dark ? "right" : "left",
+    lineOn: rows.map((band) => band.tone),
+  };
+  const frame = dark ? [persistent(wholeFrame, "ink", "top", context)] : [];
+  const fields = [...frame, ...rows.map((band) => ({ ...band, exitMs: context.durationMs }))];
+
+  return { placements: [...placed(leadId, lead), ...stack], fields };
+}
+
+// A band is at most about a third of the text area's width tall, so it hugs its line.
+function bandRow(area: Inner, format: Format): number {
+  return (area.right - area.left) * bandRowShareOfWidth * aspect(format);
+}
+
+function bandAt(index: number, top: number, row: number, tones: FieldTone[]): Omit<Field, "exitMs"> {
+  return {
+    box: boxOf(0, top + bandGap / 2, 1, row - bandGap),
+    tone: tones[index % tones.length] ?? "accent",
+    from: index % 2 === 0 ? "left" : "right",
+    enterMs: index * bandStaggerMs,
+  };
+}
+
+// A field over the top of the frame ends in a slanted cut: the title above the cut, the labels under its high end.
+// On every other use the cut falls the other way.
+function diagonal({ leadId, supports, area, context }: Parts): Arranged {
+  const rising = context.variant % 2 === 0;
+  const cutAt = (x: number) => (rising ? cutLow - (cutLow - cutHigh) * x : cutHigh + (cutLow - cutHigh) * x);
+  const widest = Math.max(0, ...supports.map((piece) => piece.size.w));
+  const stackTop = cutAt(rising ? area.right - widest : area.left + widest) + gap;
+  const leadArea = { ...area, bottom: Math.min(cutAt(area.left), cutAt(area.right)) - gap };
+  const flush: Flush = rising ? "right" : "left";
+
+  const high = cutHigh / cutLow;
+  const outline = rising
+    ? [point(0, 0), point(1, 0), point(1, high), point(0, 1)]
+    : [point(0, 0), point(1, 0), point(1, 1), point(0, high)];
+  const field = {
+    ...persistent(boxOf(0, 0, 1, cutLow), rising ? "accent" : "alt", "left", context),
+    outline,
+  };
+
+  return {
+    placements: [
+      ...leadAt(leadId, leadArea, "fit"),
+      ...stacked(supports, { ...area, top: stackTop, direction: "down", flush }),
+    ],
+    fields: [field],
+  };
+}
+
+function point(x: number, y: number): Point {
+  return { x, y: round6(y) };
+}
+
+// A raised card holds the title inside a frame of color; on every other use a dark card lands on the backdrop.
+function inset({ leadId, supports, area, context }: Parts): Arranged {
+  const { leadArea, stack } = underStack(area, supports);
+  const card = boxOfInner(leadArea);
+  const padY = cardPad * aspect(context.format);
+  const inside = {
+    left: leadArea.left + cardPad,
+    right: leadArea.right - cardPad,
+    top: leadArea.top + padY,
+    bottom: leadArea.bottom - padY,
+  };
+  const framed = context.variant % 2 === 0;
+  const raised = { ...persistent(card, framed ? "surface" : "ink", "bottom", context), raised: true };
+  const fields = framed ? [persistent(wholeFrame, "accent", "top", context), raised] : [raised];
+
+  return { placements: [...leadAt(leadId, inside, "fit"), ...stack], fields };
+}
+
+// The title stacks in a corner on a block of color that runs off the frame, the labels in the opposite corner.
+// On every other use the title takes the bottom-right corner and the labels the top-left.
+function cornerStack({ leadId, supports, area, context }: Parts): Arranged {
+  const topLeft = context.variant % 2 === 0;
+  const width = (area.right - area.left) * stackLeadWidth;
+  const height = (area.bottom - area.top) * stackLeadHeight;
+  const lead = topLeft
+    ? { left: area.left, right: area.left + width, top: area.top, bottom: area.top + height }
+    : { left: area.right - width, right: area.right, top: area.bottom - height, bottom: area.bottom };
+  const padY = gap * aspect(context.format);
+  const block = topLeft
+    ? boxOf(0, 0, lead.right + gap, lead.bottom + padY)
+    : boxOf(lead.left - gap, lead.top - padY, 1 - lead.left + gap, 1 - lead.top + padY);
+  const stack = topLeft
+    ? stacked(supports, { ...area, top: block.h + gap, direction: "up", flush: "right" })
+    : stacked(supports, { ...area, bottom: block.y - gap, direction: "down", flush: "left" });
+  const placement: Placement = { box: boxOfInner(lead), fill: "fit", align: topLeft ? "left" : "right" };
+
+  return {
+    placements: [...placed(leadId, placement), ...stack],
+    fields: [persistent(block, topLeft ? "accent" : "alt", topLeft ? "left" : "right", context)],
+  };
+}
+
+// The title's key word repeats in outlined rows over the whole frame, the title over it; on every other use the
+// frame turns dark and the outlines take the highlight.
+function echo({ leadId, keyword, supports, area, context }: Parts): Arranged {
+  const { leadArea, stack } = underStack(area, supports);
+  const dark = context.variant % 2 === 1;
+  const tone: FieldTone = dark ? "highlight" : "accent";
+  const echoed = { text: keyword ?? "", rows: echoRows[context.format] };
+  const pattern = keyword ? [{ ...persistent(wholeFrame, tone, "left", context), echo: echoed }] : [];
+  const frame = dark ? [persistent(wholeFrame, "ink", "top", context)] : [];
+
+  return { placements: [...leadAt(leadId, leadArea, "fit"), ...stack], fields: [...frame, ...pattern] };
+}
+
 // Labels stack at the bottom of the area, flush left, and the lead takes what is left above them.
 function underStack(area: Inner, supports: Support[]): { leadArea: Inner; stack: [string, Placement][] } {
   const height = area.bottom - area.top;
   const stackTop = area.bottom - Math.min(stackHeight(supports), height * maxStackShare);
-  const stack = stacked(supports, area.left, stackTop, area.bottom, "down");
+  const stack = stacked(supports, { ...area, top: stackTop, direction: "down", flush: "left" });
   const leadBottom = stack.length > 0 ? stackTop - gap : area.bottom;
 
   return { leadArea: { ...area, bottom: leadBottom }, stack };
@@ -171,36 +361,33 @@ function stackHeight(supports: Support[]): number {
   return supports.reduce((sum, piece, index) => sum + piece.size.h + (index > 0 ? gap : 0), 0);
 }
 
-// Labels in the order they arrive, from the top down or from the bottom up; what does not fit is left out.
-function stacked(
-  supports: Support[],
-  left: number,
-  top: number,
-  bottom: number,
-  direction: "down" | "up",
-): [string, Placement][] {
+// Labels in the order they arrive, from the top down or from the bottom up, flush to one side; what does not fit
+// is left out.
+function stacked(supports: Support[], stack: Stack): [string, Placement][] {
   const fitting: Support[] = [];
   let used = 0;
   for (const piece of supports) {
     const next = used + (fitting.length > 0 ? gap : 0) + piece.size.h;
-    if (next > bottom - top + fitEpsilon) break;
+    if (next > stack.bottom - stack.top + fitEpsilon) break;
     fitting.push(piece);
     used = next;
   }
 
-  let y = direction === "down" ? top : bottom - used;
+  let y = stack.direction === "down" ? stack.top : stack.bottom - used;
   return fitting.map((piece) => {
-    const box = boxOf(left, y, piece.size.w, piece.size.h);
+    const x = stack.flush === "left" ? stack.left : stack.right - piece.size.w;
+    const box = boxOf(x, y, piece.size.w, piece.size.h);
     y += piece.size.h + gap;
     return [piece.id, { box }];
   });
 }
 
 function leadAt(leadId: string | undefined, area: Inner, fill: TypeFill): [string, Placement][] {
-  if (!leadId) return [];
-  return [
-    [leadId, { box: boxOf(area.left, area.top, area.right - area.left, area.bottom - area.top), fill }],
-  ];
+  return placed(leadId, { box: boxOfInner(area), fill });
+}
+
+function placed(id: string | undefined, placement: Placement): [string, Placement][] {
+  return id ? [[id, placement]] : [];
 }
 
 function persistent(box: Box, tone: FieldTone, from: Field["from"], context: ComposeContext): Field {
@@ -229,6 +416,16 @@ function columnsFor(count: number, format: Format): number {
   if (format === "16:9") return count;
   if (format === "1:1") return count <= 3 ? count : 2;
   return count <= 2 ? 1 : 2;
+}
+
+// How many frame heights one frame width makes, to turn a horizontal share into a vertical one.
+function aspect(format: Format): number {
+  const { width, height } = formatSize(format);
+  return width / height;
+}
+
+function boxOfInner(area: Inner): Box {
+  return boxOf(area.left, area.top, area.right - area.left, area.bottom - area.top);
 }
 
 function boxOf(x: number, y: number, w: number, h: number): Box {
