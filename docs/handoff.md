@@ -9,6 +9,7 @@ Where the work stands on 2026-10-31 and how to pick it up in a new session.
 - The final runs are done: four free stock clips and four text-only ads, the videos in `runs/final/`, the runs in `runs/final-*`, the stock sources in `runs/stock/` (all local, `runs/` is not in git). Paid services cost $0.09 in all.
 - The director and the frame notes are written in the session: `pnpm spike` stops with exit code 3 and a brief, the plan goes in `director/plan.json` or the notes in `see/frames.json`, then the same command with `--resume`. `--redo <step>` reruns from a step. See [Pipeline](./pipeline.md).
 - Biome, the type check and the tests are green.
+- Fonts come from the library in `public/fonts` (40 OFL families, 2026-11-01, see "Fonts" in [Vocabulary](./vocabulary.md)); no render fetches Google Fonts any more. The Lambda site `saymo` still holds the old bundle: redeploy it (`npx remotion lambda sites create src/video/remotion/index.ts --site-name=saymo`, see the [Lambda runbook](./runbooks/lambda.md)) before Lambda renders pick up the fonts.
 
 ## Next
 

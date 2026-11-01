@@ -2,7 +2,7 @@ import type { ComponentType } from "react";
 import { AbsoluteFill, Sequence } from "remotion";
 import { FontsLoaded } from "../FontsLoaded";
 import { msToFrame } from "../frames";
-import { type DemoProps, glideLook, type Look, snapLook } from "./looks";
+import { type DemoProps, glideLook, type Look, labFonts, snapLook } from "./looks";
 
 export type Demo = { title: string; component: ComponentType<DemoProps>; durationMs: number };
 
@@ -19,7 +19,7 @@ export function labFrames(demos: Demo[]): number {
 
 export function LabReel({ demos }: { demos: Demo[] }) {
   return (
-    <FontsLoaded>
+    <FontsLoaded fonts={labFonts}>
       <AbsoluteFill style={{ backgroundColor: labBackground }}>
         {demos.map((demo, index) => (
           <Sequence

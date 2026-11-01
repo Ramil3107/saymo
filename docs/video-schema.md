@@ -26,7 +26,7 @@ Every element has a stable id, a type from the vocabulary, parameters and timing
 | `destination` | destination id | Where the video goes, see [Destinations](#destinations) |
 | `register` | register id | Character of the video, see [Registers](#registers) |
 | `style` | style id, optional | The look of the whole video (`bold-pop` or `clean-paper`, see [Vocabulary](/vocabulary#styles)); without it the register picks one |
-| `brand` | object | `colors` (one to three), `font` and an optional `logo` |
+| `brand` | object | `colors` (one to three), `font` (a family from the [font library](/vocabulary#fonts), Onest when the library does not have it) and an optional `logo` |
 | `assets` | list | `id`, `kind` (`video`, `audio` or `image`), `src` and an optional `durationMs`. Scenes, music and voice refer to assets by `id` |
 | `scenes` | list of scenes | In order, with no gaps or overlaps: the first starts at 0, each next one starts where the previous one ends |
 | `captions` | object, optional | `style` (one of the caption presets in [Vocabulary](/vocabulary#captions)), `keywords` (words the preset marks: in the accent color, an accent box, a marker or italics) and `pages`. A page has `text`, `startMs`, `durationMs` and `tokens`: words with their own `fromMs` and `toMs` |

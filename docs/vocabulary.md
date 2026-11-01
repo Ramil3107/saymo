@@ -22,11 +22,11 @@ The vocabulary is a set of React components on Remotion that take their paramete
 ## Where primitives come from
 
 - GSAP with all plugins: free since 2025, and its timeline can be seeked to a frame inside Remotion.
-- Remotion packages: transitions, captions, shapes, paths, lottie, layout-utils, google-fonts.
+- Remotion packages: transitions, captions, shapes, paths, lottie, layout-utils.
 - Remocn (MIT) and techniques from the author's `video-editing` project.
 - Third-party code is ported into the vocabulary under our schema, never plugged in as is.
 
-External assets come only with permissive licenses, and a license manifest lives in the repository: Lucide icons, open illustrations, Lottie under the Lottie Simple License. There is no stock footage in the first version, so backgrounds in text mode are built from the brand, gradients, shapes and images from the link.
+External assets come only with permissive licenses, and a license manifest lives in the repository: Lucide icons, open illustrations, Lottie under the Lottie Simple License, fonts under the SIL Open Font License (see [Fonts](#fonts)). There is no stock footage in the first version, so backgrounds in text mode are built from the brand, gradients, shapes and images from the link.
 
 ## Motion system
 
@@ -121,6 +121,24 @@ The brand gives the colors (`src/video/style/palette.ts`): the first brand color
 Every document element draws in the style. A style's surfaces decide the rest: `bold-pop` has dark panels and block labels (flat highlight slabs in the display face, capitals, a hard offset shadow), `clean-paper` has light panels and soft labels (white pills with a soft shadow and an accent badge). Chips, stickers and lower thirds are labels; title cards and lists sit on panels; quotes and kinetic text are white with a shadow over footage and ink on the backdrop; a headline is drawn as a kinetic title and a big number as a counter when it starts with a number; a document shown in a card sits on the style's backdrop; wipes and dips take their colors from the style. The layout sizes a chip for the style's face: `display.labelScale` sets its text size and `display.widthScale` how much wider the face runs than the layout's estimate, measured in the renderer (Unbounded capitals up to 1.55 times, drawn at 0.85 of the size since capitals read larger; Inter about 1). A chip wraps onto two lines at word boundaries and never breaks a word; a sticker is as wide as its text. A label still shrinks to fit its box if a line runs long. On a backdrop labels are set larger, like kinetic text, and gather around the middle of the frame in the order they arrive; a lower third there centers its lines.
 
 `pnpm render:plan fixtures/plan.vocabulary.json --out runs/vocab-bold --style bold-pop` builds a text-mode plan that holds every element kind, checks it and renders it locally; `--style` moves any plan to another style. `pnpm remotion:styles` renders a 14-second spot in both styles side by side with the brand colors of `runs/face-v2`: a hook, a counter, a collage with a tag, the footage with the style's captions, a call to action, joined by the style's transitions. Since step 7 the plan and the document carry a `style`; the director picks it from the summaries above, and every beat names the transition it enters by.
+
+## Fonts
+
+Every face a render draws comes from the font library in `public/fonts`, not from the network. It holds 40 families under the SIL Open Font License 1.1, about 2.9 MB: Latin and Cyrillic woff2 from Fontsource, one variable file per subset and style where the family is variable, so a family carries all its weights in one or two files. Each family keeps its license next to its files, and `public/fonts/manifest.json` lists the family, its kind, weights, styles, subsets, files, license and source; it is the license manifest for the fonts.
+
+| Kind | Families |
+| --- | --- |
+| display | Unbounded, Dela Gothic One, Russo One, Rubik Mono One, Tektur, Exo 2, Wix Madefor Display, Geologica, Press Start 2P, Syne |
+| sans | Onest, Inter, Inter Tight, Manrope, Montserrat, Golos Text, IBM Plex Sans, Jost, Space Grotesk |
+| serif | Playfair Display, Lora, Cormorant Garamond, EB Garamond, Prata, Yeseva One, Instrument Serif |
+| condensed | Oswald, Sofia Sans Extra Condensed, Alumni Sans, Yanone Kaffeesatz, Anton, Bebas Neue |
+| rounded | Nunito, Comfortaa, Rubik |
+| mono | JetBrains Mono, Martian Mono |
+| hand | Caveat, Marck Script, Pacifico |
+
+Syne, Space Grotesk, Instrument Serif, Anton and Bebas Neue have no Cyrillic, so each names a Cyrillic face it falls back to (Unbounded, Golos Text, Playfair Display, Oswald), loaded with it; Latin Extended letters fall back to the system face.
+
+A style names its display face and a brand its font by family name or id (`Playfair Display` or `playfair-display`); a family the library does not have falls back to Onest. A render loads only the faces its document uses (`documentFonts` in `src/video/fonts/library.ts`: the style's display face, the brand font, and the caption serif when the captions are set in it) and draws nothing until exactly those have loaded, since text is measured on the page and a size measured in a fallback face would stay for the whole render. The labs name the faces they draw. `pnpm fonts:add <fontsource-id>... --kind <kind> [--fallback <id>]` adds families from Fontsource (OFL only, a Latin-only face needs `--fallback`), then `pnpm format` settles the manifest. Remotion serves `public/` for local renders, Studio and the Lambda site; the labs that render with `runs/lab/public` get a copy from `src/cli/labAssets.ts`.
 
 ## Compositions
 
@@ -223,7 +241,7 @@ Each step ends with a render the owner reviews.
 
 Most of them fold into the steps above:
 
-- Typography: a brand font with weights 600–900, a size scale per element, line spacing; fonts self-hosted.
+- Typography: a brand font with weights 600–900, a size scale per element, line spacing. Fonts are self-hosted since 2026-11-01, see [Fonts](#fonts).
 - Icons and symbols: badge icons in chips, animated SVG symbols (a crossed wheat, a red cross) with stroke reveals and a shake.
 - Accent cards: a pull-quote card with a marker highlight, a ring pulse and a shine.
 - Status plate: a lower third with status pills ("strict · lifelong").

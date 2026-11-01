@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
+import { cssFamily, libraryFont } from "../../fonts/library";
 import { type Tempo, tempos } from "../../motion/tempo";
-import { displayFamily } from "../fonts";
 
 export type Palette = {
   background: string;
@@ -22,10 +22,12 @@ export type Look = {
 
 export type DemoProps = { look: Look; width: number; height: number };
 
+export const labFonts = [libraryFont("unbounded"), libraryFont("inter")];
+
 export const snapLook: Look = {
   name: "SNAP · fast, like Higgsfield",
   tempo: tempos.snap,
-  fontFamily: displayFamily("unbounded"),
+  fontFamily: cssFamily(libraryFont("unbounded")),
   palette: {
     background: "#F6F4EF",
     ink: "#0A0A0D",
@@ -45,7 +47,7 @@ export const snapLook: Look = {
 export const glideLook: Look = {
   name: "GLIDE · smooth, like motionvid",
   tempo: tempos.glide,
-  fontFamily: displayFamily("inter"),
+  fontFamily: cssFamily(libraryFont("inter")),
   palette: {
     background: "#F1F1F4",
     ink: "#15151A",

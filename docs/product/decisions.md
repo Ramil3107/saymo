@@ -4,6 +4,12 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-11-01 · Fonts come from a library in the repository
+
+- **Decided:** a font library of 40 families under the SIL Open Font License 1.1 lives in `public/fonts`: display faces (Unbounded, Dela Gothic One, Russo One, Rubik Mono One, Tektur and more), neutral sans, serifs, condensed, rounded, mono and hand-written faces. Each family is Latin and Cyrillic woff2 from Fontsource, one variable file per subset and style where the family is variable (all weights in one file), with its license and an entry in `public/fonts/manifest.json`; five faces are Latin-only (Syne, Space Grotesk, Instrument Serif, Anton, Bebas Neue) and name a Cyrillic fallback face. A render loads only the faces its document uses (the style's display face, the brand font, the caption serif when the captions are set in it) from the library and waits for exactly those; a brand font the library does not have falls back to Onest. `@remotion/google-fonts` is removed, and `pnpm fonts:add` adds a family. The owner asked for many fonts in the repository and chose the 40-family option on 2026-11-01, about 2.9 MB.
+- **Why:** every render tab fetched 36 font files from Google, and three local renders timed out on those fetches on 2026-10-31; the coming styles and the brand font list need many more faces than four, and a local library renders the same offline, in Studio and on Lambda. Variable files keep 40 families under 3 MB.
+- **Rejected:** 12 families, about 1.1 MB (too few faces for the styles to come); 25 families with Cyrillic only, about 2 MB, the lead's recommendation (the owner wanted the wider choice); keeping `@remotion/google-fonts` and loading only the faces a document uses (still a network fetch on every render); static files per weight (several times the size for the same faces).
+
 ### 2026-10-31 · The giant number stays whole in the frame
 
 - **Decided:** the `edge-number` composition, where the frame's left edge cropped the first figure of a counter, becomes `giant-number`: the counter as wide as the text area allows and whole in the frame, the label under it; its other form still sits on an accent field. The element `fill` loses `bleed`. This changes the composition list of the entry "A backdrop beat names its composition, and the build lays it out as data" below. The owner pointed at the cropped figure on 2026-10-31.

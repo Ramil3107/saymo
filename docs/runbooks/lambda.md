@@ -23,7 +23,7 @@ A brand-new account starts with Lambda quotas that are too small for Remotion: 5
 ## 3. Function and site
 
 1. `npx remotion lambda functions deploy --memory=2048 --timeout=120` prints the function name (`--memory=512` while the account's memory quota is still 512 MB). Put it into `.env` as `REMOTION_LAMBDA_FUNCTION_NAME`.
-2. `npx remotion lambda sites create src/video/remotion/index.ts --site-name=saymo` prints the serve URL. Put it into `.env` as `REMOTION_SERVE_URL`. Run this again after every vocabulary change; the same `--site-name` overwrites the previous deploy.
+2. `npx remotion lambda sites create src/video/remotion/index.ts --site-name=saymo` prints the serve URL. Put it into `.env` as `REMOTION_SERVE_URL`. Run this again after every vocabulary or font library change (the site carries `public/`, fonts included); the same `--site-name` overwrites the previous deploy.
 3. `npx remotion lambda quotas` shows the concurrency limit; new accounts may be capped at 10 and need a quota increase for parallel renders.
 
 ## 4. Smoke test

@@ -1,14 +1,16 @@
 import { Video } from "@remotion/media";
+import { useMemo } from "react";
 import type { CalculateMetadataFunction } from "remotion";
 import { AbsoluteFill, Sequence, staticFile } from "remotion";
 import { pagesFor } from "../../captions/looks";
 import { destinations } from "../../destinations";
+import { captionSerif, styleFonts } from "../../fonts/library";
+import type { LibraryFont } from "../../fonts/manifest";
 import { registers } from "../../registers";
 import type { CaptionStyle } from "../../schema/plan";
 import { defaultStyle } from "../../styles";
 import { CaptionLayer } from "../captions/CaptionLayer";
 import { FontsLoaded } from "../FontsLoaded";
-import { loadBrandFont } from "../fonts";
 import { msToFrame } from "../frames";
 import { styleKit } from "../style/kit";
 import type { Theme } from "../theme";
@@ -32,6 +34,7 @@ const groups: CaptionStyle[][] = [
 const panel = { width: 540, height: 960, top: 92, gap: 50 };
 const labWidth = 1920;
 const safeZone = destinations.reels.safeZone;
+const brandFont = "Onest";
 const label = {
   fontFamily: "Helvetica, Arial, sans-serif",
   fontSize: 24,
@@ -48,9 +51,10 @@ export const captionLabMetadata: CalculateMetadataFunction<CaptionLabProps> = ({
 
 export function CaptionLab(lab: CaptionLabProps) {
   const theme = labTheme(lab);
+  const fonts = useMemo(() => labFonts(lab), [lab]);
 
   return (
-    <FontsLoaded>
+    <FontsLoaded fonts={fonts}>
       <AbsoluteFill style={{ backgroundColor: "#101014" }}>
         {groups.map((group, index) => (
           <Sequence
@@ -76,11 +80,21 @@ export function CaptionLab(lab: CaptionLabProps) {
 }
 
 function labTheme(lab: CaptionLabProps): Theme {
-  const brand = { colors: lab.colors, font: "Onest" };
+  const brand = { colors: lab.colors, font: brandFont };
   const kit = styleKit(defaultStyle[lab.register], brand);
-  const { fontFamily } = loadBrandFont("Onest");
 
-  return { brand, register: registers[lab.register], tempo: kit.tempo, kit, fontFamily, safeZone };
+  return {
+    brand,
+    register: registers[lab.register],
+    tempo: kit.tempo,
+    kit,
+    fontFamily: kit.textFamily,
+    safeZone,
+  };
+}
+
+function labFonts(lab: CaptionLabProps): LibraryFont[] {
+  return [...styleFonts(defaultStyle[lab.register], brandFont), captionSerif];
 }
 
 function CaptionPanel({ style, position, count, lab, theme }: PanelProps) {
