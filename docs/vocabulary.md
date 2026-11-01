@@ -111,7 +111,7 @@ The build writes the transition each beat names, `cut` by default. `pnpm remotio
 
 ## Styles
 
-A style is the look of a whole video, kept as data in `src/video/styles.ts`: a name and a summary for the director, a tempo, the display face and its case, the tones (background, ink, surface, muted and a default highlight), the textures, and the caption presets, transitions and title entrances it draws from, how it draws each accent, and its flourishes (corner chevrons and ghost numbers in `bold-pop`, a cursor in `clean-paper`). The register keeps the pacing (scene length, holds, density); the style decides how it looks.
+A style is the look of a whole video, kept as data in `src/video/styles.ts`: a name and a summary for the director, a tempo, the display face and its case, the tones (background, ink, surface, muted and a default highlight), the textures, and the caption presets, transitions, title entrances and palettes it draws from, how it draws each accent, and its flourishes (corner chevrons and ghost numbers in `bold-pop`, a cursor in `clean-paper`). The register keeps the pacing (scene length, holds, density); the style decides how it looks.
 
 - `bold-pop`, after Higgsfield: Unbounded in capitals on off-white with drifting color fields and grain, `snap`; captions `bold-center`, `keyword-box`, `pop`, `outline`; transitions flash, whip, pixelate, zoom; titles typed, punched, tracked in or popped; accents as bursts, growing frames, brackets and flash blocks.
 - `clean-paper`, after motionvid: Inter in sentence case on warm paper with a faint grid, `glide`; captions `keyword-box`, `karaoke-pill`, `marker`, `typewriter`, `minimal`; transitions wipe, dip, zoom; titles rising, typed or revealed; accents as sparkles, selection boxes, circles and underlines.
@@ -121,6 +121,23 @@ The brand gives the colors (`src/video/style/palette.ts`): the first brand color
 Every document element draws in the style. A style's surfaces decide the rest: `bold-pop` has dark panels and block labels (flat highlight slabs in the display face, capitals, a hard offset shadow), `clean-paper` has light panels and soft labels (white pills with a soft shadow and an accent badge). Chips, stickers and lower thirds are labels; title cards and lists sit on panels; quotes and kinetic text are white with a shadow over footage and ink on the backdrop; a headline is drawn as a kinetic title and a big number as a counter when it starts with a number; a document shown in a card sits on the style's backdrop; wipes and dips take their colors from the style. The layout sizes a chip for the style's face: `display.labelScale` sets its text size and `display.widthScale` how much wider the face runs than the layout's estimate, measured in the renderer (Unbounded capitals up to 1.55 times, drawn at 0.85 of the size since capitals read larger; Inter about 1). A chip wraps onto two lines at word boundaries and never breaks a word; a sticker is as wide as its text. A label still shrinks to fit its box if a line runs long. On a backdrop labels are set larger, like kinetic text, and gather around the middle of the frame in the order they arrive; a lower third there centers its lines.
 
 `pnpm render:plan fixtures/plan.vocabulary.json --out runs/vocab-bold --style bold-pop` builds a text-mode plan that holds every element kind, checks it and renders it locally; `--style` moves any plan to another style. `pnpm remotion:styles` renders a 14-second spot in both styles side by side with the brand colors of `runs/face-v2`: a hook, a counter, a collage with a tag, the footage with the style's captions, a call to action, joined by the style's transitions. Since step 7 the plan and the document carry a `style`; the director picks it from the summaries above, and every beat names the transition it enters by.
+
+### Palettes
+
+A video without a brand draws in a named palette (`src/video/palettes.ts`): an accent, a light highlight and a dark second tone, read the way a brand's colors are, so the same rules keep text readable. Each style lists the palettes that suit it, and the director names one in the plan (`palette`) when the brief says "Brand: none"; with a brand the brand's colors apply. A plan without a palette gets cobalt, the old default blue.
+
+| Palette | Colors | Mood | Styles |
+| --- | --- | --- | --- |
+| `cobalt` | electric blue, sunny yellow | clear and confident; apps, tech, launches | both |
+| `tangerine` | hot orange, ice blue, navy | energetic and appetizing; food, sales, sport | `bold-pop` |
+| `flamingo` | loud pink, lemon, violet | playful; beauty, fashion, creators | `bold-pop` |
+| `ultraviolet` | violet, acid lime, deep indigo | digital and nocturnal; gaming, drops, music | `bold-pop` |
+| `forest` | deep green, pale lime, pine | fresh and healthy; wellness, finance, eco | both |
+| `ocean` | teal, aqua, navy | calm and trustworthy; clinics, care, SaaS | `clean-paper` |
+| `terracotta` | burnt clay, sand, cocoa | warm and handmade; bakeries, cafés, craft | `clean-paper` |
+| `plum` | plum, blush, aubergine | refined; premium, beauty, boutiques | `clean-paper` |
+
+`pnpm render:plan` draws a plan in its palette; `--colors #hex,#hex` draws it in a brand's colors instead.
 
 ## Fonts
 

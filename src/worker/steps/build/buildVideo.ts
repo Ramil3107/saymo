@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { z } from "zod";
 import { speechIntervals } from "../../../video/audio/ducking";
+import { type Brand, paletteBrand } from "../../../video/brand";
 import { pagesFor } from "../../../video/captions/looks";
 import { stepAside, type Window } from "../../../video/captions/stepAside";
 import { rebaseWords } from "../../../video/captions/timeline";
@@ -133,7 +134,7 @@ export function buildVideo(
   plan: Plan,
   content: ContentMap | null,
   assets: BuildAssets,
-  brand: VideoDoc["brand"],
+  brand: Brand | undefined,
 ): VideoDoc {
   const destination = destinations[plan.destination];
   const target = formatSize(destination.format);
@@ -174,7 +175,7 @@ export function buildVideo(
     destination: plan.destination,
     register: plan.register,
     style,
-    brand,
+    brand: brand ?? paletteBrand(plan.palette),
     assets: documentAssets(assets),
     scenes: built.map((scene) => scene.scene),
     captions,

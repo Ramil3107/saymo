@@ -15,6 +15,11 @@ test("fixture plans are valid", () => {
   expect(() => PlanSchema.parse(textPlan)).not.toThrow();
 });
 
+test("a plan names its palette from the palettes", () => {
+  expect(PlanSchema.safeParse({ ...textPlan, palette: "terracotta" }).success).toBe(true);
+  expect(PlanSchema.safeParse({ ...textPlan, palette: "beige" }).success).toBe(false);
+});
+
 test("beats must add up to lengthMs within 200 ms", () => {
   const broken = { ...footagePlan, lengthMs: footagePlan.lengthMs + 1000 };
   expect(PlanSchema.safeParse(broken).success).toBe(false);

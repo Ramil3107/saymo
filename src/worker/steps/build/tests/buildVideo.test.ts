@@ -6,6 +6,7 @@ import { destinations } from "../../../../video/destinations";
 import { intersectionArea } from "../../../../video/layout/geometry";
 import { isKineticKind } from "../../../../video/layout/layouts";
 import { captionBand } from "../../../../video/layout/safeZones";
+import { palettes } from "../../../../video/palettes";
 import { runQa } from "../../../../video/qa/checks";
 import { ContentMapSchema } from "../../../../video/schema/content";
 import { PlanSchema } from "../../../../video/schema/plan";
@@ -374,6 +375,14 @@ test("buildVideo picks the style of the register unless the plan names one", () 
 
   const calm = PlanSchema.parse({ ...textPlanJson, style: "clean-paper" });
   expect(buildVideo(calm, null, {}, brand).style).toBe("clean-paper");
+});
+
+test("buildVideo draws a video without a brand in its plan's palette, and a brand's video in the brand", () => {
+  const tangerine = PlanSchema.parse({ ...textPlanJson, palette: "tangerine" });
+
+  expect(buildVideo(tangerine, null, {}, undefined).brand.colors).toEqual(palettes.tangerine.colors);
+  expect(buildVideo(textPlan, null, {}, undefined).brand.colors).toEqual(palettes.cobalt.colors);
+  expect(buildVideo(tangerine, null, {}, brand).brand).toEqual(brand);
 });
 
 test("buildVideo draws text beats on the style backdrop and keeps each beat's transition", () => {

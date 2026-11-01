@@ -25,7 +25,7 @@ async function main(): Promise<void> {
 
   const plan = await readJson(planPath, PlanSchema);
   const styled = values.style ? restyled(plan, StyleIdSchema.parse(values.style)) : plan;
-  const brand = values.colors ? { ...defaultBrand, colors: values.colors.split(",") } : defaultBrand;
+  const brand = values.colors ? { ...defaultBrand, colors: values.colors.split(",") } : undefined;
   const doc = buildVideo(styled, null, {}, brand);
   const qa = runQa(doc, styled, {}, null);
 

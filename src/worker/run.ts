@@ -10,7 +10,6 @@ import { fetchPageText } from "../lib/html";
 import { readJson, writeJson } from "../lib/json";
 import { elapsedMs, Metrics } from "../lib/metrics";
 import { assertPricedModel } from "../lib/pricing";
-import { defaultBrand } from "../video/brand";
 import { type QaReport, QaReportSchema, runQa } from "../video/qa/checks";
 import { renderOnLambda, uploadRunAssets } from "../video/render/renderLambda";
 import { posterTimeMs, renderLocal, renderPoster } from "../video/render/renderLocal";
@@ -258,7 +257,6 @@ async function directorInput(run: Run, content: ContentMap | null): Promise<Dire
   const input: DirectorInput = {
     mode: options.source ? "footage" : "text",
     destination: options.destination,
-    brand: defaultBrand,
   };
 
   if (content) input.content = content;
@@ -325,7 +323,7 @@ function buildStep(
       const music = await copyMusicIntoRun(run, plan.musicMood);
       if (music) assets.music = music;
 
-      return buildVideo(plan, content, assets, defaultBrand);
+      return buildVideo(plan, content, assets, undefined);
     },
   });
 }

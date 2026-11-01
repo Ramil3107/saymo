@@ -2,6 +2,7 @@ import { z } from "zod";
 import { DestinationIdSchema } from "../destinations";
 import { CompositionSchema } from "../layout/compositions";
 import { LayoutSchema } from "../layout/layouts";
+import { PaletteIdSchema } from "../palettes";
 import { RegisterIdSchema } from "../registers";
 import { StyleIdSchema } from "../styles";
 import { TitleEntranceSchema, TitleLineSchema } from "../type/schedule";
@@ -119,6 +120,7 @@ const PlanFieldsSchema = z.object({
   lengthMs: z.number(),
   register: RegisterIdSchema,
   style: StyleIdSchema.optional(),
+  palette: PaletteIdSchema.optional(),
   musicMood: z.string(),
   captions: z.object({
     enabled: z.boolean(),

@@ -26,7 +26,7 @@ Every element has a stable id, a type from the vocabulary, parameters and timing
 | `destination` | destination id | Where the video goes, see [Destinations](#destinations) |
 | `register` | register id | Character of the video, see [Registers](#registers) |
 | `style` | style id, optional | The look of the whole video (`bold-pop` or `clean-paper`, see [Vocabulary](/vocabulary#styles)); without it the register picks one |
-| `brand` | object | `colors` (one to three), `font` (a family from the [font library](/vocabulary#fonts), Onest when the library does not have it) and an optional `logo` |
+| `brand` | object | `colors` (one to three), `font` (a family from the [font library](/vocabulary#fonts), Onest when the library does not have it) and an optional `logo`; a video without a brand gets the colors of its plan's palette (see [Vocabulary](/vocabulary#palettes)) and Onest |
 | `assets` | list | `id`, `kind` (`video`, `audio` or `image`), `src` and an optional `durationMs`. Scenes, music and voice refer to assets by `id` |
 | `scenes` | list of scenes | In order, with no gaps or overlaps: the first starts at 0, each next one starts where the previous one ends |
 | `captions` | object, optional | `style` (one of the caption presets in [Vocabulary](/vocabulary#captions)), `keywords` (words the preset marks: in the accent color, an accent box, a marker or italics) and `pages`. A page has `text`, `startMs`, `durationMs` and `tokens`: words with their own `fromMs` and `toMs` |
@@ -43,7 +43,7 @@ Fields of a scene:
 | `footage` | object, optional | `assetId`, `fromMs` in the source video and `transform` (`scale`, `x`, `y`) |
 | `camera` | object, optional | `kind` (`none`, `push`, `punch-in` or `pan`) and `intensity` from 0 to 1 |
 | `composition` | composition, optional | How a scene without footage fills the frame: `center`, `fill`, `split`, `giant-number`, `column` or `grid`, see [Vocabulary](/vocabulary#compositions) |
-| `fields` | list, optional | The color fields of the composition, drawn over the backdrop and under the elements: a `box`, a `tone` (`accent`, `ink`, `highlight` or `alt`, colors of the palette), the edge it sweeps in `from` (`left`, `right`, `top` or `bottom`), `enterMs` and `exitMs` |
+| `fields` | list, optional | The color fields of the composition, drawn over the backdrop and under the elements: a `box`, a `tone` (`accent`, `ink`, `highlight`, `alt` or `surface`, colors of the palette), the edge it sweeps in `from` (`left`, `right`, `top` or `bottom`), `enterMs` and `exitMs` |
 | `elements` | list | The elements of the scene |
 | `transition` | `cut`, `flash`, `wipe`, `whip`, `zoom`, `pixelate` or `dip` | How the scene enters; the scene before it leaves by the same transition, see [Vocabulary](/vocabulary#transitions) |
 

@@ -103,6 +103,7 @@ function fieldTones(palette: Palette): Record<FieldTone, FieldColors> {
     ink: fieldColors(palette, "ink"),
     highlight: fieldColors(palette, "highlight"),
     alt: fieldColors(palette, "alt"),
+    surface: fieldColors(palette, "surface"),
   };
 }
 

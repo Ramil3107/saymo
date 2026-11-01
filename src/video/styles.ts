@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { Exit } from "./motion/moves";
 import type { TempoId } from "./motion/tempo";
+import type { PaletteId } from "./palettes";
 import type { RegisterId } from "./registers";
 import type { Accent, CaptionStyle } from "./schema/plan";
 import type { Transition } from "./schema/video";
@@ -40,6 +41,7 @@ export type Style = {
   exit: Exit;
   accents: Record<Accent, AccentMark>;
   flourishes: Flourish[];
+  palettes: PaletteId[];
 };
 
 export const styles: Record<StyleId, Style> = {
@@ -64,6 +66,7 @@ export const styles: Record<StyleId, Style> = {
     exit: "smear",
     accents: { celebrate: "burst", frame: "grow-frame", focus: "brackets", stress: "flash-blocks" },
     flourishes: ["chevrons", "ghost-numbers"],
+    palettes: ["cobalt", "tangerine", "flamingo", "ultraviolet", "forest"],
   },
   "clean-paper": {
     name: "Clean paper",
@@ -86,6 +89,7 @@ export const styles: Record<StyleId, Style> = {
     exit: "fade",
     accents: { celebrate: "sparkles", frame: "selection", focus: "circle", stress: "underline" },
     flourishes: ["cursor"],
+    palettes: ["cobalt", "ocean", "forest", "terracotta", "plum"],
   },
 };
 

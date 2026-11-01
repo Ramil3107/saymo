@@ -1,4 +1,5 @@
 import { type DestinationId, destinations } from "../../../video/destinations";
+import { palettes } from "../../../video/palettes";
 import { registers } from "../../../video/registers";
 import type { Box, ContentMap, FaceBox, FrameNote, Shot } from "../../../video/schema/content";
 import type { Transcript, TranscriptWord } from "../../../video/schema/transcript";
@@ -26,6 +27,7 @@ const rules = [
   "- questions only about what changes the result and cannot be guessed (whose name to show, which product is the main one, which of several strong moments to cut); at most three; each with two to four options and a default. Everything else you decide and list under assumptions.",
   "- voiceover true only in text mode and only for narrative genres; in footage mode the footage's own speech is the voice.",
   "- style is the one of the styles that fits the brand, the content and the register; captions.style, every beat's transition and every title entrance come from that style's lists.",
+  "- palette only when the brief says Brand: none: the one of the style's palettes that fits the content and its mood; with a brand, leave palette out, the brand's colors apply.",
   "- title lines are short, one or two words each and three lines at most, so the title can be set large; a longer thought goes to a headline or to the captions.",
   "- every beat without footage names the composition that fits its overlays; two such beats in a row never share one, a video uses at least three, and center is at most one beat in three.",
   "- a beat's transition is how it enters: cut inside a continuous talk; the style's other transitions at section changes and reveals, two to five per minute, never on every beat.",
@@ -49,6 +51,9 @@ export function directorSystemPrompt(): string {
     "",
     "Styles (the look of the whole video):",
     styleTable(),
+    "",
+    "Palettes (the colors of a video without a brand: accent, highlight, second tone):",
+    paletteTable(),
     "",
     "Rules:",
     ...rules,
@@ -83,9 +88,15 @@ function styleTable(): string {
   return Object.entries(styles)
     .map(([id, style]) => {
       const accents = Object.entries(style.accents).map(([accent, mark]) => `${accent} as ${mark}`);
-      const lists = `captions ${style.captions.join(", ")}; transitions ${style.transitions.join(", ")}; title entrances ${style.titleEntrances.join(", ")}; accents ${accents.join(", ")}`;
+      const lists = `captions ${style.captions.join(", ")}; transitions ${style.transitions.join(", ")}; title entrances ${style.titleEntrances.join(", ")}; accents ${accents.join(", ")}; palettes ${style.palettes.join(", ")}`;
       return `${id}: ${style.summary} Uses ${lists}.`;
     })
+    .join("\n");
+}
+
+function paletteTable(): string {
+  return Object.entries(palettes)
+    .map(([id, palette]) => `${id}: ${palette.summary} (${palette.colors.join(", ")})`)
     .join("\n");
 }
 
@@ -100,7 +111,7 @@ function registerTable(): string {
 }
 
 function brandLine(brand: DirectorInput["brand"]): string {
-  if (!brand) return "Brand: none, use a neutral style.";
+  if (!brand) return "Brand: none, pick a palette from the style's palettes.";
   return `Brand: colors ${brand.colors.join(", ")}, font ${brand.font}.`;
 }
 

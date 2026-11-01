@@ -54,3 +54,11 @@ test("the system prompt lists every style with its captions and transitions", ()
   expect(prompt).toContain("counter (value is the number");
   expect(prompt).toContain("accents celebrate as sparkles, frame as selection");
 });
+
+test("a brief without a brand asks for a palette, and the system prompt lists them per style", () => {
+  expect(directorUserMessage({ mode: "text", destination: "reels", text: "A sale" })).toContain(
+    "Brand: none, pick a palette",
+  );
+  expect(directorSystemPrompt()).toContain("terracotta: burnt clay");
+  expect(directorSystemPrompt()).toContain("palettes cobalt, ocean, forest, terracotta, plum");
+});

@@ -8,7 +8,7 @@ export const CompositionSchema = z.enum(["center", "fill", "split", "giant-numbe
 
 export type Composition = z.infer<typeof CompositionSchema>;
 
-export const FieldToneSchema = z.enum(["accent", "ink", "highlight", "alt"]);
+export const FieldToneSchema = z.enum(["accent", "ink", "highlight", "alt", "surface"]);
 
 export type FieldTone = z.infer<typeof FieldToneSchema>;
 
