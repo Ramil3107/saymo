@@ -4,7 +4,7 @@ Where the work stands on 2026-10-31 and how to pick it up in a new session.
 
 ## State
 
-- Branch `stage-0`, everything committed, nothing pushed.
+- Branch `main` on [github.com/Ramil3107/saymo](https://github.com/Ramil3107/saymo), a public repository; work since the scaffold, the font library included, is merged into it and pushed.
 - The vocabulary iteration has steps 1 to 7 built, see "Order of work" in [Vocabulary](./vocabulary.md). Accents and the local director came last.
 - The final runs are done: four free stock clips and four text-only ads, the videos in `runs/final/`, the runs in `runs/final-*`, the stock sources in `runs/stock/` (all local, `runs/` is not in git). Paid services cost $0.09 in all.
 - The director and the frame notes are written in the session: `pnpm spike` stops with exit code 3 and a brief, the plan goes in `director/plan.json` or the notes in `see/frames.json`, then the same command with `--resume`. `--redo <step>` reruns from a step. See [Pipeline](./pipeline.md).
@@ -13,7 +13,7 @@ Where the work stands on 2026-10-31 and how to pick it up in a new session.
 
 ## Next
 
-Variety across videos, starting with compositions and color: the owner chose it on 2026-10-31. The plan is under "Variety across videos" in [Vocabulary](./vocabulary.md). Step 1, the first five composition families, is built and waits for the owner's review: the lab in `runs/composition-lab/` (both styles, `sheet.jpg`) and the four text-only ads planned again in `runs/variety-text/` (`before-after.jpg` beside the old contact sheet). On the owner's first look the cropped number read as a defect, so `edge-number` became `giant-number`, whole in the frame. Step 2 is next after the review. A separate session builds a font library in the repository on its own branch, so renders stop fetching Google Fonts.
+Variety across videos, starting with compositions and color: the owner chose it on 2026-10-31. The plan is under "Variety across videos" in [Vocabulary](./vocabulary.md). Step 1, the first five composition families, was accepted by the owner on 2026-11-01: the lab in `runs/composition-lab/` (both styles, `sheet.jpg`) and the four text-only ads planned again in `runs/variety-text/` (`before-after.jpg` beside the old contact sheet). On the owner's first look the cropped number read as a defect, so `edge-number` became `giant-number`, whole in the frame. Step 2, five more families and palettes for videos without a brand, is next.
 
 The rule proposed by the learning of 2026-10-31 in [Learnings](./learnings.md) (a contact sheet of a set of videos before they are shown, in the `spike` skill) still waits for the owner's yes.
 
