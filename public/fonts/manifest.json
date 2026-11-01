@@ -1,0 +1,1312 @@
+{
+  "note": "The font library the renders load from. Every family is under the SIL Open Font License 1.1, its license next to its files. Latin and Cyrillic woff2 from Fontsource, one variable file per subset and style where the family is variable. Add a family with pnpm fonts:add.",
+  "fonts": [
+    {
+      "id": "alumni-sans",
+      "family": "Alumni Sans",
+      "kind": "condensed",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "alumni-sans/OFL.txt",
+      "source": "https://fontsource.org/fonts/alumni-sans",
+      "version": "v20",
+      "files": [
+        {
+          "path": "alumni-sans/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "100 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "alumni-sans/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "100 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "alumni-sans/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "alumni-sans/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "anton",
+      "family": "Anton",
+      "kind": "condensed",
+      "weights": [400],
+      "styles": ["normal"],
+      "subsets": ["latin"],
+      "fallback": "oswald",
+      "license": "OFL-1.1",
+      "licenseFile": "anton/OFL.txt",
+      "source": "https://fontsource.org/fonts/anton",
+      "version": "v27",
+      "files": [
+        {
+          "path": "anton/latin-400-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        }
+      ]
+    },
+    {
+      "id": "bebas-neue",
+      "family": "Bebas Neue",
+      "kind": "condensed",
+      "weights": [400],
+      "styles": ["normal"],
+      "subsets": ["latin"],
+      "fallback": "oswald",
+      "license": "OFL-1.1",
+      "licenseFile": "bebas-neue/OFL.txt",
+      "source": "https://fontsource.org/fonts/bebas-neue",
+      "version": "v16",
+      "files": [
+        {
+          "path": "bebas-neue/latin-400-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        }
+      ]
+    },
+    {
+      "id": "caveat",
+      "family": "Caveat",
+      "kind": "hand",
+      "weights": [400, 500, 600, 700],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "caveat/OFL.txt",
+      "source": "https://fontsource.org/fonts/caveat",
+      "version": "v23",
+      "files": [
+        {
+          "path": "caveat/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400 700",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "caveat/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400 700",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "comfortaa",
+      "family": "Comfortaa",
+      "kind": "rounded",
+      "weights": [300, 400, 500, 600, 700],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "comfortaa/OFL.txt",
+      "source": "https://fontsource.org/fonts/comfortaa",
+      "version": "v47",
+      "files": [
+        {
+          "path": "comfortaa/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "300 700",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "comfortaa/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "300 700",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "cormorant-garamond",
+      "family": "Cormorant Garamond",
+      "kind": "serif",
+      "weights": [300, 400, 500, 600, 700],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "cormorant-garamond/OFL.txt",
+      "source": "https://fontsource.org/fonts/cormorant-garamond",
+      "version": "v21",
+      "files": [
+        {
+          "path": "cormorant-garamond/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "300 700",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "cormorant-garamond/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "300 700",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "cormorant-garamond/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "300 700",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "cormorant-garamond/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "300 700",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "dela-gothic-one",
+      "family": "Dela Gothic One",
+      "kind": "display",
+      "weights": [400],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "dela-gothic-one/OFL.txt",
+      "source": "https://fontsource.org/fonts/dela-gothic-one",
+      "version": "v19",
+      "files": [
+        {
+          "path": "dela-gothic-one/latin-400-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "dela-gothic-one/cyrillic-400-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "eb-garamond",
+      "family": "EB Garamond",
+      "kind": "serif",
+      "weights": [400, 500, 600, 700, 800],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "eb-garamond/OFL.txt",
+      "source": "https://fontsource.org/fonts/eb-garamond",
+      "version": "v33",
+      "files": [
+        {
+          "path": "eb-garamond/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "400 800",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "eb-garamond/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "400 800",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "eb-garamond/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400 800",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "eb-garamond/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400 800",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "exo-2",
+      "family": "Exo 2",
+      "kind": "display",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "exo-2/OFL.txt",
+      "source": "https://fontsource.org/fonts/exo-2",
+      "version": "v26",
+      "files": [
+        {
+          "path": "exo-2/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "100 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "exo-2/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "100 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "exo-2/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "exo-2/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "geologica",
+      "family": "Geologica",
+      "kind": "display",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "geologica/OFL.txt",
+      "source": "https://fontsource.org/fonts/geologica",
+      "version": "v5",
+      "files": [
+        {
+          "path": "geologica/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "geologica/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "golos-text",
+      "family": "Golos Text",
+      "kind": "sans",
+      "weights": [400, 500, 600, 700, 800, 900],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "golos-text/OFL.txt",
+      "source": "https://fontsource.org/fonts/golos-text",
+      "version": "v7",
+      "files": [
+        {
+          "path": "golos-text/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "golos-text/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "ibm-plex-sans",
+      "family": "IBM Plex Sans",
+      "kind": "sans",
+      "weights": [100, 200, 300, 400, 500, 600, 700],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "ibm-plex-sans/OFL.txt",
+      "source": "https://fontsource.org/fonts/ibm-plex-sans",
+      "version": "v23",
+      "files": [
+        {
+          "path": "ibm-plex-sans/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "100 700",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "ibm-plex-sans/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "100 700",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "ibm-plex-sans/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "100 700",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "ibm-plex-sans/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "100 700",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "instrument-serif",
+      "family": "Instrument Serif",
+      "kind": "serif",
+      "weights": [400],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin"],
+      "fallback": "playfair-display",
+      "license": "OFL-1.1",
+      "licenseFile": "instrument-serif/OFL.txt",
+      "source": "https://fontsource.org/fonts/instrument-serif",
+      "version": "v5",
+      "files": [
+        {
+          "path": "instrument-serif/latin-400-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "400",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "instrument-serif/latin-400-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        }
+      ]
+    },
+    {
+      "id": "inter",
+      "family": "Inter",
+      "kind": "sans",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "inter/OFL.txt",
+      "source": "https://fontsource.org/fonts/inter",
+      "version": "v20",
+      "files": [
+        {
+          "path": "inter/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "100 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "inter/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "100 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "inter/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "inter/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "inter-tight",
+      "family": "Inter Tight",
+      "kind": "sans",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "inter-tight/OFL.txt",
+      "source": "https://fontsource.org/fonts/inter-tight",
+      "version": "v9",
+      "files": [
+        {
+          "path": "inter-tight/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "100 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "inter-tight/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "100 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "inter-tight/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "inter-tight/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "jetbrains-mono",
+      "family": "JetBrains Mono",
+      "kind": "mono",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "jetbrains-mono/OFL.txt",
+      "source": "https://fontsource.org/fonts/jetbrains-mono",
+      "version": "v24",
+      "files": [
+        {
+          "path": "jetbrains-mono/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "100 800",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "jetbrains-mono/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "100 800",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "jetbrains-mono/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "100 800",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "jetbrains-mono/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "100 800",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "jost",
+      "family": "Jost",
+      "kind": "sans",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "jost/OFL.txt",
+      "source": "https://fontsource.org/fonts/jost",
+      "version": "v20",
+      "files": [
+        {
+          "path": "jost/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "100 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "jost/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "100 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "jost/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "jost/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "lora",
+      "family": "Lora",
+      "kind": "serif",
+      "weights": [400, 500, 600, 700],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "lora/OFL.txt",
+      "source": "https://fontsource.org/fonts/lora",
+      "version": "v37",
+      "files": [
+        {
+          "path": "lora/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "400 700",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "lora/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "400 700",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "lora/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400 700",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "lora/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400 700",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "manrope",
+      "family": "Manrope",
+      "kind": "sans",
+      "weights": [200, 300, 400, 500, 600, 700, 800],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "manrope/OFL.txt",
+      "source": "https://fontsource.org/fonts/manrope",
+      "version": "v20",
+      "files": [
+        {
+          "path": "manrope/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "200 800",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "manrope/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "200 800",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "marck-script",
+      "family": "Marck Script",
+      "kind": "hand",
+      "weights": [400],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "marck-script/OFL.txt",
+      "source": "https://fontsource.org/fonts/marck-script",
+      "version": "v22",
+      "files": [
+        {
+          "path": "marck-script/latin-400-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "marck-script/cyrillic-400-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "martian-mono",
+      "family": "Martian Mono",
+      "kind": "mono",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "martian-mono/OFL.txt",
+      "source": "https://fontsource.org/fonts/martian-mono",
+      "version": "v6",
+      "files": [
+        {
+          "path": "martian-mono/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "100 800",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "martian-mono/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "100 800",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "montserrat",
+      "family": "Montserrat",
+      "kind": "sans",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "montserrat/OFL.txt",
+      "source": "https://fontsource.org/fonts/montserrat",
+      "version": "v31",
+      "files": [
+        {
+          "path": "montserrat/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "100 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "montserrat/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "100 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "montserrat/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "montserrat/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "nunito",
+      "family": "Nunito",
+      "kind": "rounded",
+      "weights": [200, 300, 400, 500, 600, 700, 800, 900, 1000],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "nunito/OFL.txt",
+      "source": "https://fontsource.org/fonts/nunito",
+      "version": "v32",
+      "files": [
+        {
+          "path": "nunito/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "200 1000",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "nunito/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "200 1000",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "nunito/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "200 1000",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "nunito/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "200 1000",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "onest",
+      "family": "Onest",
+      "kind": "sans",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "onest/OFL.txt",
+      "source": "https://fontsource.org/fonts/onest",
+      "version": "v11",
+      "files": [
+        {
+          "path": "onest/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "onest/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "100 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "oswald",
+      "family": "Oswald",
+      "kind": "condensed",
+      "weights": [200, 300, 400, 500, 600, 700],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "oswald/OFL.txt",
+      "source": "https://fontsource.org/fonts/oswald",
+      "version": "v57",
+      "files": [
+        {
+          "path": "oswald/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "200 700",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "oswald/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "200 700",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "pacifico",
+      "family": "Pacifico",
+      "kind": "hand",
+      "weights": [400],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "pacifico/OFL.txt",
+      "source": "https://fontsource.org/fonts/pacifico",
+      "version": "v23",
+      "files": [
+        {
+          "path": "pacifico/latin-400-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "pacifico/cyrillic-400-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "playfair-display",
+      "family": "Playfair Display",
+      "kind": "serif",
+      "weights": [400, 500, 600, 700, 800, 900],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "playfair-display/OFL.txt",
+      "source": "https://fontsource.org/fonts/playfair-display",
+      "version": "v40",
+      "files": [
+        {
+          "path": "playfair-display/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "400 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "playfair-display/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "400 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "playfair-display/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "playfair-display/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "prata",
+      "family": "Prata",
+      "kind": "serif",
+      "weights": [400],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "prata/OFL.txt",
+      "source": "https://fontsource.org/fonts/prata",
+      "version": "v22",
+      "files": [
+        {
+          "path": "prata/latin-400-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "prata/cyrillic-400-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "press-start-2p",
+      "family": "Press Start 2P",
+      "kind": "display",
+      "weights": [400],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "press-start-2p/OFL.txt",
+      "source": "https://fontsource.org/fonts/press-start-2p",
+      "version": "v16",
+      "files": [
+        {
+          "path": "press-start-2p/latin-400-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "press-start-2p/cyrillic-400-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "rubik",
+      "family": "Rubik",
+      "kind": "rounded",
+      "weights": [300, 400, 500, 600, 700, 800, 900],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "rubik/OFL.txt",
+      "source": "https://fontsource.org/fonts/rubik",
+      "version": "v31",
+      "files": [
+        {
+          "path": "rubik/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "300 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "rubik/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "300 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "rubik/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "300 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "rubik/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "300 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "rubik-mono-one",
+      "family": "Rubik Mono One",
+      "kind": "display",
+      "weights": [400],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "rubik-mono-one/OFL.txt",
+      "source": "https://fontsource.org/fonts/rubik-mono-one",
+      "version": "v20",
+      "files": [
+        {
+          "path": "rubik-mono-one/latin-400-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "rubik-mono-one/cyrillic-400-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "russo-one",
+      "family": "Russo One",
+      "kind": "display",
+      "weights": [400],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "russo-one/OFL.txt",
+      "source": "https://fontsource.org/fonts/russo-one",
+      "version": "v18",
+      "files": [
+        {
+          "path": "russo-one/latin-400-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "russo-one/cyrillic-400-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "sofia-sans-extra-condensed",
+      "family": "Sofia Sans Extra Condensed",
+      "kind": "condensed",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000],
+      "styles": ["italic", "normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "sofia-sans-extra-condensed/OFL.txt",
+      "source": "https://fontsource.org/fonts/sofia-sans-extra-condensed",
+      "version": "v6",
+      "files": [
+        {
+          "path": "sofia-sans-extra-condensed/latin-italic.woff2",
+          "subset": "latin",
+          "style": "italic",
+          "weight": "1 1000",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "sofia-sans-extra-condensed/cyrillic-italic.woff2",
+          "subset": "cyrillic",
+          "style": "italic",
+          "weight": "1 1000",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        },
+        {
+          "path": "sofia-sans-extra-condensed/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "1 1000",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "sofia-sans-extra-condensed/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "1 1000",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "space-grotesk",
+      "family": "Space Grotesk",
+      "kind": "sans",
+      "weights": [300, 400, 500, 600, 700],
+      "styles": ["normal"],
+      "subsets": ["latin"],
+      "fallback": "golos-text",
+      "license": "OFL-1.1",
+      "licenseFile": "space-grotesk/OFL.txt",
+      "source": "https://fontsource.org/fonts/space-grotesk",
+      "version": "v22",
+      "files": [
+        {
+          "path": "space-grotesk/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "300 700",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        }
+      ]
+    },
+    {
+      "id": "syne",
+      "family": "Syne",
+      "kind": "display",
+      "weights": [400, 500, 600, 700, 800],
+      "styles": ["normal"],
+      "subsets": ["latin"],
+      "fallback": "unbounded",
+      "license": "OFL-1.1",
+      "licenseFile": "syne/OFL.txt",
+      "source": "https://fontsource.org/fonts/syne",
+      "version": "v24",
+      "files": [
+        {
+          "path": "syne/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400 800",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        }
+      ]
+    },
+    {
+      "id": "tektur",
+      "family": "Tektur",
+      "kind": "display",
+      "weights": [400, 500, 600, 700, 800, 900],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "tektur/OFL.txt",
+      "source": "https://fontsource.org/fonts/tektur",
+      "version": "v6",
+      "files": [
+        {
+          "path": "tektur/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "tektur/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "unbounded",
+      "family": "Unbounded",
+      "kind": "display",
+      "weights": [200, 300, 400, 500, 600, 700, 800, 900],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "unbounded/OFL.txt",
+      "source": "https://fontsource.org/fonts/unbounded",
+      "version": "v12",
+      "files": [
+        {
+          "path": "unbounded/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "200 900",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "unbounded/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "200 900",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "wix-madefor-display",
+      "family": "Wix Madefor Display",
+      "kind": "display",
+      "weights": [400, 500, 600, 700, 800],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "wix-madefor-display/OFL.txt",
+      "source": "https://fontsource.org/fonts/wix-madefor-display",
+      "version": "v12",
+      "files": [
+        {
+          "path": "wix-madefor-display/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400 800",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "wix-madefor-display/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400 800",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "yanone-kaffeesatz",
+      "family": "Yanone Kaffeesatz",
+      "kind": "condensed",
+      "weights": [200, 300, 400, 500, 600, 700],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "yanone-kaffeesatz/OFL.txt",
+      "source": "https://fontsource.org/fonts/yanone-kaffeesatz",
+      "version": "v34",
+      "files": [
+        {
+          "path": "yanone-kaffeesatz/latin-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "200 700",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "yanone-kaffeesatz/cyrillic-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "200 700",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    },
+    {
+      "id": "yeseva-one",
+      "family": "Yeseva One",
+      "kind": "serif",
+      "weights": [400],
+      "styles": ["normal"],
+      "subsets": ["latin", "cyrillic"],
+      "license": "OFL-1.1",
+      "licenseFile": "yeseva-one/OFL.txt",
+      "source": "https://fontsource.org/fonts/yeseva-one",
+      "version": "v24",
+      "files": [
+        {
+          "path": "yeseva-one/latin-400-normal.woff2",
+          "subset": "latin",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+        },
+        {
+          "path": "yeseva-one/cyrillic-400-normal.woff2",
+          "subset": "cyrillic",
+          "style": "normal",
+          "weight": "400",
+          "unicodeRange": "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
+        }
+      ]
+    }
+  ]
+}
