@@ -25,13 +25,14 @@ const SOLID_SIZES: Record<Size, string> = {
 };
 
 const LOOKS: Record<Variant, string> = {
-  primary: "bg-accent text-ink enabled:hover:brightness-110",
-  white: "bg-white text-ink enabled:hover:brightness-95",
+  primary: "bg-accent text-ink not-disabled:hover:brightness-110",
+  white: "bg-white text-ink not-disabled:hover:brightness-95",
   secondary:
-    "h-[44px] px-[18px] gap-8 bg-raised border border-line text-dense font-normal text-white enabled:hover:bg-selected",
-  outline: "h-[44px] px-16 gap-8 border border-line-strong text-small text-white enabled:hover:bg-raised",
+    "h-[44px] px-[18px] gap-8 bg-raised border border-line text-dense font-normal text-white not-disabled:hover:bg-selected",
+  outline:
+    "h-[44px] px-16 gap-8 border border-line-strong text-small text-white not-disabled:hover:bg-raised",
   suggestion:
-    "h-[44px] px-16 gap-8 bg-surface border border-line text-small text-white enabled:hover:bg-raised",
+    "h-[44px] px-16 gap-8 bg-surface border border-line text-small text-white not-disabled:hover:bg-raised",
 };
 
 const ICON_SIZES: Record<Variant, string> = {
@@ -84,10 +85,6 @@ function buttonClasses(variant: Variant, size: Size = "regular", className = "")
   return `${BASE} ${sizing} ${LOOKS[variant]} ${ICON_SIZES[variant]} ${className}`.trim();
 }
 
-function defaultIconSide(variant: Variant): IconSide {
-  return STARTING_ICON_VARIANTS.includes(variant) ? "start" : "end";
-}
-
 function withIcon(children: ReactNode, icon: ReactNode, side: IconSide) {
   if (!icon) return children;
   if (side === "start") {
@@ -104,4 +101,8 @@ function withIcon(children: ReactNode, icon: ReactNode, side: IconSide) {
       {icon}
     </>
   );
+}
+
+function defaultIconSide(variant: Variant): IconSide {
+  return STARTING_ICON_VARIANTS.includes(variant) ? "start" : "end";
 }
