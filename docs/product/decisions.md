@@ -4,6 +4,12 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-11-09 · The development database runs on Railway
+
+- **Decided:** while the application is built, it uses a Postgres database on Railway, the host already chosen for production, reached over Railway's public URL. The owner's call on 2026-11-09.
+- **Why:** one provider and one bill for development and production, and nothing to install or keep running on the Mac.
+- **Rejected:** Postgres on the Mac through Homebrew (the lead's recommendation: works offline and answers fastest, but is one more thing to install and run); Docker (a heavier install for the same database); Neon (free for development, but a second service next to Railway).
+
 ### 2026-11-09 · The engine pauses, and the application is built around a mock engine
 
 - **Decided:** work on the vocabulary pauses, and the application around the engine comes next: every screen of the design system, sign-in with Google and an email link, the database with its migrations, the library, the brand, the account, plans and limits, built to launch standard, secure and working for real. Generation runs behind the boundary the real pipeline will use, with a mock engine that returns a sample plan and a sample video document after realistic waits; the current engine is plugged in next and switched on by one setting. Payment is mocked behind the boundary a merchant of record will use: a checkout page of our own where any card goes through and grants the chosen plan with its limits, so a real provider replaces the mock without touching the screens or the limits. The owner's call on 2026-11-09. This changes the order in the entry "The vocabulary comes before the infrastructure" (2026-10-30): the application now comes before the rest of the variety plan.
