@@ -10,5 +10,5 @@ description: Add a primitive to the video vocabulary. Call when the director nee
 5. Add a card to the catalog. There is no catalog yet. It arrives in stage 1. Until then, skip this step.
 6. Write a test for registers and formats: the primitive works in every register and in every format (9:16, 1:1, 16:9).
 7. Render a single frame: `pnpm remotion:still`.
-8. Render the primitive in motion with the default concurrency and run `pnpm check:still <video> --from <s> --to <s> --crop w:h:x:y` over a stretch where it stands still. Anything above compression noise is a twitch to fix before the owner sees it.
+8. Render the primitive in motion with the default concurrency and run `pnpm check:still <video> --from <s> --to <s> --crop w:h:x:y` over a stretch where it stands still. Anything above compression noise is a twitch to fix before the owner sees it. Beside a moving backdrop the encoder adds noise of its own at the still part's edges, so there compare lossless stills of neighbouring frames instead (`npx remotion still src/video/remotion/index.ts saymo --props=<video.json> --frame=<n> <out.png>`).
 9. Show the owner a render of the primitive in motion. It joins the vocabulary only after the owner has seen it.

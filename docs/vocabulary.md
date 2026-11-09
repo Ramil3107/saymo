@@ -9,13 +9,13 @@ The vocabulary is a set of React components on Remotion that take their paramete
 | Category | Primitives |
 | --- | --- |
 | Footage | trimmed video clip, background footage, image, logo, shape, Lottie |
-| Camera | push, punch-in, pan, parallax over an image or screenshot |
+| Camera | push, punch-in, pan, parallax over an image or screenshot; on a beat without footage the camera moves the backdrop, see [Backdrops](#backdrops) |
 | Text | headline, subheading, big number with a counter, quote, lower third, chip (paper pill sized to its text, optional badge such as Fe or 01, pops in with a blur and floats), sticker, title-card (section label and a big title on a dark panel), list (title and numbered items on a dark side panel) |
 | Captions | thirteen presets built from one caption look, see [Captions](#captions) |
 | Enters and exits | fade, slide, mask, by word, by letter, typewriter |
 | Accents | celebrate, frame, focus, stress: four intents the style draws around an element, see [Accents in the document](#accents-in-the-document) |
 | Transitions | cut, fade, slide, wipe, push |
-| Backgrounds | color, gradient, brand, blurred footage |
+| Backgrounds | ten backdrops, one per video, drawn in its colors, see [Backdrops](#backdrops); brand color, gradient, blurred footage |
 | Audio | music ducked under the voice, voice, loudness normalization |
 | Layout | per beat: free (chips float beside the subject in slots with keep-out zones), panel-top (a title card over the top 46%, the footage zooms and slides so the face sits below), panel-side (a list over one side, the face moves to the other); over a document or screen card the top panel is a short title strip and a headline becomes that strip; safe zones per destination with a 4% gutter; a beat without footage names a composition, see [Compositions](#compositions) |
 
@@ -64,7 +64,7 @@ The style of a video sets its tempo: `bold-pop` moves in `snap` and `clean-paper
 - `Cursor`: a pointer travels to a target and clicks, with a ring spreading from the tip.
 - `CornerBrackets`: viewfinder brackets that close in on a subject.
 - `Chevrons`: three chevrons lit one after another.
-- Textures: `Grain` (film grain with a new seed every frame), `PaperGrid` (a faint grid with a vignette), `Halftone` (dots fading across the picture), `Blobs` (soft color fields drifting behind the content).
+- Textures: `Grain` (film grain with a new seed every frame), `PaperGrid` (a faint grid with a vignette), `Halftone` (dots fading across the picture), `Blobs` (soft color fields drifting behind the content). The backdrops are built from them and from looks of their own, see [Backdrops](#backdrops).
 
 `pnpm remotion:lab` also renders `runs/lab/accent-lab.mp4`, nine demos over a still of `runs/face-v2` that `src/cli/labAssets.ts` prepares in `runs/lab/public`.
 
@@ -111,12 +111,12 @@ The build writes the transition each beat names, `cut` by default. `pnpm remotio
 
 ## Styles
 
-A style is the look of a whole video, kept as data in `src/video/styles.ts`: a name and a summary for the director, a tempo, the display face and its case, the tones (background, ink, surface, muted and a default highlight), the textures, and the caption presets, transitions, title entrances and palettes it draws from, how it draws each accent, and its flourishes (corner chevrons and ghost numbers in `bold-pop`, a cursor in `clean-paper`). The register keeps the pacing (scene length, holds, density); the style decides how it looks.
+A style is the look of a whole video, kept as data in `src/video/styles.ts`: a name and a summary for the director, a tempo, the display face and its case, the tones (background, ink, surface, muted and a default highlight), and the backdrops, caption presets, transitions, title entrances and palettes it draws from, how it draws each accent, and its flourishes (corner chevrons and ghost numbers in `bold-pop`, a cursor in `clean-paper`). The register keeps the pacing (scene length, holds, density); the style decides how it looks.
 
-- `bold-pop`, after Higgsfield: Unbounded in capitals on off-white with drifting color fields and grain, `snap`; captions `bold-center`, `keyword-box`, `pop`, `outline`; transitions flash, whip, pixelate, zoom; titles typed, punched, tracked in or popped; accents as bursts, growing frames, brackets and flash blocks.
-- `clean-paper`, after motionvid: Inter in sentence case on warm paper with a faint grid, `glide`; captions `keyword-box`, `karaoke-pill`, `marker`, `typewriter`, `minimal`; transitions wipe, dip, zoom; titles rising, typed or revealed; accents as sparkles, selection boxes, circles and underlines.
+- `bold-pop`, after Higgsfield: Unbounded in capitals on off-white with drifting color fields and grain, or another of its backdrops, `snap`; captions `bold-center`, `keyword-box`, `pop`, `outline`; transitions flash, whip, pixelate, zoom; titles typed, punched, tracked in or popped; accents as bursts, growing frames, brackets and flash blocks.
+- `clean-paper`, after motionvid: Inter in sentence case on warm paper with a faint grid, or another of its backdrops, `glide`; captions `keyword-box`, `karaoke-pill`, `marker`, `typewriter`, `minimal`; transitions wipe, dip, zoom; titles rising, typed or revealed; accents as sparkles, selection boxes, circles and underlines.
 
-The brand gives the colors (`src/video/style/palette.ts`): the first brand color that is not near white becomes the accent, darkened until it reads at 3:1 on the background; a light brand color becomes the highlight, or the style's own; another dark brand color, or a deeper accent, becomes the second tone. `styleKit` in `src/video/remotion/style` folds the style, the brand palette, the display face and the brand's text face together, and `Backdrop` draws the background with the style's textures.
+The brand gives the colors (`src/video/style/palette.ts`): the first brand color that is not near white becomes the accent, darkened until it reads at 3:1 on the background; a light brand color becomes the highlight, or the style's own; another dark brand color, or a deeper accent, becomes the second tone. `styleKit` in `src/video/remotion/style` folds the style, the brand palette, the display face, the brand's text face and the video's backdrop together, and `Backdrop` draws that backdrop.
 
 Every document element draws in the style. A style's surfaces decide the rest: `bold-pop` has dark panels and block labels (flat highlight slabs in the display face, capitals, a hard offset shadow), `clean-paper` has light panels and soft labels (white pills with a soft shadow and an accent badge). Chips, stickers and lower thirds are labels; title cards and lists sit on panels; quotes and kinetic text are white with a shadow over footage and ink on the backdrop; a headline is drawn as a kinetic title and a big number as a counter when it starts with a number; a document shown in a card sits on the style's backdrop; wipes and dips take their colors from the style. The layout sizes a chip for the style's face: `display.labelScale` sets its text size and `display.widthScale` how much wider the face runs than the layout's estimate, measured in the renderer (Unbounded capitals up to 1.55 times, drawn at 0.85 of the size since capitals read larger; Inter about 1). A chip wraps onto two lines at word boundaries and never breaks a word; a sticker is as wide as its text. A label still shrinks to fit its box if a line runs long. On a backdrop labels are set larger, like kinetic text, and gather around the middle of the frame in the order they arrive; a lower third there centers its lines.
 
@@ -138,6 +138,29 @@ A video without a brand draws in a named palette (`src/video/palettes.ts`): an a
 | `plum` | plum, blush, aubergine | refined; premium, beauty, boutiques | `clean-paper` |
 
 `pnpm render:plan` draws a plan in its palette; `--colors #hex,#hex` draws it in a brand's colors instead.
+
+### Backdrops
+
+A backdrop is what a beat without footage stands on and what shows around footage in a card. A video names one in the plan (`backdrop`), with a brand or without, and keeps it for every such beat; it is drawn in the video's colors (`src/video/remotion/backdrop`). Each style lists its own, the first being its old look; a backdrop the style does not list gives way to that first one, so `--style` keeps a plan in the new style's look. A plan without a backdrop gets the style's first, so older plans render as before.
+
+| Backdrop | The look | After | Styles |
+| --- | --- | --- | --- |
+| `glow` | off-white with soft color glows drifting, and grain | Higgsfield's Kling cards | `bold-pop`, its first |
+| `paper-grid` | warm paper with a faint grid, darker at the edges | motionvid's Sticker Launch | `clean-paper`, its first |
+| `color` | the whole frame in the accent, a lighter spot drifting, deeper at the far corner, and grain | Higgsfield's Playable cards | `bold-pop` |
+| `night` | near-black tinted by the second tone, an accent glow from below and a fainter one above, and grain | Higgsfield's Content Factory, motionvid's Floating Dark UI | both |
+| `halftone` | accent dots on paper growing toward two corners and sliding along the screen, the middle left clear | the halftone on Higgsfield's portraits | `bold-pop` |
+| `pills` | diagonal rows of rounded pills in light tints of the palette, neighbouring rows sliding opposite ways | motionvid's Sticker Launch | `bold-pop` |
+| `streak` | a long tapered smear of the accent with speed lines, and a thinner highlight one above going the other way | the smear on Higgsfield's Content Factory card | `bold-pop` |
+| `studio` | cool light grey lit from above, a touch darker toward the floor | motionvid's Apple look | `clean-paper` |
+| `dots` | a fine dot grid on paper, a dot in the middle of the frame | a design canvas | `clean-paper` |
+| `sketchbook` | cream paper in a thin ruled frame with ticks out of its corners | motionvid's Sketchbook | `clean-paper` |
+
+`color` and `night` are grounds: text on them reads as on an `accent` or an `ink` field. The build gives such text `on` with the ground's tone, so it takes the colors that read there, as text on a field does; a label keeps its own background. A field never takes the ground's tone (`src/video/layout/ground.ts`): on `color` an accent field turns ink, on `night` an ink field turns accent and the second tone turns highlight, so the dark forms of `fill`, `bands`, `echo` and `inset` turn the frame to color there. A dip passes through the ground.
+
+A backdrop runs on the video's time, so its glows and patterns flow on across cuts instead of starting over. On a beat without footage the beat's camera moves the backdrop and nothing else (`backdropView` in `src/video/motion/camera.ts`): `push` grows it by up to 12% over the beat, `pan` slides it across by up to a tenth of the frame and a little down, grown just enough that no edge comes into view, and `punch-in` snaps it up to 18% closer over two moves of the style's tempo, with the tempo's overshoot, then keeps creeping in. The color fields and the text stay still, so they stay crisp and where the layout put them, and a moving backdrop never stops on a fractional position. Rendered frames of a field over a moving backdrop are identical; the encoded video still shows noise of up to 40 levels on the text's edges there, so stillness beside a moving backdrop is checked on lossless stills (`npx remotion still ... --frame`), not with `pnpm check:still`.
+
+`pnpm render:plan fixtures/plan.backdrops.json --out runs/backdrop-lab/<style>/<backdrop> --style <style> --backdrop <backdrop>` renders five beats on a backdrop: a bare title with a push, a split with a pan, a giant number with a punch-in, bands with a push and an inset card with a pan.
 
 ## Fonts
 
@@ -294,6 +317,6 @@ A composition is how a beat on the backdrop fills the frame: where the type sits
 
 1. The first five families: `fill` (the title fills the frame), `split` (a color field over half the frame, the title on it), `giant-number` (a counter as wide as the frame allows), `column` (a color band at the edge, the type flush against it) and `grid` (chips as colored tiles). `center` stays as today's layout and the default, so older plans render unchanged. Text on a field takes colors that read on it, and neighbouring beats never repeat a composition. Checked on a composition lab in both styles and on the four text-only ads planned again, as a contact sheet beside the old one. Built on 2026-10-31, see [Compositions](#compositions); accepted by the owner on 2026-11-01. Building it turned up that every render measured text before its fonts had loaded, so `bold-pop` titles ran wider than their box; renders now wait for the fonts.
 2. Five more families (bands, a diagonal cut, an inset card, a corner stack, a word repeated in outline) and palettes for videos without a brand. Built on 2026-11-01, see [Compositions](#compositions) and [Palettes](#palettes); checked on the composition lab in both styles and on the four text-only ads planned again, each in its own palette; accepted by the owner on 2026-11-09.
-3. Six to eight new backgrounds and a camera that moves over the backdrop.
+3. Six to eight new backgrounds and a camera that moves over the backdrop. Built on 2026-11-09 as eight new backdrops, ten in all, named per video, with the camera moving the backdrop behind still text, see [Backdrops](#backdrops); checked on the backdrop lab in both styles and on the four text-only ads planned again, each on its own backdrop with the camera moving. Building it turned up that a marker could sit under a line set in the field's accent color that does not read on it; a marker now reads under both.
 4. No repeats across one user's videos: the director's brief lists the compositions and palettes of the user's recent videos. Checked on a contact sheet of twelve videos that must not read as one template.
 5. New blocks: a price tag, a checklist, a rating, before and after, steps.

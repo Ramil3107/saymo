@@ -1,0 +1,219 @@
+{
+  "title": "Backdrop lab",
+  "summary": "Five beats on the backdrop, the text on it bare, on a field, as a giant number, in bands and on a card, with the camera moving over it, rendered once per backdrop.",
+  "cast": [],
+  "destination": "reels",
+  "lengthMs": 10000,
+  "register": "playful-sale",
+  "style": "bold-pop",
+  "musicMood": "upbeat",
+  "captions": {
+    "enabled": false,
+    "style": "bold-center",
+    "keywords": []
+  },
+  "voiceover": false,
+  "beats": [
+    {
+      "id": "b1",
+      "role": "setup",
+      "startMs": 0,
+      "durationMs": 2000,
+      "transition": "cut",
+      "composition": "center",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "Fresh bread daily",
+          "lines": [
+            {
+              "text": "Fresh",
+              "size": "xl",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "bread",
+              "size": "xl",
+              "tone": "accent",
+              "align": "center"
+            },
+            {
+              "text": "daily",
+              "size": "l",
+              "tone": "ink",
+              "align": "center"
+            }
+          ],
+          "entrance": "punch",
+          "atMs": 0,
+          "durationMs": 2000
+        },
+        {
+          "id": "a",
+          "kind": "chip",
+          "text": "Since 1998",
+          "atMs": 500,
+          "durationMs": 1500
+        }
+      ],
+      "camera": {
+        "kind": "push",
+        "intensity": 0.6
+      }
+    },
+    {
+      "id": "b2",
+      "role": "message",
+      "startMs": 2000,
+      "durationMs": 2000,
+      "transition": "flash",
+      "composition": "split",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "Every sweater",
+          "lines": [
+            {
+              "text": "Every",
+              "size": "l",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "sweater",
+              "size": "xl",
+              "tone": "accent",
+              "align": "center"
+            }
+          ],
+          "entrance": "punch",
+          "atMs": 0,
+          "durationMs": 2000
+        },
+        {
+          "id": "c1",
+          "kind": "chip",
+          "text": "Free shipping",
+          "atMs": 500,
+          "durationMs": 1500,
+          "badge": "01"
+        },
+        {
+          "id": "c2",
+          "kind": "chip",
+          "text": "Over $50",
+          "atMs": 900,
+          "durationMs": 1100,
+          "badge": "02"
+        }
+      ],
+      "camera": {
+        "kind": "pan",
+        "intensity": 0.6
+      }
+    },
+    {
+      "id": "b3",
+      "role": "proof",
+      "startMs": 4000,
+      "durationMs": 2000,
+      "transition": "whip",
+      "composition": "giant-number",
+      "overlays": [
+        {
+          "id": "n",
+          "kind": "counter",
+          "text": "40",
+          "value": 40,
+          "atMs": 0,
+          "durationMs": 2000,
+          "suffix": "%",
+          "sub": "off everything",
+          "accent": "stress"
+        },
+        {
+          "id": "c1",
+          "kind": "chip",
+          "text": "Nov 28 to 30",
+          "atMs": 1200,
+          "durationMs": 800
+        }
+      ],
+      "camera": {
+        "kind": "punch-in",
+        "intensity": 0.7
+      }
+    },
+    {
+      "id": "b4",
+      "role": "setup",
+      "startMs": 6000,
+      "durationMs": 2000,
+      "transition": "zoom",
+      "composition": "bands",
+      "overlays": [
+        {
+          "id": "h",
+          "kind": "headline",
+          "text": "Book a visit",
+          "sub": "Mon to Sat",
+          "atMs": 0,
+          "durationMs": 2000
+        }
+      ],
+      "camera": {
+        "kind": "push",
+        "intensity": 0.5
+      }
+    },
+    {
+      "id": "b5",
+      "role": "proof",
+      "startMs": 8000,
+      "durationMs": 2000,
+      "transition": "whip",
+      "composition": "inset",
+      "overlays": [
+        {
+          "id": "t",
+          "kind": "title",
+          "text": "Free trial",
+          "lines": [
+            {
+              "text": "Free",
+              "size": "xl",
+              "tone": "ink",
+              "align": "center"
+            },
+            {
+              "text": "trial",
+              "size": "xl",
+              "tone": "accent",
+              "align": "center"
+            }
+          ],
+          "entrance": "type",
+          "atMs": 0,
+          "durationMs": 2000,
+          "accent": "celebrate"
+        },
+        {
+          "id": "a",
+          "kind": "chip",
+          "text": "No card needed",
+          "atMs": 600,
+          "durationMs": 1400
+        }
+      ],
+      "camera": {
+        "kind": "pan",
+        "intensity": 0.5
+      }
+    }
+  ],
+  "assumptions": [],
+  "questions": []
+}

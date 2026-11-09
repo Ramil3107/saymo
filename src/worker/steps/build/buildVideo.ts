@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { z } from "zod";
 import { speechIntervals } from "../../../video/audio/ducking";
+import { backdrops, type Ground } from "../../../video/backdrops";
 import { type Brand, paletteBrand } from "../../../video/brand";
 import { pagesFor } from "../../../video/captions/looks";
 import { stepAside, type Window } from "../../../video/captions/stepAside";
@@ -18,6 +19,7 @@ import {
 } from "../../../video/layout/compositions";
 import { fitContain, fitCover } from "../../../video/layout/fitCover";
 import { intersectionArea } from "../../../video/layout/geometry";
+import { toneOnGround } from "../../../video/layout/ground";
 import { keepOutErrorShare, keepOutZones, overlapRatio, zoomedZones } from "../../../video/layout/keepOut";
 import {
   cardArea,
@@ -49,7 +51,7 @@ import {
   type VideoDoc,
   VideoDocSchema,
 } from "../../../video/schema/video";
-import { defaultStyle, type StyleId, styles } from "../../../video/styles";
+import { defaultStyle, type StyleId, styleBackdrop, styles } from "../../../video/styles";
 import { fractionDigits } from "../../../video/type/numbers";
 import type { TitleLine } from "../../../video/type/schedule";
 
@@ -103,6 +105,7 @@ type SceneContext = {
   captionStyle: Plan["captions"]["style"];
   spoken: SpokenBeat | undefined;
   style: StyleId;
+  ground: Ground | undefined;
   variant: number;
 };
 
@@ -142,6 +145,7 @@ export function buildVideo(
   const source = assets.sourceVideo ? sizeOf(assets.sourceVideo.info) : undefined;
   const spokenByBeat = new Map((assets.voice ?? []).map((spoken) => [spoken.beatId, spoken]));
   const style = plan.style ?? defaultStyle[plan.register];
+  const backdrop = styleBackdrop(style, plan.backdrop);
 
   const slots = timeline(plan, assets.voice);
   const built = slots.map((slot, index) =>
@@ -154,6 +158,7 @@ export function buildVideo(
       captionStyle: plan.captions.style,
       spoken: spokenByBeat.get(slot.beat.id),
       style,
+      ground: backdrops[backdrop].ground,
       variant: compositionVariant(plan.beats, index),
     }),
   );
@@ -176,6 +181,7 @@ export function buildVideo(
     destination: plan.destination,
     register: plan.register,
     style,
+    backdrop,
     brand: brand ?? paletteBrand(plan.palette),
     assets: documentAssets(assets),
     scenes: built.map((scene) => scene.scene),
@@ -272,7 +278,9 @@ function buildScene(slot: Slot, context: SceneContext): BuiltScene {
   const { beat, startMs, durationMs } = slot;
   const framing = framingFor(beat, context);
   const transform = footageTransform(beat, context, framing);
-  const { elements, fields } = placeElements(slot, transform, context, framing);
+  const onBackdrop = !beat.footage || framing.fit === "card";
+  const placed = placeElements(slot, transform, context, framing);
+  const { elements, fields } = onBackdrop ? grounded(placed, context.ground) : placed;
   const words = sceneWords(slot, context);
 
   const scene: Scene = {
@@ -681,6 +689,25 @@ function titleLines(overlay: Overlay): TitleLine[] {
 
 function counterValue(overlay: Overlay): number {
   return overlay.value ?? (Number.parseFloat(overlay.text.replace(/[^\d.-]/g, "")) || 0);
+}
+
+// On a color or dark backdrop a field that would vanish takes another tone, and text on no field reads as on the
+// ground; a label keeps its own background.
+function grounded(placed: Placed, ground: Ground | undefined): Placed {
+  if (!ground) return placed;
+
+  return {
+    elements: placed.elements.map((element) => groundedElement(element, ground)),
+    fields: placed.fields.map((field) => ({ ...field, tone: toneOnGround(field.tone, ground) })),
+  };
+}
+
+function groundedElement(element: Element, ground: Ground): Element {
+  const lineOn = element.lineOn?.map((tone) => toneOnGround(tone, ground));
+  const toned = lineOn ? { ...element, lineOn } : element;
+  if (toned.on) return { ...toned, on: toneOnGround(toned.on, ground) };
+
+  return tileKinds.includes(toned.kind) ? toned : { ...toned, on: ground };
 }
 
 function sceneWords(slot: Slot, context: SceneContext): TranscriptWord[] {

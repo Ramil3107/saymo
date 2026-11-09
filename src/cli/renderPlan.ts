@@ -2,6 +2,7 @@ import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { readJson, writeJson } from "../lib/json";
+import { BackdropIdSchema } from "../video/backdrops";
 import { defaultBrand } from "../video/brand";
 import { runQa } from "../video/qa/checks";
 import { renderLocal } from "../video/render/renderLocal";
@@ -10,7 +11,7 @@ import { type StyleId, StyleIdSchema, styles } from "../video/styles";
 import { buildVideo } from "../worker/steps/build/buildVideo";
 
 const usage =
-  "Usage: pnpm render:plan <plan.json> --out <dir> [--style bold-pop|clean-paper] [--colors #hex,#hex]";
+  "Usage: pnpm render:plan <plan.json> --out <dir> [--style bold-pop|clean-paper] [--backdrop <id>] [--colors #hex,#hex]";
 
 await main();
 
@@ -18,12 +19,18 @@ await main();
 async function main(): Promise<void> {
   const { values, positionals } = parseArgs({
     allowPositionals: true,
-    options: { out: { type: "string" }, style: { type: "string" }, colors: { type: "string" } },
+    options: {
+      out: { type: "string" },
+      style: { type: "string" },
+      backdrop: { type: "string" },
+      colors: { type: "string" },
+    },
   });
   const planPath = positionals[0];
   if (!planPath || !values.out) throw new Error(usage);
 
-  const plan = await readJson(planPath, PlanSchema);
+  const read = await readJson(planPath, PlanSchema);
+  const plan = values.backdrop ? { ...read, backdrop: BackdropIdSchema.parse(values.backdrop) } : read;
   const styled = values.style ? restyled(plan, StyleIdSchema.parse(values.style)) : plan;
   const brand = values.colors ? { ...defaultBrand, colors: values.colors.split(",") } : undefined;
   const doc = buildVideo(styled, null, {}, brand);

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { BackdropIdSchema } from "../backdrops";
 import { DestinationIdSchema } from "../destinations";
 import { CompositionSchema } from "../layout/compositions";
 import { LayoutSchema } from "../layout/layouts";
@@ -121,6 +122,7 @@ const PlanFieldsSchema = z.object({
   register: RegisterIdSchema,
   style: StyleIdSchema.optional(),
   palette: PaletteIdSchema.optional(),
+  backdrop: BackdropIdSchema.optional(),
   musicMood: z.string(),
   captions: z.object({
     enabled: z.boolean(),

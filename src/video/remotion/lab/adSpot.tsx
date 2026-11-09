@@ -14,12 +14,13 @@ import { type Rect, rectStyle } from "../accents/geometry";
 import { Scribble } from "../accents/Scribble";
 import { SelectionBox } from "../accents/SelectionBox";
 import { Sparkles } from "../accents/Sparkles";
+import { Backdrop } from "../backdrop/Backdrop";
 import { CaptionLayer } from "../captions/CaptionLayer";
 import { msToFrame } from "../frames";
 import { Collage } from "../media/Collage";
+import { useMs } from "../motion/Move";
 import { SceneTransition } from "../motion/SceneTransition";
 import type { StyleKit } from "../style/kit";
-import { Backdrop } from "../style/Textures";
 import type { Theme } from "../theme";
 import { CornerLabel } from "../type/CornerLabel";
 import { Counter, countDurationMs } from "../type/Counter";
@@ -279,9 +280,11 @@ function Stage({
   height: number;
   children: ReactNode;
 }) {
+  const ms = useMs();
+
   return (
     <AbsoluteFill>
-      <Backdrop kit={kit} width={width} height={height} />
+      <Backdrop kit={kit} frame={{ width, height }} ms={ms} />
       <AbsoluteFill
         style={{ alignItems: "center", justifyContent: "center", fontFamily: kit.display.family }}
       >

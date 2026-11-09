@@ -62,7 +62,7 @@ export function SaymoVideo(doc: VideoDoc) {
 }
 
 function themeFor(doc: VideoDoc): Theme {
-  const kit = styleKit(doc.style ?? defaultStyle[doc.register], doc.brand);
+  const kit = styleKit(doc.style ?? defaultStyle[doc.register], doc.brand, doc.backdrop);
 
   return {
     brand: doc.brand,
@@ -102,13 +102,26 @@ function SceneView({ scene, doc, theme }: { scene: Scene; doc: VideoDoc; theme: 
 
   return (
     <AbsoluteFill>
-      <Background background={scene.background} theme={theme} frame={frame} />
+      <Background
+        background={scene.background}
+        camera={scene.camera}
+        theme={theme}
+        frame={frame}
+        startMs={scene.startMs}
+        durationMs={scene.durationMs}
+      />
       {scene.fields ? (
         <Fields fields={scene.fields} kit={theme.kit} frame={frame} sceneMs={scene.durationMs} />
       ) : null}
       <Camera camera={scene.camera} durationMs={scene.durationMs}>
         {scene.footage && footageAsset ? (
-          <Footage footage={scene.footage} asset={footageAsset} durationMs={scene.durationMs} theme={theme} />
+          <Footage
+            footage={scene.footage}
+            asset={footageAsset}
+            startMs={scene.startMs}
+            durationMs={scene.durationMs}
+            theme={theme}
+          />
         ) : null}
       </Camera>
       {scene.elements.map((element) => (

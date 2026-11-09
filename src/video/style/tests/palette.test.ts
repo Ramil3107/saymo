@@ -23,6 +23,14 @@ describe("brandPalette", () => {
     expect(contrastRatio(palette.alt, palette.background)).toBeGreaterThanOrEqual(3);
   });
 
+  it("sets ink text on a light brand accent and white text on a deep one", () => {
+    const lime = brandPalette(styles["bold-pop"].tones, ["#C8FF2E"]);
+    const cobalt = brandPalette(styles["bold-pop"].tones, ["#2D4BFF"]);
+
+    expect(fieldColors(lime, "accent").ink).toBe(lime.ink);
+    expect(fieldColors(cobalt, "accent").ink).toBe("#FFFFFF");
+  });
+
   it("falls back to the style's own tones without brand colors", () => {
     const palette = brandPalette(styles["bold-pop"].tones, []);
     expect(palette.highlight).toBe(styles["bold-pop"].tones.highlight);

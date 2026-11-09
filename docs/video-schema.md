@@ -26,6 +26,7 @@ Every element has a stable id, a type from the vocabulary, parameters and timing
 | `destination` | destination id | Where the video goes, see [Destinations](#destinations) |
 | `register` | register id | Character of the video, see [Registers](#registers) |
 | `style` | style id, optional | The look of the whole video (`bold-pop` or `clean-paper`, see [Vocabulary](/vocabulary#styles)); without it the register picks one |
+| `backdrop` | backdrop id, optional | What the scenes without footage stand on, one of the style's backdrops (see [Vocabulary](/vocabulary#backdrops)); without it, or with one the style does not list, the style's first |
 | `brand` | object | `colors` (one to three), `font` (a family from the [font library](/vocabulary#fonts), Onest when the library does not have it) and an optional `logo`; a video without a brand gets the colors of its plan's palette (see [Vocabulary](/vocabulary#palettes)) and Onest |
 | `assets` | list | `id`, `kind` (`video`, `audio` or `image`), `src` and an optional `durationMs`. Scenes, music and voice refer to assets by `id` |
 | `scenes` | list of scenes | In order, with no gaps or overlaps: the first starts at 0, each next one starts where the previous one ends |
@@ -39,9 +40,9 @@ Fields of a scene:
 | --- | --- | --- |
 | `id` | string | Stable id, the same as the id of the beat the scene comes from |
 | `startMs`, `durationMs` | number | Position on the timeline of the video |
-| `background` | object | `kind` (`brand`, `solid`, `gradient` or `style`, the style's backdrop with its textures) and an optional `color` |
+| `background` | object | `kind` (`brand`, `solid`, `gradient` or `style`, the video's backdrop) and an optional `color` |
 | `footage` | object, optional | `assetId`, `fromMs` in the source video and `transform` (`scale`, `x`, `y`) |
-| `camera` | object, optional | `kind` (`none`, `push`, `punch-in` or `pan`) and `intensity` from 0 to 1 |
+| `camera` | object, optional | `kind` (`none`, `push`, `punch-in` or `pan`) and `intensity` from 0 to 1; over footage it moves the shot, in a scene without footage it moves the backdrop while the fields and elements stay still |
 | `composition` | composition, optional | How a scene without footage fills the frame: `center`, `fill`, `split`, `giant-number`, `column`, `grid`, `bands`, `diagonal`, `inset`, `corner-stack` or `echo`, see [Vocabulary](/vocabulary#compositions) |
 | `fields` | list, optional | The color fields of the composition, drawn over the backdrop and under the elements: a `box`, a `tone` (`accent`, `ink`, `highlight`, `alt` or `surface`, colors of the palette), the edge it sweeps in `from` (`left`, `right`, `top` or `bottom`), `enterMs` and `exitMs`; optionally an `outline` (points inside the box, 0 to 1, that the field is cut to), `raised` (a card with the style's corners and shadow) or `echo` (a `text` repeated in outlined rows, `rows` of them, instead of a fill) |
 | `elements` | list | The elements of the scene |
@@ -49,7 +50,7 @@ Fields of a scene:
 
 ## Elements
 
-An element is one of eleven kinds, picked by `kind`. Every element has an `id`, `enterMs` and `exitMs` (counted from the start of its scene), a `box` and an optional `accent`: what the mark around the element says, `celebrate`, `frame`, `focus` or `stress`, drawn by the style (see [Vocabulary](/vocabulary#accents-in-the-document)). The `box` is a rectangle `x`, `y`, `w`, `h` in fractions of the frame, from 0 to 1. An element placed by a composition may also have `on`, the tone of the field under it, so its text takes colors that read there (a chip or sticker gets it only on its own grid tile, where it drops its background), and `fill`: `fit` (the text as large as its box allows), `spread` (also spread over the box's height) or `rows` (each line in a row of its own); text in rows carries `lineOn`, the tone of the field under each line. On top of that:
+An element is one of eleven kinds, picked by `kind`. Every element has an `id`, `enterMs` and `exitMs` (counted from the start of its scene), a `box` and an optional `accent`: what the mark around the element says, `celebrate`, `frame`, `focus` or `stress`, drawn by the style (see [Vocabulary](/vocabulary#accents-in-the-document)). The `box` is a rectangle `x`, `y`, `w`, `h` in fractions of the frame, from 0 to 1. An element placed by a composition may also have `on`, the tone of the field under it, so its text takes colors that read there (a chip or sticker gets it only on its own grid tile, where it drops its background); on a `color` or `night` backdrop text on no field has `on` too, the tone of that ground, and `fill`: `fit` (the text as large as its box allows), `spread` (also spread over the box's height) or `rows` (each line in a row of its own); text in rows carries `lineOn`, the tone of the field under each line. On top of that:
 
 - `headline`: `text` and an optional `sub`;
 - `chip`: `text`;

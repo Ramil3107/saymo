@@ -2,18 +2,19 @@ import { Video } from "@remotion/media";
 import type { CSSProperties } from "react";
 import { useVideoConfig } from "remotion";
 import type { Scene, VideoDoc } from "../../schema/video";
+import { Backdrop } from "../backdrop/Backdrop";
 import { msToFrame } from "../frames";
-import { Backdrop } from "../style/Textures";
+import { useMs } from "../motion/Move";
 import type { Theme } from "../theme";
 
 type SceneFootage = NonNullable<Scene["footage"]>;
 type Asset = VideoDoc["assets"][number];
-type Props = { footage: SceneFootage; asset: Asset; durationMs: number; theme: Theme };
+type Props = { footage: SceneFootage; asset: Asset; startMs: number; durationMs: number; theme: Theme };
 type Size = { width: number; height: number };
 
 const cardRadiusShare = 0.028;
 
-export function Footage({ footage, asset, durationMs, theme }: Props) {
+export function Footage({ footage, asset, startMs, durationMs, theme }: Props) {
   const { scale } = footage.transform;
   const size: Size | undefined =
     asset.width && asset.height ? { width: asset.width * scale, height: asset.height * scale } : undefined;
@@ -21,7 +22,7 @@ export function Footage({ footage, asset, durationMs, theme }: Props) {
 
   return (
     <>
-      {card ? <CardBackground theme={theme} /> : null}
+      {card ? <CardBackground theme={theme} startMs={startMs} /> : null}
       <div style={holderStyle(footage, size, card)}>
         <Video
           src={asset.src}
@@ -35,10 +36,11 @@ export function Footage({ footage, asset, durationMs, theme }: Props) {
   );
 }
 
-function CardBackground({ theme }: { theme: Theme }) {
+function CardBackground({ theme, startMs }: { theme: Theme; startMs: number }) {
   const { width, height } = useVideoConfig();
+  const ms = startMs + useMs();
 
-  return <Backdrop kit={theme.kit} width={width} height={height} />;
+  return <Backdrop kit={theme.kit} frame={{ width, height }} ms={ms} />;
 }
 
 function holderStyle(footage: SceneFootage, size: Size | undefined, card: boolean): CSSProperties {

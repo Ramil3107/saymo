@@ -28,6 +28,14 @@
 
 ---
 
+## Changed while building
+
+- The geometry helpers are `pillRows.ts` and `halftoneDots.ts`: `pills.ts` beside `Pills.tsx` differs only in case, which macOS does not tell apart.
+- A pan grows the backdrop just enough to hide its edge instead of drawing it past the frame (`backdropOverscan` is gone): every look keeps drawing in the frame, and `sketchbook`'s ruled frame stays in view on still beats.
+- The kit test lives in `src/video/remotion/style/tests/kit.test.ts`, the module it tests.
+- `pnpm check:still` cannot judge a field beside a moving backdrop: the encoder adds noise at the text's edges. Lossless stills of neighbouring frames are identical there.
+- The ads showed a marker under an accent line that did not read on it; `fieldColors` now picks a marker both the ink and the accent text read on.
+
 ### Task 1: Backdrops as data
 
 **Files:**

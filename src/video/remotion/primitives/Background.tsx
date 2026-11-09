@@ -1,24 +1,40 @@
 import type { CSSProperties } from "react";
 import { AbsoluteFill } from "remotion";
+import { backdropView } from "../../motion/camera";
 import type { Scene } from "../../schema/video";
-import { Backdrop } from "../style/Textures";
+import { Backdrop } from "../backdrop/Backdrop";
+import { useMs } from "../motion/Move";
+import { restingTransform } from "../motion/pixels";
 import { type Frame, ink, type Theme } from "../theme";
 
 type SceneBackground = Scene["background"];
-
-export function Background({
-  background,
-  theme,
-  frame,
-}: {
+type Props = {
   background: SceneBackground;
+  camera: Scene["camera"];
   theme: Theme;
   frame: Frame;
-}) {
-  if (background.kind === "style")
-    return <Backdrop kit={theme.kit} width={frame.width} height={frame.height} />;
+  startMs: number;
+  durationMs: number;
+};
 
-  return <AbsoluteFill style={backgroundStyle(background, theme)} />;
+export function Background(props: Props) {
+  if (props.background.kind === "style") return <MovingBackdrop {...props} />;
+
+  return <AbsoluteFill style={backgroundStyle(props.background, props.theme)} />;
+}
+
+// The beat's camera moves the backdrop; the fields and text drawn over it stay still.
+function MovingBackdrop({ camera, theme, frame, startMs, durationMs }: Props) {
+  const sceneMs = useMs();
+  const view = backdropView(camera, sceneMs, durationMs, theme.kit.tempo);
+  const atRest = view.scale === 1 && view.x === 0 && view.y === 0;
+  const transform = `translate(${view.x * frame.width}px, ${view.y * frame.height}px) scale(${view.scale})`;
+
+  return (
+    <AbsoluteFill style={{ transform: restingTransform(transform, atRest) }}>
+      <Backdrop kit={theme.kit} frame={frame} ms={startMs + sceneMs} />
+    </AbsoluteFill>
+  );
 }
 
 function backgroundStyle(background: SceneBackground, theme: Theme): CSSProperties {

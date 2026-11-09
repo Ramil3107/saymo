@@ -1,15 +1,17 @@
+import { type BackdropId, backdrops, type Ground } from "../../backdrops";
 import { cssFamily, libraryFont } from "../../fonts/library";
 import type { FieldTone } from "../../layout/compositions";
 import { type Tempo, tempos } from "../../motion/tempo";
 import type { VideoDoc } from "../../schema/video";
 import { brandPalette, type FieldColors, fieldColors, type Palette } from "../../style/palette";
-import { type Style, type StyleId, styles } from "../../styles";
+import { type Style, type StyleId, styleBackdrop, styles } from "../../styles";
 import type { TransitionColors } from "../motion/SceneTransition";
 import type { TypeColors, TypeFont } from "../type/KineticTitle";
 
 export type StyleKit = {
   id: StyleId;
   style: Style;
+  backdrop: BackdropId;
   palette: Palette;
   tempo: Tempo;
   display: TypeFont;
@@ -39,14 +41,17 @@ const footageScrim =
   "radial-gradient(closest-side, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.32) 60%, rgba(0, 0, 0, 0))";
 const white = "#FFFFFF";
 
-// Everything a scene needs to draw in a style: the style's own choices with the brand's colors and font folded in.
-export function styleKit(id: StyleId, brand: VideoDoc["brand"]): StyleKit {
+// Everything a scene needs to draw in a style: the style's own choices with the brand's colors, the brand's font and
+// the video's backdrop folded in.
+export function styleKit(id: StyleId, brand: VideoDoc["brand"], requested?: BackdropId): StyleKit {
   const style = styles[id];
   const palette = brandPalette(style.tones, brand.colors);
+  const backdrop = styleBackdrop(id, requested);
 
   return {
     id,
     style,
+    backdrop,
     palette,
     tempo: tempos[style.tempo],
     display: { family: cssFamily(libraryFont(style.display.font)), weight: style.display.weight },
@@ -62,7 +67,7 @@ export function styleKit(id: StyleId, brand: VideoDoc["brand"]): StyleKit {
     panel: panelTones(style, palette),
     label: labelTones(style, palette),
     fields: fieldTones(palette),
-    transition: transitionColors(style, palette),
+    transition: transitionColors(style, palette, backdrops[backdrop].ground),
     scrim: footageScrim,
   };
 }
@@ -107,8 +112,18 @@ function fieldTones(palette: Palette): Record<FieldTone, FieldColors> {
   };
 }
 
-function transitionColors(style: Style, palette: Palette): TransitionColors {
-  const dip = style.surfaces.panel === "dark" ? palette.ink : palette.background;
+function transitionColors(style: Style, palette: Palette, ground: Ground | undefined): TransitionColors {
+  return {
+    flash: white,
+    dip: dipColor(style, palette, ground),
+    panel: palette.accent,
+    edge: palette.highlight,
+  };
+}
 
-  return { flash: white, dip, panel: palette.accent, edge: palette.highlight };
+// A dip passes through the ground of a color or dark backdrop, otherwise through the style's panel tone.
+function dipColor(style: Style, palette: Palette, ground: Ground | undefined): string {
+  if (ground) return palette[ground];
+
+  return style.surfaces.panel === "dark" ? palette.ink : palette.background;
 }

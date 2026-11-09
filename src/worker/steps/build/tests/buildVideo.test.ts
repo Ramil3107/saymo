@@ -585,6 +585,40 @@ test("buildVideo gives text above a diagonal cut the field's colors", () => {
   expect(scene?.elements.find((element) => element.kind === "chip")?.on).toBeUndefined();
 });
 
+test("buildVideo writes the backdrop into the document, the plan's only when the style lists it", () => {
+  const night = PlanSchema.parse({ ...textPlanJson, style: "clean-paper", backdrop: "night" });
+  const pills = PlanSchema.parse({ ...textPlanJson, style: "clean-paper", backdrop: "pills" });
+
+  expect(buildVideo(textPlan, null, {}, brand).backdrop).toBe("glow");
+  expect(buildVideo(night, null, {}, brand).backdrop).toBe("night");
+  expect(buildVideo(pills, null, {}, brand).backdrop).toBe("paper-grid");
+});
+
+test("buildVideo keeps fields and bare text readable on a color backdrop", () => {
+  const compositions = ["split", "center", "grid"] as const;
+  const beats = textPlan.beats.map((beat, index) => ({ ...beat, composition: compositions[index] }));
+  const doc = buildVideo({ ...textPlan, backdrop: "color", beats }, null, {}, brand);
+  const [split, center, grid] = doc.scenes;
+
+  expect(split?.fields?.map((field) => field.tone)).not.toContain("accent");
+  expect(split?.elements[0]?.on).toBe("ink");
+  expect(center?.elements.find((element) => element.kind === "big-number")?.on).toBe("accent");
+  expect(center?.elements.find((element) => element.kind === "chip")?.on).toBeUndefined();
+  expect(grid?.fields?.map((field) => field.tone)).not.toContain("accent");
+});
+
+test("buildVideo turns the dark forms of a composition to color on a night backdrop", () => {
+  const compositions = ["bands", "center", "bands"] as const;
+  const beats = textPlan.beats.map((beat, index) => ({ ...beat, composition: compositions[index] }));
+  const doc = buildVideo({ ...textPlan, style: "clean-paper", backdrop: "night", beats }, null, {}, brand);
+  const fieldTones = doc.scenes.flatMap((scene) => (scene.fields ?? []).map((field) => field.tone));
+  const lineTones = doc.scenes.flatMap((scene) => scene.elements.flatMap((element) => element.lineOn ?? []));
+
+  expect([...fieldTones, ...lineTones]).not.toContain("ink");
+  expect(fieldTones).toContain("accent");
+  expect(doc.scenes[1]?.elements.find((element) => element.kind === "big-number")?.on).toBe("ink");
+});
+
 test("buildVideo gives a repeated composition its other form and ignores compositions over footage", () => {
   const compositions = ["split", "grid", "split"] as const;
   const beats = textPlan.beats.map((beat, index) => ({ ...beat, composition: compositions[index] }));

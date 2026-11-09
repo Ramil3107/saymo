@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { BackdropId } from "./backdrops";
 import type { Exit } from "./motion/moves";
 import type { TempoId } from "./motion/tempo";
 import type { PaletteId } from "./palettes";
@@ -10,8 +11,6 @@ import type { TitleEntrance } from "./type/schedule";
 export const StyleIdSchema = z.enum(["bold-pop", "clean-paper"]);
 
 export type StyleId = z.infer<typeof StyleIdSchema>;
-
-export type Texture = "blobs" | "grain" | "paper-grid" | "halftone";
 
 export type AccentMark =
   | "burst"
@@ -34,7 +33,7 @@ export type Style = {
   display: { font: string; weight: number; upper: boolean; labelScale: number; widthScale: number };
   surfaces: { panel: "light" | "dark"; labels: "soft" | "block" };
   tones: Tones;
-  textures: Texture[];
+  backdrops: [BackdropId, ...BackdropId[]];
   captions: CaptionStyle[];
   transitions: Transition[];
   titleEntrances: TitleEntrance[];
@@ -59,7 +58,7 @@ export const styles: Record<StyleId, Style> = {
       muted: "#ECE6EC",
       highlight: "#C8FF2E",
     },
-    textures: ["blobs", "grain"],
+    backdrops: ["glow", "color", "night", "halftone", "pills", "streak"],
     captions: ["bold-center", "keyword-box", "pop", "outline"],
     transitions: ["flash", "whip", "pixelate", "zoom", "cut"],
     titleEntrances: ["type", "punch", "spread", "pop"],
@@ -82,7 +81,7 @@ export const styles: Record<StyleId, Style> = {
       muted: "#DCDAD3",
       highlight: "#FF7A2F",
     },
-    textures: ["paper-grid"],
+    backdrops: ["paper-grid", "studio", "dots", "sketchbook", "night"],
     captions: ["keyword-box", "karaoke-pill", "marker", "typewriter", "minimal"],
     transitions: ["wipe", "dip", "zoom", "cut"],
     titleEntrances: ["rise", "type", "reveal"],
@@ -99,3 +98,11 @@ export const defaultStyle: Record<RegisterId, StyleId> = {
   "serious-clinical": "clean-paper",
   "rich-premium": "clean-paper",
 };
+
+// The backdrop a video draws: the one it names when its style lists it, otherwise the style's first.
+export function styleBackdrop(style: StyleId, requested?: BackdropId): BackdropId {
+  const own = styles[style].backdrops;
+  if (requested && own.includes(requested)) return requested;
+
+  return own[0];
+}

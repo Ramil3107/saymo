@@ -1,6 +1,6 @@
 import { useMs } from "../motion/Move";
 
-type Props = { colors: string[]; width: number; height: number };
+type Props = { colors: string[]; width: number; height: number; ms?: number };
 
 const periodMs = 9000;
 const travelShare = 0.08;
@@ -10,9 +10,10 @@ const spots = [
   { x: 0.2, y: 0.25, size: 0.55 },
 ];
 
-// Soft color fields that drift slowly behind the content.
-export function Blobs({ colors, width, height }: Props) {
-  const ms = useMs();
+// Soft color fields that drift slowly behind the content, on the given time or the scene's own.
+export function Blobs({ colors, width, height, ms: atMs }: Props) {
+  const sceneMs = useMs();
+  const ms = atMs ?? sceneMs;
 
   return (
     <>

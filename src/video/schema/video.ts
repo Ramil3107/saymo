@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { BackdropIdSchema } from "../backdrops";
 import { DestinationIdSchema, FormatSchema } from "../destinations";
 import { CompositionSchema, FieldSchema, FieldToneSchema, TypeFillSchema } from "../layout/compositions";
 import { RegisterIdSchema } from "../registers";
@@ -102,6 +103,7 @@ const VideoDocFieldsSchema = z.object({
   destination: DestinationIdSchema,
   register: RegisterIdSchema,
   style: StyleIdSchema.optional(),
+  backdrop: BackdropIdSchema.optional(),
   brand: z.object({
     colors: z.array(z.string()).min(1).max(3),
     font: z.string(),

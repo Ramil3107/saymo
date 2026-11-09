@@ -18,7 +18,7 @@ flowchart LR
 ```
 
 - **The video is data.** The director never writes code: it returns a plan checked against a Zod schema, and a deterministic build turns it into a document of scenes and elements. Layout for 9:16, 1:1 and 16:9 is computed from that document.
-- **A vocabulary, not templates.** A frame is composed from primitives: kinetic titles, counters, chips, accents, media pieces, transitions, compositions of the frame, palettes for videos without a brand and two complete styles. See [Vocabulary](docs/vocabulary.md).
+- **A vocabulary, not templates.** A frame is composed from primitives: kinetic titles, counters, chips, accents, media pieces, transitions, compositions of the frame, palettes for videos without a brand, ten backdrops with a camera that moves over them and two complete styles. See [Vocabulary](docs/vocabulary.md).
 - **Three entry modes** come from one pipeline: your footage with graphics, text only, and minimal captions and cuts.
 
 ## Where it stands
