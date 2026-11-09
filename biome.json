@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**/*.{ts,tsx,json}", "!docs/design"]
+    "includes": ["**/*.{ts,tsx,json}", "!docs/design", "!drizzle/meta"]
   },
   "formatter": {
     "enabled": true,
