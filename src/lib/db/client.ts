@@ -29,5 +29,7 @@ function sharedPool(): Pool {
 
 function createPool(): Pool {
   const { DATABASE_URL } = appEnv();
-  return new Pool({ connectionString: DATABASE_URL, ssl: sslFor(DATABASE_URL), max: MAX_CONNECTIONS });
+  const pool = new Pool({ connectionString: DATABASE_URL, ssl: sslFor(DATABASE_URL), max: MAX_CONNECTIONS });
+  pool.on("error", (error) => console.error("Idle database connection failed:", error.message));
+  return pool;
 }

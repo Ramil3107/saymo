@@ -7,12 +7,25 @@ if (existsSync(".env")) {
   process.loadEnvFile();
 }
 
-const url = z.url().parse(process.env.DATABASE_URL);
+const url = z.object({ DATABASE_URL: z.url() }).parse(process.env).DATABASE_URL;
 
 export default defineConfig({
   dialect: "postgresql",
   schema: "./src/lib/db/schema/index.ts",
   out: "./drizzle",
   casing: "snake_case",
-  dbCredentials: { url, ssl: sslFor(url) },
+  dbCredentials: credentialsFrom(url),
 });
+
+// drizzle-kit drops `ssl` when given a bare url, so the parts are passed separately
+function credentialsFrom(databaseUrl: string) {
+  const parsed = new URL(databaseUrl);
+  return {
+    host: parsed.hostname,
+    port: Number(parsed.port) || undefined,
+    user: decodeURIComponent(parsed.username),
+    password: decodeURIComponent(parsed.password),
+    database: parsed.pathname.slice(1),
+    ssl: sslFor(databaseUrl),
+  };
+}

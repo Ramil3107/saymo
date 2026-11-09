@@ -15,3 +15,11 @@ test("a public host is reached over TLS that accepts Railway's self-signed certi
     rejectUnauthorized: false,
   });
 });
+
+test("a local host is recognised in any letter case", () => {
+  expect(sslFor("postgresql://u:p@LOCALHOST:5432/db")).toBe(false);
+});
+
+test("the IPv6 loopback is reached without TLS", () => {
+  expect(sslFor("postgresql://u:p@[::1]:5432/db")).toBe(false);
+});
