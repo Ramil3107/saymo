@@ -28,19 +28,23 @@ export function brandPalette(tones: Tones, brandColors: string[]): Palette {
 }
 
 // Text on a color field: ink or white, whichever reads better, the first palette color that reads on the field,
-// and the first one the text reads on for a marker.
+// and for a marker the first one that both reads under, since a marked line may be set in either.
 export function fieldColors(palette: Palette, tone: FieldTone): FieldColors {
   const background = palette[tone];
   const ink =
     contrastRatio(palette.ink, background) >= contrastRatio(white, background) ? palette.ink : white;
-  const accent = [palette.highlight, palette.accent, palette.background].find(
-    (color) => color !== background && contrastRatio(color, background) >= textRatio,
-  );
+  const accent =
+    [palette.highlight, palette.accent, palette.background].find(
+      (color) => color !== background && contrastRatio(color, background) >= textRatio,
+    ) ?? ink;
   const marker = [palette.highlight, palette.accent, palette.alt].find(
-    (color) => color !== background && contrastRatio(ink, color) >= textRatio,
+    (color) =>
+      color !== background &&
+      contrastRatio(ink, color) >= textRatio &&
+      contrastRatio(accent, color) >= textRatio,
   );
 
-  return { background, ink, accent: accent ?? ink, marker };
+  return { background, ink, accent, marker };
 }
 
 function isNearWhite(color: string): boolean {
