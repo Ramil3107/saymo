@@ -2,5 +2,16 @@
   "Brand": {
     "name": "Saymo",
     "description": "Turn a video or a text into a social video."
+  },
+  "Emails": {
+    "SignInLink": {
+      "subject": "Your sign-in link to Saymo",
+      "preview": "Tap to sign in to Saymo.",
+      "title": "Your sign-in link",
+      "body": "Tap below to sign in. The link works once and expires in 10 minutes.",
+      "button": "Sign in",
+      "fallback": "Or paste this link into your browser:",
+      "ignore": "Didn't ask for this? Ignore this email and nothing happens."
+    }
   }
 }
