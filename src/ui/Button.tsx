@@ -25,18 +25,24 @@ const SOLID_SIZES: Record<Size, string> = {
 };
 
 const LOOKS: Record<Variant, string> = {
-  primary: "bg-accent text-ink hover:brightness-110",
-  white: "bg-white text-ink hover:bg-muted",
+  primary: "bg-accent text-ink enabled:hover:brightness-110",
+  white: "bg-white text-ink enabled:hover:brightness-95",
   secondary:
-    "h-[44px] px-[18px] gap-8 bg-raised border border-line text-dense font-normal text-white hover:bg-selected",
-  outline: "h-[44px] px-16 gap-8 border border-line-strong text-small text-white hover:bg-raised",
-  suggestion: "h-[44px] px-16 gap-8 bg-surface border border-line text-small text-white hover:bg-raised",
+    "h-[44px] px-[18px] gap-8 bg-raised border border-line text-dense font-normal text-white enabled:hover:bg-selected",
+  outline: "h-[44px] px-16 gap-8 border border-line-strong text-small text-white enabled:hover:bg-raised",
+  suggestion:
+    "h-[44px] px-16 gap-8 bg-surface border border-line text-small text-white enabled:hover:bg-raised",
+};
+
+const ICON_SIZES: Record<Variant, string> = {
+  primary: "[&_svg]:size-[18px]",
+  white: "[&_svg]:size-[18px]",
+  secondary: "[&_svg]:size-[17px]",
+  outline: "[&_svg]:size-[18px]",
+  suggestion: "[&_svg]:size-[18px]",
 };
 
 const STARTING_ICON_VARIANTS: Variant[] = ["secondary", "outline", "suggestion"];
-
-const SECONDARY_ICON_SIZE = 17;
-const DEFAULT_ICON_SIZE = 18;
 
 export function Button({
   variant,
@@ -50,7 +56,7 @@ export function Button({
   children,
   ...rest
 }: ButtonProps) {
-  const shownIcon = busy ? <LoaderCircle className="animate-spin" size={iconSize(variant)} /> : icon;
+  const shownIcon = busy ? <LoaderCircle className="animate-spin" /> : icon;
 
   return (
     <button
@@ -75,11 +81,7 @@ export function ButtonLink({ variant, size, icon, iconSide, href, children }: Bu
 
 function buttonClasses(variant: Variant, size: Size = "regular", className = "") {
   const sizing = variant === "primary" || variant === "white" ? SOLID_SIZES[size] : "";
-  return `${BASE} ${sizing} ${LOOKS[variant]} ${className}`.trim();
-}
-
-function iconSize(variant: Variant) {
-  return variant === "secondary" ? SECONDARY_ICON_SIZE : DEFAULT_ICON_SIZE;
+  return `${BASE} ${sizing} ${LOOKS[variant]} ${ICON_SIZES[variant]} ${className}`.trim();
 }
 
 function defaultIconSide(variant: Variant): IconSide {
