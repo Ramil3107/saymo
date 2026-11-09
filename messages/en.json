@@ -13,5 +13,8 @@
       "fallback": "Or paste this link into your browser:",
       "ignore": "Didn't ask for this? Ignore this email and nothing happens."
     }
+  },
+  "Home": {
+    "title": "What are we making today?"
   }
 }

@@ -1,12 +1,6 @@
-import { useTranslations } from "next-intl";
-import { Logo } from "@/ui/Logo";
-import { PublicBar } from "@/ui/PublicBar";
+import { redirect } from "next/navigation";
+import { getUser } from "@/features/auth";
 
-export default function HomePage() {
-  const t = useTranslations("Brand");
-  return (
-    <main>
-      <PublicBar logo={<Logo href="/" name={t("name")} />} />
-    </main>
-  );
+export default async function RootPage() {
+  redirect((await getUser()) ? "/home" : "/sign-in");
 }
