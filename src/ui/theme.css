@@ -87,9 +87,14 @@
   --spacing-44: 44px;
 
   --container-*: initial;
+  --container-form: 420px;
   --container-task: 880px;
   --container-wide: 1216px;
   --container-modal: 500px;
+
+  --breakpoint-split: 56.25rem;
+
+  --aspect-frame: 9 / 16;
 
   --shadow-*: initial;
   --shadow-float: 0 24px 60px rgb(0 0 0 / 0.6);

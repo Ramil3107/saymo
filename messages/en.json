@@ -16,5 +16,48 @@
   },
   "Home": {
     "title": "What are we making today?"
+  },
+  "SignIn": {
+    "pageTitle": "Sign in",
+    "sticker": "No password needed",
+    "title": "Sign in and start making.",
+    "lead": "Use Google or get a sign-in link by email.",
+    "google": "Continue with Google",
+    "or": "or",
+    "emailLabel": "Work email",
+    "emailPlaceholder": "you@company.com",
+    "submit": "Email me a link",
+    "terms": "By continuing you agree to the <terms>Terms</terms> and the <privacy>Privacy Policy</privacy>.",
+    "invalidEmail": "Enter an email address like you@company.com.",
+    "tooManyTries": "Too many tries. Wait a minute and try again.",
+    "sendFailed": "We couldn't send the link. Try again.",
+    "linkExpired": "That link has expired or was already used. Get a new one below.",
+    "googleFailed": "Google sign-in didn't finish. Try again or use your email.",
+    "accountDeleted": "Your account is deleted. Thanks for trying Saymo."
+  },
+  "CheckEmail": {
+    "mockName": "Saymo",
+    "mockTime": "now",
+    "mockTitle": "Your sign-in link",
+    "mockBody": "Tap below to sign in. The link works once.",
+    "mockButton": "Sign in",
+    "title": "Check your inbox.",
+    "lead": "We sent a sign-in link to <strong>{email}</strong>. Open it on this device.",
+    "resend": "Resend link",
+    "resent": "Sent again",
+    "differentEmail": "Use a different email",
+    "spamHint": "Nothing there? Check spam or the Promotions tab."
+  },
+  "Landing": {
+    "frames": {
+      "new": "New",
+      "pdf": "PDF",
+      "reportsTitle": "Reports, now in PDF",
+      "quarter": "Quarter in review",
+      "growth": "3×",
+      "signups": "more signups",
+      "quoteLead": "And that's when everything",
+      "quoteHighlight": "changed"
+    }
   }
 }
