@@ -7,6 +7,7 @@ import * as schema from "@/lib/db/schema";
 const LINK_LIFETIME_SECONDS = 10 * 60;
 const SECONDS_PER_DAY = 24 * 60 * 60;
 const SESSION_DAYS = 30;
+const LINK_OPEN_RATE_RULE = { window: 60, max: 30 };
 
 export type AuthDeps = {
   db: Database;
@@ -32,7 +33,12 @@ export function createAuth(deps: AuthDeps) {
       disableOriginCheck: false,
     },
     session: { expiresIn: SESSION_DAYS * SECONDS_PER_DAY, updateAge: SECONDS_PER_DAY },
-    rateLimit: { enabled: true, storage: "database" },
+    rateLimit: {
+      enabled: true,
+      storage: "database",
+      customRules: { "/magic-link/verify": LINK_OPEN_RATE_RULE },
+    },
+    account: { encryptOAuthTokens: true },
     socialProviders: deps.google ? { google: { ...deps.google, prompt: "select_account" } } : {},
     user: { deleteUser: { enabled: true } },
     plugins: [

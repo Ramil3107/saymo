@@ -8,7 +8,7 @@ export const TEST_BASE_URL = "http://localhost:3000";
 
 const SECRET = "a".repeat(32);
 const CLIENT_IP = "203.0.113.7";
-const SIGN_IN_LINK_URL = `${TEST_BASE_URL}/api/auth/sign-in/magic-link`;
+const LINK_REQUEST_URL = `${TEST_BASE_URL}/api/auth/sign-in/magic-link`;
 const SESSION_COOKIE = "better-auth.session_token";
 
 type LinkRequest = { callbackURL?: string; newUserCallbackURL?: string; errorCallbackURL?: string };
@@ -34,7 +34,7 @@ export function requestLink(auth: Auth, email: string, overrides: LinkRequest = 
   const body = { email, callbackURL: "/home", newUserCallbackURL: "/home", errorCallbackURL: "/sign-in" };
 
   return auth.handler(
-    new Request(SIGN_IN_LINK_URL, {
+    new Request(LINK_REQUEST_URL, {
       method: "POST",
       headers: { origin: TEST_BASE_URL, "content-type": "application/json", "x-forwarded-for": CLIENT_IP },
       body: JSON.stringify({ ...body, ...overrides }),

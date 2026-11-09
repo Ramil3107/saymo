@@ -1,16 +1,18 @@
 import { eq } from "drizzle-orm";
 import { expect, onTestFinished, test, vi } from "vitest";
-import { users } from "@/lib/db/schema";
+import { users, verifications } from "@/lib/db/schema";
 import { openLink, requestLink, setUpAuth, signInByEmail, TEST_BASE_URL } from "../testing";
 
 const HOME_LANDING = `${TEST_BASE_URL}/home`;
-const EXPIRED_LINK_LANDING = `${TEST_BASE_URL}/sign-in?error=INVALID_TOKEN`;
+const INVALID_LINK_LANDING = `${TEST_BASE_URL}/sign-in?error=INVALID_TOKEN`;
+const NINE_MINUTES_MS = 9 * 60_000;
 const ELEVEN_MINUTES_MS = 11 * 60_000;
 
-test("an email link signs a new person in and lands on Home", async () => {
+test("an email link signs a new person in with a working session and verifies the email", async () => {
   const { auth, links, db } = await setUpAuth();
   const { cookie } = await signInByEmail(auth, "ana@company.com", links);
-  expect(cookie).toContain("better-auth.session_token=");
+  const session = await auth.api.getSession({ headers: new Headers({ cookie }) });
+  expect(session?.user.email).toBe("ana@company.com");
   const [person] = await db.select().from(users).where(eq(users.email, "ana@company.com"));
   expect(person?.emailVerified).toBe(true);
 });
@@ -31,7 +33,7 @@ test("a link works once", async () => {
   const second = await openLink(auth, links[0]);
   expect(first.headers.get("location")).toBe(HOME_LANDING);
   expect(second.status).toBe(302);
-  expect(second.headers.get("location")).toBe(EXPIRED_LINK_LANDING);
+  expect(second.headers.get("location")).toBe(INVALID_LINK_LANDING);
 });
 
 test("a link expires after ten minutes", async () => {
@@ -43,7 +45,42 @@ test("a link expires after ten minutes", async () => {
   await requestLink(auth, "ana@company.com");
   vi.setSystemTime(Date.now() + ELEVEN_MINUTES_MS);
   const opened = await openLink(auth, links[0]);
-  expect(opened.headers.get("location")).toBe(EXPIRED_LINK_LANDING);
+  expect(opened.headers.get("location")).toBe(INVALID_LINK_LANDING);
+});
+
+test("a link still works at nine minutes", async () => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  onTestFinished(() => {
+    vi.useRealTimers();
+  });
+  const { auth, links } = await setUpAuth();
+  await requestLink(auth, "ana@company.com");
+  vi.setSystemTime(Date.now() + NINE_MINUTES_MS);
+  const opened = await openLink(auth, links[0]);
+  expect(opened.headers.get("location")).toBe(HOME_LANDING);
+});
+
+test("the link's token is not stored as sent", async () => {
+  const { auth, links, db } = await setUpAuth();
+  await requestLink(auth, "ana@company.com");
+  const token = new URL(links[0] ?? "").searchParams.get("token") ?? "";
+  const rows = await db.select().from(verifications);
+  expect(token).not.toBe("");
+  expect(rows.length).toBeGreaterThan(0);
+  for (const row of rows) {
+    expect(JSON.stringify(row)).not.toContain(token);
+  }
+});
+
+test("many opens of a used link from one office address are not rate limited", async () => {
+  const { auth, links } = await setUpAuth();
+  await requestLink(auth, "ana@company.com");
+  await openLink(auth, links[0]);
+  const landings: (string | null)[] = [];
+  for (let i = 0; i < 6; i++) {
+    landings.push((await openLink(auth, links[0])).headers.get("location"));
+  }
+  expect(landings).toEqual(Array(6).fill(INVALID_LINK_LANDING));
 });
 
 test("a callback to another site is refused and no email goes out", async () => {
