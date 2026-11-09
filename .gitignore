@@ -14,3 +14,7 @@ runs/
 .remotion/
 docs/.vitepress/cache/
 docs/.vitepress/dist/
+next-env.d.ts
+*.tsbuildinfo
+/test-results/
+/playwright-report/
