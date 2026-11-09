@@ -1,6 +1,6 @@
 # Handoff
 
-Where the work stands on 2026-11-01 and how to pick it up in a new session.
+Where the work stands on 2026-11-09 and how to pick it up in a new session.
 
 ## State
 
@@ -13,7 +13,7 @@ Where the work stands on 2026-11-01 and how to pick it up in a new session.
 
 ## Next
 
-Variety across videos, starting with compositions and color: the owner chose it on 2026-10-31. The plan is under "Variety across videos" in [Vocabulary](./vocabulary.md). Step 1, the first five composition families, was accepted by the owner on 2026-11-01: the lab in `runs/composition-lab/` (both styles, `sheet.jpg`) and the four text-only ads planned again in `runs/variety-text/` (`before-after.jpg` beside the old contact sheet). On the owner's first look the cropped number read as a defect, so `edge-number` became `giant-number`, whole in the frame. Step 2 was built on 2026-11-01 and waits for the owner's look: palettes for videos without a brand (eight, five per style, named in the plan) and five more families, `bands`, `diagonal`, `inset`, `corner-stack` and `echo`. The lab is in `runs/composition-lab-2/` (both styles, `sheet-new.jpg` holds the ten new beats); the four text-only ads were planned again with the new families, each in its own palette (knit flamingo, ledger forest, dental ocean, bakery tangerine), in `runs/variety-text/`, with `contact-sheet-step2.jpg` beside the step 1 sheet and the step 1 runs kept in `runs/variety-text/step1/`. Step 3, new backgrounds and a camera over the backdrop, comes after the owner's yes.
+Variety across videos, starting with compositions and color: the owner chose it on 2026-10-31. The plan is under "Variety across videos" in [Vocabulary](./vocabulary.md). Step 1, the first five composition families, was accepted by the owner on 2026-11-01: the lab in `runs/composition-lab/` (both styles, `sheet.jpg`) and the four text-only ads planned again in `runs/variety-text/` (`before-after.jpg` beside the old contact sheet). On the owner's first look the cropped number read as a defect, so `edge-number` became `giant-number`, whole in the frame. Step 2, accepted by the owner on 2026-11-09, brought palettes for videos without a brand (eight, five per style, named in the plan) and five more families, `bands`, `diagonal`, `inset`, `corner-stack` and `echo`. The lab is in `runs/composition-lab-2/` (both styles, `sheet-new.jpg` holds the ten new beats); the four text-only ads were planned again with the new families, each in its own palette (knit flamingo, ledger forest, dental ocean, bakery tangerine), in `runs/variety-text/`, with `contact-sheet-step2.jpg` beside the step 1 sheet and the step 1 runs kept in `runs/variety-text/step1/`. Step 3, new backgrounds and a camera over the backdrop, is next; its set of backgrounds was put to the owner on 2026-11-09.
 
 The rule proposed by the learning of 2026-10-31 in [Learnings](./learnings.md) (a contact sheet of a set of videos before they are shown, in the `spike` skill) still waits for the owner's yes.
 
