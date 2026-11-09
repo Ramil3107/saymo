@@ -1,6 +1,8 @@
+import type { CSSProperties } from "react";
 import { Body, Button, Container, Head, Heading, Hr, Html, Link, Preview, Section, Text } from "react-email";
 
 export type SignInLinkCopy = {
+  brand: string;
   preview: string;
   title: string;
   body: string;
@@ -16,6 +18,7 @@ const colors = {
   ink: "#08080b",
   accent: "#ff4a1c",
   muted: "#a3a3ad",
+  mutedText: "#5c5c66",
 };
 
 const styles = {
@@ -54,13 +57,13 @@ const styles = {
   },
   rule: { borderColor: colors.muted, margin: "32px 0 16px", opacity: 0.4 },
   small: {
-    color: colors.muted,
+    color: colors.mutedText,
     fontSize: 13,
     lineHeight: "20px",
     margin: "0 0 8px",
-    wordBreak: "break-all" as const,
+    wordBreak: "break-all",
   },
-};
+} satisfies Record<string, CSSProperties>;
 
 export function SignInLinkEmail({ url, copy }: { url: string; copy: SignInLinkCopy }) {
   return (
@@ -71,7 +74,7 @@ export function SignInLinkEmail({ url, copy }: { url: string; copy: SignInLinkCo
         <Container style={styles.container}>
           <Section>
             <span style={styles.logoDot} />
-            <Text style={styles.logoName}>Saymo</Text>
+            <Text style={styles.logoName}>{copy.brand}</Text>
           </Section>
           <Heading as="h1" style={styles.title}>
             {copy.title}

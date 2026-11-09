@@ -17,3 +17,17 @@ test("the mailer sends from the configured sender", async () => {
     expect.objectContaining({ from: "Saymo <hello@saymo.local>", to: "a@b.co", subject: "S" }),
   );
 });
+
+test("the mailer lets a transport failure through", async () => {
+  const transport = nodemailer.createTransport({ jsonTransport: true });
+  vi.spyOn(transport, "sendMail").mockRejectedValue(new Error("smtp down"));
+
+  const sending = createMailer(transport, "Saymo <hello@saymo.local>").send({
+    to: "a@b.co",
+    subject: "S",
+    html: "<p>H</p>",
+    text: "H",
+  });
+
+  await expect(sending).rejects.toThrow("smtp down");
+});
