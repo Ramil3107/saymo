@@ -1,11 +1,12 @@
 import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import type { PgliteDatabase } from "drizzle-orm/pglite";
 import { Pool } from "pg";
-import { appEnv } from "../appEnv";
+import { databaseUrl } from "../appEnv";
 import * as schema from "./schema";
 import { sslFor } from "./ssl";
 
 const MAX_CONNECTIONS = 10;
+const CONNECTION_TIMEOUT_MS = 10_000;
 
 declare global {
   var saymoPool: Pool | undefined;
@@ -28,8 +29,13 @@ function sharedPool(): Pool {
 }
 
 function createPool(): Pool {
-  const { DATABASE_URL } = appEnv();
-  const pool = new Pool({ connectionString: DATABASE_URL, ssl: sslFor(DATABASE_URL), max: MAX_CONNECTIONS });
+  const url = databaseUrl();
+  const pool = new Pool({
+    connectionString: url,
+    ssl: sslFor(url),
+    max: MAX_CONNECTIONS,
+    connectionTimeoutMillis: CONNECTION_TIMEOUT_MS,
+  });
   pool.on("error", (error) => console.error("Idle database connection failed:", error.message));
   return pool;
 }

@@ -1,4 +1,14 @@
-import { bigint, boolean, index, integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+  bigint,
+  boolean,
+  index,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: id(),
@@ -43,7 +53,10 @@ export const accounts = pgTable(
     password: text(),
     ...timestamps(),
   },
-  (table) => [index("accounts_user_id_idx").on(table.userId)],
+  (table) => [
+    index("accounts_user_id_idx").on(table.userId),
+    uniqueIndex("accounts_provider_account_idx").on(table.providerId, table.accountId),
+  ],
 );
 
 export const verifications = pgTable(

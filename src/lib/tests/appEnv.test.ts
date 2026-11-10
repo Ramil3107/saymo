@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { googleSignIn, loadAppEnv } from "../appEnv";
+import { databaseUrl, googleSignIn, loadAppEnv } from "../appEnv";
 
 const complete = {
   DATABASE_URL: "postgresql://saymo:secret@localhost:5432/saymo",
@@ -33,4 +33,12 @@ test("Google sign-in needs both the id and the secret", () => {
 test("Google sign-in is on when both keys are set", () => {
   const env = loadAppEnv({ ...complete, GOOGLE_CLIENT_ID: "id", GOOGLE_CLIENT_SECRET: "secret" });
   expect(googleSignIn(env)).toEqual({ clientId: "id", clientSecret: "secret" });
+});
+
+test("the database url alone is enough for the database", () => {
+  expect(databaseUrl({ DATABASE_URL: complete.DATABASE_URL })).toBe(complete.DATABASE_URL);
+});
+
+test("a missing database url names the variable", () => {
+  expect(() => databaseUrl({})).toThrow("DATABASE_URL");
 });

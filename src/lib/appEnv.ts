@@ -7,9 +7,11 @@ const emptyAsMissing = <T extends z.ZodType>(schema: T) =>
 
 const optionalString = emptyAsMissing(z.string().optional());
 
+export const DatabaseEnvSchema = z.object({ DATABASE_URL: z.url() });
+
 export const AppEnvSchema = z
   .object({
-    DATABASE_URL: z.url(),
+    ...DatabaseEnvSchema.shape,
     BETTER_AUTH_SECRET: z.string().min(MIN_AUTH_SECRET_LENGTH),
     BETTER_AUTH_URL: z.url(),
     GOOGLE_CLIENT_ID: optionalString,
@@ -30,6 +32,10 @@ let cached: AppEnv | undefined;
 
 export function loadAppEnv(source: Record<string, string | undefined> = process.env): AppEnv {
   return AppEnvSchema.parse(source);
+}
+
+export function databaseUrl(source: Record<string, string | undefined> = process.env): string {
+  return DatabaseEnvSchema.parse(source).DATABASE_URL;
 }
 
 export function appEnv(): AppEnv {

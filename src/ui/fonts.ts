@@ -31,6 +31,7 @@ const monoLatin = localFont({
   weight: "100 800",
   variable: "--font-mono-latin",
   adjustFontFallback: false,
+  preload: false,
   declarations: [
     {
       prop: "unicode-range",
