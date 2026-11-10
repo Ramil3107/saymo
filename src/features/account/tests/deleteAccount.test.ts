@@ -8,6 +8,12 @@ const TWO_DAYS_MS = 2 * 24 * 60 * 60_000;
 test("deleting the account removes the person, their sessions and accounts", async () => {
   const { auth, links, db } = await setUpAuth();
   const { cookie } = await signInByEmail(auth, "ana@company.com", links);
+  const [person] = await db.select().from(users);
+  if (person === undefined) {
+    throw new Error("Sign-in created no user");
+  }
+  await db.insert(accounts).values({ userId: person.id, providerId: "google", accountId: "g-1" });
+  expect(await db.select().from(accounts)).toHaveLength(1);
   await auth.api.deleteUser({ body: {}, headers: new Headers({ cookie }) });
   expect(await db.select().from(users)).toHaveLength(0);
   expect(await db.select().from(sessions)).toHaveLength(0);
