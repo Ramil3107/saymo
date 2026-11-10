@@ -14,8 +14,30 @@
       "ignore": "Didn't ask for this? Ignore this email and nothing happens."
     }
   },
+  "Common": {
+    "account": "Account"
+  },
   "Home": {
-    "title": "What are we making today?"
+    "sticker": "No timeline. No layers.",
+    "title": "What are we making today?",
+    "lead": "Describe it, drop a link, or upload a video you already have."
+  },
+  "Account": {
+    "title": "Account",
+    "profile": "Profile",
+    "signedInWithGoogle": "Signed in with Google.",
+    "signedInWithEmail": "Signed in with email.",
+    "signOut": "Sign out",
+    "deleteLabel": "Delete account",
+    "deleteBody": "Removes your videos, brand and billing details. This cannot be undone.",
+    "deleteButton": "Delete account",
+    "deleteDialogTitle": "Delete your account?",
+    "deleteDialogBody": "Your videos, brand and billing details go for good.",
+    "deleteConfirm": "Delete account",
+    "deleteCancel": "Keep my account",
+    "signInAgain": "For your safety, sign in again before deleting your account.",
+    "signInAgainButton": "Sign in again",
+    "deleteFailed": "We couldn't delete the account. Try again."
   },
   "SignIn": {
     "pageTitle": "Sign in",
@@ -59,5 +81,16 @@
       "quoteLead": "And that's when everything",
       "quoteHighlight": "changed"
     }
+  },
+  "NotFound": {
+    "sticker": "404",
+    "title": "Cut. This page isn't in the script.",
+    "lead": "The link is wrong or the page has moved.",
+    "home": "Back to Saymo"
+  },
+  "Error": {
+    "title": "Cut. Something broke on set.",
+    "lead": "Try again. If it keeps happening, come back in a few minutes.",
+    "retry": "Try again"
   }
 }
