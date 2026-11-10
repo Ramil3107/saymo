@@ -24,7 +24,7 @@ flowchart TD
 
 1. The person arrives at **Landing** (1.1) from an ad, from a community or through a link to someone else's video.
 2. **Sign in** (1.2): Google or a link by email.
-3. If they chose email, they see **Check your email** (1.3) and follow the link from the email.
+3. If they chose email, they see **Check your email** (1.3) and follow the link from the email. It opens "One click left." with a Sign in to Saymo button, so a mail scanner that opens the link does not use it up (the owner's decision of 2026-11-10).
 4. They land on **Home** (2.1).
 5. **Brand setup** (1.4) is not required at the start: it can be opened from the header, and after the first video the service itself will suggest setting up the brand.
 
@@ -32,7 +32,7 @@ flowchart TD
 flowchart LR
   L[1.1 Landing] --> S[1.2 Sign in]
   S -->|Google| H[2.1 Home]
-  S -->|Email| E[1.3 Check your email] -->|link from the email| H
+  S -->|Email| E[1.3 Check your email] -->|link from the email| O[One click left] -->|Sign in to Saymo| H
   H -.->|header or after the first video| B[1.4 Brand setup] --> H
 ```
 

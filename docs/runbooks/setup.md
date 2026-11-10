@@ -59,5 +59,5 @@ printf 'GOOGLE_CLIENT_SECRET=%s\n' "$(pbpaste)" >> .env
 
    While the consent screen is in Testing, only the project's own account and the test users listed under Audience can sign in. Production needs its own client for the real domain and the consent screen published.
 5. `pnpm db:migrate` applies the migrations in `drizzle/` to that database.
-6. `pnpm dev` starts the app on port 3000 and Mailpit. Open the app, enter an email, and open the link from Mailpit.
+6. `pnpm dev` starts the app on port 3000 and Mailpit. Open the app, enter an email, open the link from Mailpit and press Sign in to Saymo.
 7. `pnpm e2e` runs the end-to-end test: sign in with a link, sign out, delete the account. It starts `pnpm dev` itself if it is not running, and it needs Chromium: `pnpm exec playwright install chromium`.

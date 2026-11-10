@@ -67,7 +67,8 @@ flowchart LR
   L[1.1 Landing] --> S[1.2 Sign in]
   S -->|Google| H[2.1 Home]
   S -->|Email me a link| E[1.3 Check your email]
-  E -.->|link from the email| H
+  E -.->|link from the email| O[One click left, not drawn]
+  O -->|Sign in to Saymo| H
   H -->|Make the video| G[2.2 Generating]
   G -->|Version 1 ready| R[2.4 Video and edits]
   G -.->|error| F[2.3 Generation failed]
