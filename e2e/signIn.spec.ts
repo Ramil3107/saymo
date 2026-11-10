@@ -5,6 +5,7 @@ const MAILPIT_URL = "http://127.0.0.1:8025";
 const MAIL_WAIT_MS = 10_000;
 const MAIL_POLL_INTERVAL_MS = 250;
 const SIGN_IN_LINK_PATTERN = /http:\/\/localhost:3000\/sign-in\/link\?token=[\w%-]+/;
+const EXPIRED_LINK_NOTICE = "That link has expired or was already used. Get a new one below.";
 
 const SearchResponseSchema = z.object({ messages: z.array(z.object({ ID: z.string() })) });
 const MessageResponseSchema = z.object({ Text: z.string() });
@@ -17,7 +18,7 @@ test("a person signs in with an email link, signs out, signs in again and delete
   await page.goto("/account");
   await expect(page).toHaveURL(/\/sign-in/);
 
-  await signInWithEmailLink(page, email);
+  const firstLink = await signInWithEmailLink(page, email);
   await expect(page.getByRole("heading", { name: "What are we making today?" })).toBeVisible();
 
   await page.getByRole("link", { name: "Account" }).click();
@@ -29,6 +30,11 @@ test("a person signs in with an email link, signs out, signs in again and delete
   await page.goto("/home");
   await expect(page).toHaveURL(/\/sign-in/);
 
+  await pressUsedLink(page, firstLink);
+  await expect(page.getByText(EXPIRED_LINK_NOTICE)).toBeVisible();
+  await page.goto("/sign-in/link");
+  await expect(page.getByText(EXPIRED_LINK_NOTICE)).toBeVisible();
+
   await signInWithEmailLink(page, email);
   await page.getByRole("link", { name: "Account" }).click();
   await page.getByRole("button", { name: "Delete account" }).click();
@@ -38,19 +44,27 @@ test("a person signs in with an email link, signs out, signs in again and delete
   await expect(page.getByText("Your account is deleted.")).toBeVisible();
 });
 
-async function signInWithEmailLink(page: Page, email: string) {
+async function signInWithEmailLink(page: Page, email: string): Promise<string> {
   await page.goto("/sign-in");
   await page.getByLabel("Work email").fill(email);
   await page.getByRole("button", { name: "Email me a link" }).click();
   await expect(page.getByRole("heading", { name: "Check your inbox." })).toBeVisible();
   await expect(page.getByText(email)).toBeVisible();
 
-  await page.goto(await waitForSignInLink(email));
+  const link = await waitForSignInLink(email);
+  await page.goto(link);
   await expect(page.getByRole("heading", { name: "One click left." })).toBeVisible();
   // A mail scanner opens the link before the person does
   await page.reload();
   await page.getByRole("button", { name: "Sign in to Saymo" }).click();
   await expect(page).toHaveURL(/\/home/);
+  return link;
+}
+
+async function pressUsedLink(page: Page, link: string) {
+  await page.goto(link);
+  await page.getByRole("button", { name: "Sign in to Saymo" }).click();
+  await expect(page).toHaveURL(/\/sign-in\?error=/);
 }
 
 async function waitForSignInLink(email: string): Promise<string> {
