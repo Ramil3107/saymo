@@ -20,8 +20,9 @@ The rule proposed by the learning of 2026-10-31 in [Learnings](./learnings.md) (
 
 ## Backlog
 
-- Hardening for slice 5: a CSP and the other security headers; `trustedProxies` for Better Auth when the app is deployed behind Railway's proxy, so the rate limiter sees the real client IP.
+- Hardening for slice 5: a CSP and the other security headers; the rate limiter behind Railway's proxy: check what Railway forwards (`X-Forwarded-For` overwritten or appended, `X-Real-IP`), set `advanced.ipAddress.ipAddressHeaders` or `trustedProxies` to match (Better Auth 1.7.18 puts requests without a resolved IP into one shared bucket), and test that two clients get separate limits.
 - Small polish that slice 1 deferred: sign out has no failure handling; Resend keeps no keyboard focus while disabled; the email is not trimmed before validation; the proxy matcher skips every path with a dot; `requireUser` and the matcher have no tests; a few minor items in the primitives (an icon button link drops extra props, the dialog does not guard Esc while busy); `localhost:3000` is written in three places in the e2e setup.
+- Later slices, from the slice 1 review: `server-only` guards on server modules; production-only defaults for `SMTP_URL` and `EMAIL_FROM`, with relaxed TLS only for Railway's proxy hosts; a per-address limit on sign-in emails; tests for `requireUser`, `getUser` and the proxy matcher; `isPublic("//…")` is treated as public.
 - Google in production: an OAuth client for the real domain, once the domain is chosen, and the consent screen published or test users added.
 - Media in the document: photos and collage named in the plan.
 - The sound-effect layer and music tracks; the videos are silent now.

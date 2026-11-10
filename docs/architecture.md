@@ -40,6 +40,7 @@ Inside `app/`, `(public)` holds the pages anyone can open (Sign in) and `(app)` 
 
 - A slice never imports another slice's internals, only its public entry.
 - A screen is assembled from slices in `app/`.
+- `src/proxy.ts` imports the auth slice's `routes.ts` directly, not its `index.ts`, because the index loads `auth` and the database pool.
 - Everything about the video lives in `video/` and knows nothing about the database or users.
 
 ## Sign-in
@@ -49,9 +50,9 @@ Sign-in runs on Better Auth, on top of Drizzle and Postgres. There are two ways 
 - **Email link.** The person enters an email and gets a link that is valid for 10 minutes and works once; the token is stored hashed. The email goes through the SMTP mailer: Mailpit locally, Resend's SMTP in production. A request for a link is limited to 5 per minute, and opening a link has its own limit of 30 per minute per IP, so an office behind one address is not locked out. The limiter runs in every environment and keeps its counters in the database.
 - **Google.** Wired up, and it stays off until `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set. Google's tokens are encrypted at rest.
 
-A session lasts 30 days and is refreshed daily. Better Auth's origin and callback checks are forced on in every environment, tests included. Ids are uuids made by the database.
+A session lasts 30 days and its database row is refreshed daily, but the cookie is only written by the two server actions (`nextCookies` cannot set cookies while a Server Component renders), so the cookie lasts 30 days from sign-in. Better Auth's origin and callback checks are forced on in every environment, tests included. Ids are uuids made by the database.
 
-The proxy (`src/proxy.ts`) is an optimistic gate: it only looks for the session cookie and sends a person without one to Sign in, and a person with one away from Sign in. It does not prove a session is valid. Every page and server action that shows or changes a person's data calls `requireUser()` itself. Cache Components are off, so signed-in pages render on every request.
+The proxy (`src/proxy.ts`) is an optimistic gate: it only looks for the session cookie and sends a person without one to Sign in. It does not send a person with one away from Sign in, by design: only the Sign in page does that, after `getUser()` confirms a live session, so a stale cookie cannot cause a redirect loop. The cookie alone does not prove a session is valid. Every page and server action that shows or changes a person's data calls `requireUser()` itself. Cache Components are off, so signed-in pages render on every request.
 
 Deleting an account needs a fresh session. If the session is older than a day, the person is asked to sign in again first. Sign-in requests go through `authClient.signIn.magicLink`, never through a server action that calls `auth.api`, because that path skips the rate limiter and the callback check.
 
@@ -59,7 +60,7 @@ Deleting an account needs a fresh session. If the session is older than a day, t
 
 Drizzle 0.45 on `pg`, with the schema in `src/lib/db/schema/`. Migrations are generated with `pnpm db:generate`, live in `drizzle/` and are applied with `pnpm db:migrate`. Ids are uuids that Postgres generates. In development the database is a Postgres on Railway reached over its public proxy; the connection uses TLS without certificate checks there and none for local hosts. Tests do not touch Railway: `createTestDb()` starts an in-memory PGlite and runs the real migrations on it.
 
-Behind Railway's proxy in production Better Auth must be told which proxy to trust (`trustedProxies`), otherwise its rate limiter sees the proxy's address for everyone and all people share one limit.
+Before deploying, check what Railway forwards: whether it overwrites or appends `X-Forwarded-For`, and whether it sends `X-Real-IP`. Better Auth 1.7.18 trusts a single-value `X-Forwarded-For` as is, resolves a multi-value one to no IP, and in production puts every request without an IP into one shared bucket (`no-trusted-ip|<path>`). Then set `advanced.ipAddress.ipAddressHeaders` or `trustedProxies` to match, and add a test that two clients get separate limits.
 
 ## Stack
 

@@ -4,7 +4,7 @@
 
 - Saymo turns a user's video or text into a social video.
 - A director running on a Claude model builds a plan of beats. The plan becomes the video document (data, not code), and Remotion renders the document to MP4.
-- Stage 0 (scaffold and spike) is done; the next iteration is the vocabulary base, built locally and checked on `runs/face-v2`; the reference is Higgsfield for motion and motionvid for the use cases (see `docs/vocabulary.md`). The application, database, queue, storage and deployment come after it.
+- Stage 0 (scaffold and spike) is done; the next iteration is the vocabulary base, built locally and checked on `runs/face-v2`; the reference is Higgsfield for motion and motionvid for the use cases (see `docs/vocabulary.md`). The vocabulary is paused: on 2026-11-09 the application (database, sign-in, screens) started around a mock engine, and the real engine plugs in after it.
 
 Spec: `docs/superpowers/specs/2026-10-28-saymo-v1-design.md`.
 
@@ -76,7 +76,7 @@ docs/             documentation pages, built into a VitePress site
 - `pnpm e2e`: the Playwright test of the main path (it starts `pnpm dev` if needed).
 - `pnpm check`: Biome, lint and formatting.
 - `pnpm format`: fixes formatting after a red `pnpm check`.
-- `pnpm typecheck`: type check, `tsc --noEmit`.
+- `pnpm typecheck`: type check, `next typegen && tsc --noEmit`.
 - `pnpm test`: tests, Vitest.
 - `pnpm spike`: runs the pipeline on a video or text; the director and the frame descriptions are local by default (the run stops for a plan or notes written in the session, then `--resume`), `--director api` and `--vision api` call the API, `--redo <step>` reruns from a step. Details in the `spike` skill.
 - `pnpm docs:dev`: the documentation site, locally.

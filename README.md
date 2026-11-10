@@ -64,7 +64,7 @@ The app is on `http://localhost:3000` and the sign-in emails land in Mailpit at 
 | Command | What it does |
 | --- | --- |
 | `pnpm check` | Biome: lint and formatting |
-| `pnpm typecheck` | TypeScript, `tsc --noEmit` |
+| `pnpm typecheck` | TypeScript, `next typegen && tsc --noEmit` |
 | `pnpm test` | Vitest |
 | `pnpm spike <video>` or `pnpm spike --text "..."` | The full pipeline; the director runs locally by default and the run resumes with `--resume --run <id>` |
 | `pnpm render:plan <plan.json> --out <dir>` | Build, check and render a plan locally |
