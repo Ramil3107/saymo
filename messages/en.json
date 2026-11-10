@@ -70,6 +70,13 @@
     "differentEmail": "Use a different email",
     "spamHint": "Nothing there? Check spam or the Promotions tab."
   },
+  "SignInLink": {
+    "pageTitle": "Finish signing in",
+    "title": "One click left.",
+    "lead": "Press the button to finish signing in on this device.",
+    "button": "Sign in to Saymo",
+    "ignore": "Didn't ask to sign in? Close this page and nothing happens."
+  },
   "Landing": {
     "frames": {
       "new": "New",

@@ -12,22 +12,25 @@ const LINK_REQUEST_URL = `${TEST_BASE_URL}/api/auth/sign-in/magic-link`;
 const SESSION_COOKIE = "better-auth.session_token";
 
 type LinkRequest = { callbackURL?: string; newUserCallbackURL?: string; errorCallbackURL?: string };
+type TestAuth = { auth: Auth; links: string[]; tokens: string[]; db: PgliteDatabase<Schema> };
 
-export async function setUpAuth(): Promise<{ auth: Auth; links: string[]; db: PgliteDatabase<Schema> }> {
+export async function setUpAuth(): Promise<TestAuth> {
   const { db, close } = await createTestDb();
   onTestFinished(close);
 
   const links: string[] = [];
+  const tokens: string[] = [];
   const auth = createAuth({
     db,
     secret: SECRET,
     baseURL: TEST_BASE_URL,
-    async sendSignInLink(_to, url) {
-      links.push(url);
+    async sendSignInLink(_to, link) {
+      links.push(link.url);
+      tokens.push(link.token);
     },
   });
 
-  return { auth, links, db };
+  return { auth, links, tokens, db };
 }
 
 export function requestLink(auth: Auth, email: string, overrides: LinkRequest = {}): Promise<Response> {
@@ -57,13 +60,13 @@ export async function signInByEmail(auth: Auth, email: string, links: string[]):
 
   const opened = await openLink(auth, links.at(-1));
 
-  return { cookie: sessionCookieFrom(opened) };
+  return { cookie: sessionCookieFrom(opened.headers) };
 }
 
-function sessionCookieFrom(response: Response): string {
-  const header = response.headers.getSetCookie().find((cookie) => cookie.startsWith(`${SESSION_COOKIE}=`));
+export function sessionCookieFrom(headers: Headers): string {
+  const header = headers.getSetCookie().find((cookie) => cookie.startsWith(`${SESSION_COOKIE}=`));
   if (header === undefined) {
-    throw new Error(`Opening the link set no session cookie (status ${response.status})`);
+    throw new Error("No session cookie was set");
   }
 
   const [nameAndValue = ""] = header.split(";");

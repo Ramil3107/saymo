@@ -14,7 +14,7 @@ export type AuthDeps = {
   secret: string;
   baseURL: string;
   google?: { clientId: string; clientSecret: string };
-  sendSignInLink(to: string, url: string): Promise<void>;
+  sendSignInLink(to: string, link: { url: string; token: string }): Promise<void>;
   plugins?: BetterAuthPlugin[];
 };
 
@@ -45,7 +45,7 @@ export function createAuth(deps: AuthDeps) {
       magicLink({
         expiresIn: LINK_LIFETIME_SECONDS,
         storeToken: "hashed",
-        sendMagicLink: ({ email, url }) => deps.sendSignInLink(email, url),
+        sendMagicLink: ({ email, url, token }) => deps.sendSignInLink(email, { url, token }),
       }),
       ...(deps.plugins ?? []),
     ],

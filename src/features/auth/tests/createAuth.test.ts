@@ -1,7 +1,15 @@
+import { isAPIError } from "better-auth/api";
 import { eq } from "drizzle-orm";
 import { expect, onTestFinished, test, vi } from "vitest";
 import { users, verifications } from "@/lib/db/schema";
-import { openLink, requestLink, setUpAuth, signInByEmail, TEST_BASE_URL } from "../testing";
+import {
+  openLink,
+  requestLink,
+  sessionCookieFrom,
+  setUpAuth,
+  signInByEmail,
+  TEST_BASE_URL,
+} from "../testing";
 
 const HOME_LANDING = `${TEST_BASE_URL}/home`;
 const INVALID_LINK_LANDING = `${TEST_BASE_URL}/sign-in?error=INVALID_TOKEN`;
@@ -34,6 +42,17 @@ test("a link works once", async () => {
   expect(first.headers.get("location")).toBe(HOME_LANDING);
   expect(second.status).toBe(302);
   expect(second.headers.get("location")).toBe(INVALID_LINK_LANDING);
+});
+
+test("a captured token signs in once through the server API", async () => {
+  const { auth, tokens } = await setUpAuth();
+  await requestLink(auth, "ana@company.com");
+  const query = { token: tokens[0] ?? "" };
+  const first = await auth.api.magicLinkVerify({ query, headers: new Headers(), returnHeaders: true });
+  const cookie = sessionCookieFrom(first.headers);
+  const session = await auth.api.getSession({ headers: new Headers({ cookie }) });
+  expect(session?.user.email).toBe("ana@company.com");
+  await expect(auth.api.magicLinkVerify({ query, headers: new Headers() })).rejects.toSatisfy(isAPIError);
 });
 
 test("a link expires after ten minutes", async () => {
