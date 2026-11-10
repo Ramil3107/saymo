@@ -34,3 +34,22 @@ The account itself must be created with Sign up for AWS (advanced); the reasons 
 - the Remotion Lambda policies, see [Remotion Lambda](/runbooks/lambda).
 
 Never commit keys. `.env` is listed in `.gitignore`.
+
+## Run the app
+
+1. Mail: `brew install mailpit`. `pnpm dev` starts it beside the app; the inbox is at `http://localhost:8025`.
+2. Database: the app needs a Postgres. In development it is a Railway Postgres. In the Railway console open the Postgres service, then Settings, Networking, Public Networking, and add a TCP Proxy on port 5432. Without it only services inside Railway can connect. The app's `DATABASE_URL` is then Railway's `DATABASE_PUBLIC_URL`; the internal `DATABASE_URL` that Railway shows works only inside Railway.
+3. Put these in `.env`:
+
+| Variable | Used for | Where to get it |
+| --- | --- | --- |
+| `DATABASE_URL` | the app's Postgres | Railway's `DATABASE_PUBLIC_URL`, see above |
+| `BETTER_AUTH_SECRET` | signs sessions and links, at least 32 characters | `openssl rand -base64 32` |
+| `BETTER_AUTH_URL` | the app's own address | `http://localhost:3000` locally |
+| `SMTP_URL` | the mail server | `smtp://127.0.0.1:1025` for Mailpit (the default); Resend's SMTP in production |
+| `EMAIL_FROM` | the sender of the emails | for example `Saymo <hello@saymo.local>` (the default) |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | sign-in with Google, optional, set both or neither | a Google Cloud OAuth client; the redirect URI is `<BETTER_AUTH_URL>/api/auth/callback/google` |
+
+4. `pnpm db:migrate` applies the migrations in `drizzle/` to that database.
+5. `pnpm dev` starts the app on port 3000 and Mailpit. Open the app, enter an email, and open the link from Mailpit.
+6. `pnpm e2e` runs the end-to-end test: sign in with a link, sign out, delete the account. It starts `pnpm dev` itself if it is not running, and it needs Chromium: `pnpm exec playwright install chromium`.

@@ -4,7 +4,7 @@ Turn a recording or a few lines of text into a ready-to-post social video.
 
 The user uploads a video or writes what they need and presses one button. A director, a Claude model, writes a plan of beats; the plan becomes a video document, plain JSON rather than code; and [Remotion](https://www.remotion.dev) renders the document to MP4 with cuts, zooms, captions and motion graphics in the brand's style. Edits are made in words: "Claude Code, but for videos".
 
-> **Status: early development.** The rendering pipeline and the video vocabulary work locally; the web app, accounts and billing are not built yet. See [Where it stands](#where-it-stands).
+> **Status: early development.** The rendering pipeline and the video vocabulary work locally; the web app has sign-in with an email link and an account, and the rest of it, plans and billing included, is not built yet. See [Where it stands](#where-it-stands).
 
 ## How it works
 
@@ -25,7 +25,7 @@ flowchart LR
 
 - Done: the scaffold and the pipeline spike (transcription, frame notes, director, build, QA, local and Lambda rendering).
 - In progress: the vocabulary base and variety across videos; the plan is in [Vocabulary](docs/vocabulary.md#variety-across-videos).
-- Next: the application (Next.js, Postgres, a job queue, storage) per the [design spec](docs/superpowers/specs/2026-10-28-saymo-v1-design.md).
+- In progress: the application, slice by slice. Slice 1, the foundation and sign-in (Next.js, Postgres, an email link), is built; the main path on a mock engine is next. See the [design spec](docs/superpowers/specs/2026-10-28-saymo-v1-design.md).
 
 ## Stack
 
@@ -49,6 +49,17 @@ pnpm render:plan fixtures/plan.compositions.json --out runs/composition-lab --st
 
 The MP4 lands in `runs/composition-lab/out.mp4`. To run the full pipeline on your own video or text, copy `.env.example` to `.env`, fill in the keys from [Setup](docs/runbooks/setup.md) and see [Pipeline](docs/pipeline.md).
 
+## Run the app
+
+The app needs a Postgres database and a mail inbox. Install Mailpit (`brew install mailpit`), put `DATABASE_URL`, `BETTER_AUTH_SECRET` and `BETTER_AUTH_URL` in `.env` (see [Setup](docs/runbooks/setup.md#run-the-app)), then:
+
+```bash
+pnpm db:migrate
+pnpm dev
+```
+
+The app is on `http://localhost:3000` and the sign-in emails land in Mailpit at `http://localhost:8025`. `pnpm e2e` runs the end-to-end test.
+
 ## Commands
 
 | Command | What it does |
@@ -60,16 +71,26 @@ The MP4 lands in `runs/composition-lab/out.mp4`. To run the full pipeline on you
 | `pnpm render:plan <plan.json> --out <dir>` | Build, check and render a plan locally |
 | `pnpm remotion:studio` | Remotion Studio, to preview compositions |
 | `pnpm remotion:lab` | Render the motion, type, accent, media and transition labs |
+| `pnpm dev` | The app and Mailpit |
+| `pnpm build` | The production build of the app |
+| `pnpm db:generate`, `pnpm db:migrate` | Write and apply database migrations |
+| `pnpm e2e` | The end-to-end test in Playwright |
 | `pnpm docs:dev` | The documentation site, locally |
 
 ## Project structure
 
 ```
 src/
+  app/       Next.js routes, thin
+  features/  slices: auth, account, emails, generation, landing
+  ui/        design system: tokens and primitives
   video/     schema, layout, compositions, motion, styles, fonts, QA and the Remotion components
   worker/    pipeline steps: ingest, transcribe, see, direct, build
-  lib/       thin infrastructure: env, ffmpeg, AI clients
+  lib/       thin infrastructure: env, db, email, i18n, ffmpeg, AI clients
   cli/       the spike and the render commands
+messages/    interface strings
+drizzle/     database migrations
+e2e/         end-to-end tests
 docs/        documentation, built into a VitePress site
 fixtures/    sample plans and documents
 public/      the font library

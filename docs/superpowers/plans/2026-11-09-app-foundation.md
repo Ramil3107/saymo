@@ -229,7 +229,7 @@ With `--spacing: initial` only the listed steps exist, so `p-16` and `gap-14` wo
 - [ ] **Step 6: Verify**
 
 Run: `pnpm build`. Expected: compiled with no type errors (TypeScript 7 runs through the project's own `tsc`).
-Run: `pnpm dev`, open http://localhost:3000 in the browser pane. Expected: "Saymo" in Onest 800 on `#08080b`. In devtools the `html` element carries the four font variables.
+Run: `pnpm dev`, open `http://localhost:3000` in the browser pane. Expected: "Saymo" in Onest 800 on `#08080b`. In devtools the `html` element carries the four font variables.
 Run: `pnpm check && pnpm typecheck && pnpm test`. Expected: all green, the existing 485 tests still pass.
 
 - [ ] **Step 7: Commit**
@@ -271,7 +271,7 @@ The exact measures live in "Buttons", "Input fields", "Feedback", "Containers" a
 
 - [ ] **Step 2: Verify**
 
-Run: `pnpm check && pnpm typecheck && pnpm build`. Expected: clean. Run `pnpm dev` and open http://localhost:3000: the logo matches the top left of `1-2-sign-in.png`. The other primitives are checked by eye on the screens of Tasks 7 and 8, where they first appear with real copy.
+Run: `pnpm check && pnpm typecheck && pnpm build`. Expected: clean. Run `pnpm dev` and open `http://localhost:3000`: the logo matches the top left of `1-2-sign-in.png`. The other primitives are checked by eye on the screens of Tasks 7 and 8, where they first appear with real copy.
 
 - [ ] **Step 3: Commit**
 
@@ -715,7 +715,7 @@ Run: `pnpm test src/features/auth/tests/signInErrors.test.ts`. Expected: FAIL, t
 - [ ] **Step 5: Verify in the browser**
 
 Run: `pnpm dev`. In the browser pane at 1280 and 375 wide:
-  - http://localhost:3000/home redirects to `/sign-in`, which matches `1-2-sign-in.png` (no Google button yet, since its keys come in Task 11).
+  - `http://localhost:3000/home` redirects to `/sign-in`, which matches `1-2-sign-in.png` (no Google button yet, since its keys come in Task 11).
   - Submit `ana@company.com`: the screen becomes `1-3-check-email.png`; Mailpit at http://127.0.0.1:8025 shows "Your sign-in link to Saymo".
   - Open the link from Mailpit: you land on `/home`. Open it again: you land on `/sign-in` with the expired notice.
   - Submit six times within a minute: the sixth shows "Too many tries".

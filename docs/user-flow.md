@@ -6,9 +6,13 @@ The overall map of the first version. Nodes are screens (numbers follow `design/
 flowchart TD
   L[1.1 Landing] --> S[1.2 Sign in]
   S -->|Google| H[2.1 Home]
+  S -->|Google canceled or failed| S
   S -->|Email me a link| CE[1.3 Check your email]
-  M1([Email: sign-in link]) -.-> CE
+  S -->|too many tries| S
+  M1([Email: sign-in link, valid 10 minutes, works once]) -.-> CE
+  CE -->|Resend the link| CE
   CE -->|link from the email| H
+  CE -->|link expired or used| S
 
   H -->|Make the video| LIM{Videos left?}
   LIM -->|no| LR[6.1 Limit reached] --> P[6.2 Plans]
@@ -34,7 +38,21 @@ flowchart TD
 
   H --> MV[5.1 My videos] --> R
   H --> AC[5.3 Account]
+  AC -->|Sign out| S
+  AC -->|Delete account| DEL{Fresh session?}
+  DEL -->|yes, confirmed: account deleted| S
+  DEL -->|no: Sign in again| S
   AC --> BR[1.4 Brand setup] --> H
   AC --> P
   M5([Email from the merchant: payment failed, 3 days, then Free]) -.-> AC
 ```
+
+Sign-in states, built in the first slice of the application:
+
+- **Link sent.** The Check your inbox screen shows the address and a Resend button.
+- **Resend.** Sends a new link to the same address.
+- **Expired or used link.** Back on Sign in with a notice that the link has expired.
+- **Too many tries.** Requests for a link are limited to 5 per minute; the person sees a notice and tries again later.
+- **Google canceled or failed.** Back on Sign in with a notice.
+
+Deleting an account asks for confirmation. If the session is older than a day, a notice asks the person to sign in again first, and then the account can be deleted. After the deletion the person lands on Sign in with a goodbye notice.

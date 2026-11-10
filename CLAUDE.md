@@ -48,7 +48,7 @@ The code reads top-down like a book. In every file:
 
 ## Structure
 
-Target structure from the spec, section 9. Stage 0 has `lib/`, `video/`, `worker/` and `cli/` (the `spike` command).
+Target structure from the spec, section 9. Built so far: `app/`, `features/` (auth, account, emails, generation, landing), `ui/`, `lib/`, `video/`, `worker/` and `cli/` (the `spike` command), plus `messages/`, `drizzle/` and `e2e/`.
 
 ```
 src/
@@ -69,6 +69,11 @@ docs/             documentation pages, built into a VitePress site
 
 ## Commands
 
+- `pnpm dev`: the app on port 3000 and Mailpit (the inbox is at localhost:8025).
+- `pnpm build`: the production build of the app.
+- `pnpm db:generate`: writes a migration into `drizzle/` from a change in the schema.
+- `pnpm db:migrate`: applies the migrations to the database in `DATABASE_URL`.
+- `pnpm e2e`: the Playwright test of the main path (it starts `pnpm dev` if needed).
 - `pnpm check`: Biome, lint and formatting.
 - `pnpm format`: fixes formatting after a red `pnpm check`.
 - `pnpm typecheck`: type check, `tsc --noEmit`.
