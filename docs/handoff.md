@@ -5,7 +5,7 @@ Where the work stands on 2026-11-10 and how to pick it up in a new session.
 ## State
 
 - The application is built slice by slice around a mock engine (see the decision of 2026-11-09 in [Decisions](./product/decisions.md)). Slice 1, the foundation and sign-in, is built on the branch `app` in the worktree `.claude/worktrees/app`. It is not merged and not pushed. It has the design system, the app's environment and database, email, sign-in with an email link on Better Auth, Sign in and Check your inbox, Home (header only), Account (profile, sign out, deletion), the 404 and error pages, and the end-to-end test (`pnpm e2e`). How it works is in [Architecture](./architecture.md), how to run it in [Setup](./runbooks/setup.md#run-the-app).
-- Google sign-in is wired but waits for the keys, which the owner creates (the last task of the slice). Until then the Sign in screen shows the Google button without working keys.
+- Google sign-in works locally. On 2026-11-10 the owner created the Google Cloud project "Saymo", its consent screen (External, still in Testing) and the OAuth client "Saymo local" (origin `http://localhost:3000`, redirect `http://localhost:3000/api/auth/callback/google`); both keys are in the worktree's local `.env`, and the owner signed in with Google and saw "Signed in with Google." on Account. Production needs its own OAuth client for the real domain (the domain is an open question) and the consent screen published, or test users added. The Google button stays hidden until both keys are set.
 - The Railway development database is migrated; its Postgres service has a TCP Proxy on port 5432, and the app's `DATABASE_URL` is Railway's `DATABASE_PUBLIC_URL`.
 - `main` is on [github.com/Ramil3107/saymo](https://github.com/Ramil3107/saymo), a public repository, with the engine and the font library. The engine's state: the vocabulary iteration has steps 1 to 7 built (see "Order of work" in [Vocabulary](./vocabulary.md)); step 3 of the variety plan (backdrops and the camera) is merged to `main`, but the owner has not looked at it; step 4 waits for that look. The director and the frame notes are written in the session (`pnpm spike` stops with exit code 3, then `--resume`; see [Pipeline](./pipeline.md)). The Lambda site `saymo` still holds the old bundle: redeploy it ([Lambda runbook](./runbooks/lambda.md)) before Lambda renders pick up the font library.
 - Biome, the type check and the tests are green.
@@ -22,7 +22,7 @@ The rule proposed by the learning of 2026-10-31 in [Learnings](./learnings.md) (
 
 - Hardening for slice 5: a CSP and the other security headers; `trustedProxies` for Better Auth when the app is deployed behind Railway's proxy, so the rate limiter sees the real client IP.
 - Small polish that slice 1 deferred: sign out has no failure handling; Resend keeps no keyboard focus while disabled; the email is not trimmed before validation; the proxy matcher skips every path with a dot; `requireUser` and the matcher have no tests; a few minor items in the primitives (an icon button link drops extra props, the dialog does not guard Esc while busy); `localhost:3000` is written in three places in the e2e setup.
-- The Google keys and the working Google button, with the owner.
+- Google in production: an OAuth client for the real domain, once the domain is chosen, and the consent screen published or test users added.
 - Media in the document: photos and collage named in the plan.
 - The sound-effect layer and music tracks; the videos are silent now.
 - A list made for the backdrop; a card cropped to the subject instead of the whole frame.
@@ -35,6 +35,6 @@ The rule proposed by the learning of 2026-10-31 in [Learnings](./learnings.md) (
 ```
 Read CLAUDE.md, docs/handoff.md and the plan docs/superpowers/plans/2026-11-09-app-foundation.md (the Roadmap).
 Slice 1 of the application lives on the branch app in the worktree .claude/worktrees/app. Check git log and the
-working tree, tell me in Russian in two or three lines where it stands (merged or not, Google keys), then
+working tree, tell me in Russian in two or three lines where it stands (merged or not), then
 carry on: merge slice 1 if I say so, and write the plan for slice 2, the main path on the mock engine.
 ```

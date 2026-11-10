@@ -26,7 +26,7 @@ Slices in `features/`: auth, brand, library, generation, editing, rendering, rev
 
 | Slice | Public entry gives | Holds |
 | --- | --- | --- |
-| `auth` | `auth`, `getUser`, `requireUser`, `SessionUser` | Better Auth setup, the route rules, the Sign in and Check your inbox screens |
+| `auth` | `auth`, `SignInScreen`, `getUser`, `requireUser`, `SessionUser`, `signInMessage`, `SignInMessage` | Better Auth setup, the route rules, the Sign in and Check your inbox screens |
 | `account` | the Account screen parts and their actions | profile, sign out, account deletion |
 | `emails` | `sendSignInLinkEmail` | the sign-in email, built with React Email |
 | `generation` | `HomeHeader` | the header of Home; the prompt arrives in the next slice |

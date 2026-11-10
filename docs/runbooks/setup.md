@@ -48,8 +48,16 @@ Never commit keys. `.env` is listed in `.gitignore`.
 | `BETTER_AUTH_URL` | the app's own address | `http://localhost:3000` locally |
 | `SMTP_URL` | the mail server | `smtp://127.0.0.1:1025` for Mailpit (the default); Resend's SMTP in production |
 | `EMAIL_FROM` | the sender of the emails | for example `Saymo <hello@saymo.local>` (the default) |
-| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | sign-in with Google, optional, set both or neither | a Google Cloud OAuth client; the redirect URI is `<BETTER_AUTH_URL>/api/auth/callback/google` |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | sign-in with Google, optional, set both or neither | a Google Cloud OAuth client, see below |
 
-4. `pnpm db:migrate` applies the migrations in `drizzle/` to that database.
-5. `pnpm dev` starts the app on port 3000 and Mailpit. Open the app, enter an email, and open the link from Mailpit.
-6. `pnpm e2e` runs the end-to-end test: sign in with a link, sign out, delete the account. It starts `pnpm dev` itself if it is not running, and it needs Chromium: `pnpm exec playwright install chromium`.
+4. Google sign-in (optional; the Google button stays hidden until both keys are set). In the [Google Cloud console](https://console.cloud.google.com) create a project, then open Google Auth Platform and choose Get started: app name, support email, Audience External, contact email. Under Clients choose Create client, type Web application, authorized JavaScript origin `http://localhost:3000` and redirect URI `http://localhost:3000/api/auth/callback/google`. Copy the client ID, then append it, then copy the secret and append that:
+
+```bash
+printf 'GOOGLE_CLIENT_ID=%s\n' "$(pbpaste)" >> .env
+printf 'GOOGLE_CLIENT_SECRET=%s\n' "$(pbpaste)" >> .env
+```
+
+   While the consent screen is in Testing, only the project's own account and the test users listed under Audience can sign in. Production needs its own client for the real domain and the consent screen published.
+5. `pnpm db:migrate` applies the migrations in `drizzle/` to that database.
+6. `pnpm dev` starts the app on port 3000 and Mailpit. Open the app, enter an email, and open the link from Mailpit.
+7. `pnpm e2e` runs the end-to-end test: sign in with a link, sign out, delete the account. It starts `pnpm dev` itself if it is not running, and it needs Chromium: `pnpm exec playwright install chromium`.

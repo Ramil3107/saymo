@@ -24,8 +24,7 @@ flowchart LR
 ## Where it stands
 
 - Done: the scaffold and the pipeline spike (transcription, frame notes, director, build, QA, local and Lambda rendering).
-- In progress: the vocabulary base and variety across videos; the plan is in [Vocabulary](docs/vocabulary.md#variety-across-videos).
-- In progress: the application, slice by slice. Slice 1, the foundation and sign-in (Next.js, Postgres, an email link), is built; the main path on a mock engine is next. See the [design spec](docs/superpowers/specs/2026-10-28-saymo-v1-design.md).
+- In progress: the vocabulary base and variety across videos (plan in [Vocabulary](docs/vocabulary.md#variety-across-videos)), and the application, slice by slice. Slice 1, the foundation and sign-in (Next.js, Postgres, email link and Google), is built; the main path on a mock engine is next, per the [design spec](docs/superpowers/specs/2026-10-28-saymo-v1-design.md).
 
 ## Stack
 
