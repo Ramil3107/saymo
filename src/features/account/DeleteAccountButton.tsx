@@ -6,15 +6,21 @@ import { Button } from "@/ui/Button";
 import { ConfirmDialog } from "@/ui/ConfirmDialog";
 import { Notice } from "@/ui/Notice";
 import { deleteAccount, signOut } from "./actions";
-import type { DeletionOutcome } from "./deletionOutcome";
+import type { DeletionResult } from "./deletionOutcome";
+
+const DELETED_SIGN_IN_PATH = "/sign-in?deleted=1";
 
 export function DeleteAccountButton() {
   const t = useTranslations("Account");
-  const [outcome, setOutcome] = useState<DeletionOutcome | null>(null);
+  const [outcome, setOutcome] = useState<DeletionResult | null>(null);
 
   async function confirmDeletion() {
     try {
       const result = await deleteAccount();
+      if (result.outcome === "deleted") {
+        window.location.assign(DELETED_SIGN_IN_PATH);
+        return;
+      }
       setOutcome(result.outcome);
     } catch {
       setOutcome("failed");

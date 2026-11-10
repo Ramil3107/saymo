@@ -3,14 +3,14 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth, requireUser } from "@/features/auth";
-import { type DeletionOutcome, deletionOutcome } from "./deletionOutcome";
+import { type DeletionResult, deletionOutcome } from "./deletionOutcome";
 
 export async function signOut(): Promise<never> {
   await auth.api.signOut({ headers: await headers() });
   redirect("/sign-in");
 }
 
-export async function deleteAccount(): Promise<{ outcome: DeletionOutcome }> {
+export async function deleteAccount(): Promise<{ outcome: DeletionResult }> {
   await requireUser();
 
   try {
@@ -19,5 +19,5 @@ export async function deleteAccount(): Promise<{ outcome: DeletionOutcome }> {
     return { outcome: deletionOutcome(error) };
   }
 
-  redirect("/sign-in?deleted=1");
+  return { outcome: "deleted" };
 }

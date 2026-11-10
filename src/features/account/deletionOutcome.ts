@@ -2,6 +2,7 @@ import { APIError } from "better-auth/api";
 import { z } from "zod";
 
 export type DeletionOutcome = "sign-in-again" | "failed";
+export type DeletionResult = DeletionOutcome | "deleted";
 
 const STALE_SESSION_CODES = ["SESSION_EXPIRED", "SESSION_NOT_FRESH"];
 
