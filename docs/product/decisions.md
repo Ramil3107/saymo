@@ -4,6 +4,12 @@ Each decision: date, what was decided, why, what was rejected. New entries on to
 
 ---
 
+### 2026-11-10 · A sign-in link opens a page with a button
+
+- **Decided:** the link in the sign-in email opens a Saymo page, "One click left.", with a Sign in to Saymo button. Opening the page changes nothing; pressing the button signs the person in. The button's server action spends the token through Better Auth's server API (`auth.api.magicLinkVerify`), which skips Better Auth's rate limiter and origin check; that is accepted because the action passes no callback URL, tokens are single-use, hashed and long, and Next checks a server action's Origin itself. A visitor who is already signed in goes to Home; a link without a token, or with a broken, used or expired one, lands on Sign in with the expired-link notice. The owner's call on 2026-11-10, from the final review of slice 1.
+- **Why:** corporate mail filters (Microsoft Defender Safe Links, Mimecast, Proofpoint) and link previewers open the links in an email before the person does. The link works once, so the scan used it up and the person's click landed on "That link has expired or was already used."
+- **Rejected:** a six-digit code typed on Check your inbox (it changes screen 1.3 and is more work); accepting the risk.
+
 ### 2026-11-10 · The application's foundation
 
 - **Decided:** the lead's calls while building slice 1 of the application (foundation and sign-in).
