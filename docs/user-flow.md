@@ -11,8 +11,9 @@ flowchart TD
   S -->|too many tries| S
   M1([Email: sign-in link, valid 10 minutes, works once]) -.-> CE
   CE -->|Resend the link| CE
-  CE -->|link from the email| H
-  CE -->|link expired or used| S
+  CE -->|link from the email| OC["One click left."]
+  OC -->|Sign in to Saymo| H
+  OC -->|link expired or used| S
 
   H -->|Make the video| LIM{Videos left?}
   LIM -->|no| LR[6.1 Limit reached] --> P[6.2 Plans]
@@ -51,7 +52,8 @@ Sign-in states, built in the first slice of the application:
 
 - **Link sent.** The Check your inbox screen shows the address and a Resend button.
 - **Resend.** Sends a new link to the same address.
-- **Expired or used link.** Back on Sign in with a notice that the link has expired.
+- **The link's page.** The link opens "One click left." with a Sign in to Saymo button, and only the button signs in: mail filters and link previewers open links before the person does, and a link that signed in on opening would be used up by them. A person who is already signed in goes straight to Home.
+- **Expired or used link.** Back on Sign in with a notice that the link has expired. A link without a token, or with a broken one, lands there too.
 - **Too many tries.** Requests for a link are limited to 5 per minute; the person sees a notice and tries again later.
 - **Google canceled or failed.** Back on Sign in with a notice.
 

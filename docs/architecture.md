@@ -26,13 +26,13 @@ Slices in `features/`: auth, brand, library, generation, editing, rendering, rev
 
 | Slice | Public entry gives | Holds |
 | --- | --- | --- |
-| `auth` | `auth`, `SignInScreen`, `getUser`, `requireUser`, `SessionUser`, `signInMessage`, `SignInMessage` | Better Auth setup, the route rules, the Sign in and Check your inbox screens |
+| `auth` | `auth`, `SignInScreen`, `ConfirmSignIn`, `getUser`, `requireUser`, `SessionUser`, `signInMessage`, `SignInMessage`, `SignInTokenSchema`, `INVALID_LINK_PATH` | Better Auth setup, the route rules, the Sign in, Check your inbox and One click left screens, the action that finishes an email sign-in |
 | `account` | the Account screen parts and their actions | profile, sign out, account deletion |
 | `emails` | `sendSignInLinkEmail` | the sign-in email, built with React Email |
 | `generation` | `HomeHeader` | the header of Home; the prompt arrives in the next slice |
 | `landing` | `ExampleFrames` | the example frames shown next to sign-in |
 
-Inside `app/`, `(public)` holds the pages anyone can open (Sign in) and `(app)` the pages that need a session (Home, Account, with the app bar). `api/auth/[...all]` is Better Auth's route handler. The 404 and error pages sit at the root.
+Inside `app/`, `(public)` holds the pages anyone can open (Sign in and `/sign-in/link`, the page the email's link opens) and `(app)` the pages that need a session (Home, Account, with the app bar). `api/auth/[...all]` is Better Auth's route handler. The 404 and error pages sit at the root.
 
 `ui/` is the design system: `theme.css` generates the theme from the tokens in `docs/design/tokens.css`, and only the token steps are defined, so a raw color or size does not compile. Radix comes through the `radix-ui` package and the icons are Lucide at stroke 1.8. In `lib/`: `appEnv.ts` (the app's environment, checked with Zod), `db/` (client, schema, test database), `email/` (the SMTP mailer and the template renderer) and `i18n/` (next-intl with one locale and typed keys over `messages/en.json`). Interface strings come only from `messages/`.
 
@@ -47,14 +47,14 @@ Inside `app/`, `(public)` holds the pages anyone can open (Sign in) and `(app)` 
 
 Sign-in runs on Better Auth, on top of Drizzle and Postgres. There are two ways in:
 
-- **Email link.** The person enters an email and gets a link that is valid for 10 minutes and works once; the token is stored hashed. The email goes through the SMTP mailer: Mailpit locally, Resend's SMTP in production. A request for a link is limited to 5 per minute, and opening a link has its own limit of 30 per minute per IP, so an office behind one address is not locked out. The limiter runs in every environment and keeps its counters in the database.
+- **Email link.** The person enters an email and gets a link that is valid for 10 minutes and works once; the token is stored hashed. The email goes through the SMTP mailer: Mailpit locally, Resend's SMTP in production. The link opens a page of ours, `/sign-in/link`, with a Sign in to Saymo button. Opening the page changes nothing; the button's server action, `confirmSignIn`, spends the token through `auth.api.magicLinkVerify` and lands on Home, or on Sign in with the expired-link notice. The link does not sign in on opening because corporate mail filters and link previewers (Microsoft Defender Safe Links, Mimecast, Proofpoint) open the links in an email before the person does, and a single-use link would be used up by the scan. A request for a link is limited to 5 per minute. The action calls Better Auth's server API, which skips its rate limiter and origin check; that is safe here because the action passes no callback URL, tokens are single-use, hashed and 32 letters long, and Next checks a server action's Origin itself. Better Auth's own verify route, which the email no longer links to, keeps a limit of 30 per minute per IP. The limiter runs in every environment and keeps its counters in the database.
 - **Google.** Wired up, and it stays off until `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set. Google's tokens are encrypted at rest.
 
-A session lasts 30 days and its database row is refreshed daily, but the cookie is only written by the two server actions (`nextCookies` cannot set cookies while a Server Component renders), so the cookie lasts 30 days from sign-in. Better Auth's origin and callback checks are forced on in every environment, tests included. Ids are uuids made by the database.
+A session lasts 30 days and its database row is refreshed daily, but the cookie is only written at sign-in and in server actions (`nextCookies` cannot set cookies while a Server Component renders), so the cookie lasts 30 days from sign-in. Better Auth's origin and callback checks are forced on in every environment, tests included. Ids are uuids made by the database.
 
 The proxy (`src/proxy.ts`) is an optimistic gate: it only looks for the session cookie and sends a person without one to Sign in. It does not send a person with one away from Sign in, by design: only the Sign in page does that, after `getUser()` confirms a live session, so a stale cookie cannot cause a redirect loop. The cookie alone does not prove a session is valid. Every page and server action that shows or changes a person's data calls `requireUser()` itself. Cache Components are off, so signed-in pages render on every request.
 
-Deleting an account needs a fresh session. If the session is older than a day, the person is asked to sign in again first. Sign-in requests go through `authClient.signIn.magicLink`, never through a server action that calls `auth.api`, because that path skips the rate limiter and the callback check.
+Deleting an account needs a fresh session. If the session is older than a day, the person is asked to sign in again first. Requests for a link go through `authClient.signIn.magicLink`, never through a server action that calls `auth.api`, because that path skips the rate limiter and the callback check. Spending a link's token is the one sign-in step that does go through a server action, for the reasons under Email link above.
 
 ## Database
 
